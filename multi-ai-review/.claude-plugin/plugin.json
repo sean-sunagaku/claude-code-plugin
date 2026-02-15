@@ -1,0 +1,8 @@
+{
+  "name": "multi-ai-review",
+  "version": "1.0.0",
+  "description": "Codex, Gemini, Claude の3つの AI に並列でコードレビューを依頼し、統合レポートを生成する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["code-review", "multi-ai", "codex", "gemini", "claude", "parallel"]
+}

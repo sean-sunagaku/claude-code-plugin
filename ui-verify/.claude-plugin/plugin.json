@@ -1,0 +1,8 @@
+{
+  "name": "ui-verify",
+  "version": "1.0.0",
+  "description": "Chrome DevTools でフロントエンドの動作確認。起動中サーバーを自動検出し操作・デバッグ・パフォーマンス分析を実行",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["ui", "testing", "chrome-devtools", "verification", "e2e"]
+}

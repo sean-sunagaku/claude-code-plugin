@@ -1,0 +1,8 @@
+{
+  "name": "git-workflow",
+  "version": "1.0.0",
+  "description": "ブランチ作成、Conventional Commits コミット、PR 作成までの Git ワークフローを自動化",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["git", "workflow", "commit", "pull-request", "conventional-commits"]
+}

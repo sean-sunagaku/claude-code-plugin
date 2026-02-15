@@ -1,0 +1,8 @@
+{
+  "name": "ci-check",
+  "version": "1.0.0",
+  "description": "全パッケージの lint, format, test, audit を一括実行し、エラーがあれば修正する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["ci", "lint", "format", "test", "audit", "automation"]
+}

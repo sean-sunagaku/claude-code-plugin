@@ -1,0 +1,14 @@
+# Results from AI reviews
+multi-ai-review/skills/multi-ai-review/results/
+plan-review/skills/plan-review/results/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Design system output
+design-system/

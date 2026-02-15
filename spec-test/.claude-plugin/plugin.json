@@ -1,0 +1,8 @@
+{
+  "name": "spec-test",
+  "version": "1.0.0",
+  "description": "仕様駆動設計。仕様書からクラス責務を分析し、純粋関数を特定、テストファーストで単体テストを設計する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["spec", "test", "tdd", "test-first", "pure-function", "design"]
+}

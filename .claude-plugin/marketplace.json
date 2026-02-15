@@ -1,0 +1,83 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "sunagaku-marketplace",
+  "version": "1.0.0",
+  "description": "Claude Code development skills: multi-AI review, agent team orchestration, git workflow, CI checks, UI verification, spec-driven testing, and more.",
+  "owner": {
+    "name": "sunagaku"
+  },
+  "plugins": [
+    {
+      "name": "multi-ai-review",
+      "source": "./multi-ai-review",
+      "description": "Codex, Gemini, Claude の3つの AI に並列でコードレビューを依頼し、統合レポートを生成する",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["code-review", "multi-ai", "codex", "gemini", "claude", "parallel"]
+    },
+    {
+      "name": "plan-review",
+      "source": "./plan-review",
+      "description": "Codex, Gemini, Claude の3つの AI で Plan ファイルを並列レビュー。実装計画の妥当性、抜け漏れ、リスクを分析する",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["plan-review", "multi-ai", "architecture", "risk-analysis"]
+    },
+    {
+      "name": "agent-team",
+      "source": "./agent-team",
+      "description": "Multi-agent team orchestration for parallel task execution, research, and implementation",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["agent", "team", "parallel", "orchestration", "swarm"]
+    },
+    {
+      "name": "git-workflow",
+      "source": "./git-workflow",
+      "description": "ブランチ作成、Conventional Commits コミット、PR 作成までの Git ワークフローを自動化",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["git", "workflow", "commit", "pull-request", "conventional-commits"]
+    },
+    {
+      "name": "ci-check",
+      "source": "./ci-check",
+      "description": "全パッケージの lint, format, test, audit を一括実行し、エラーがあれば修正する",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["ci", "lint", "format", "test", "audit", "automation"]
+    },
+    {
+      "name": "ui-verify",
+      "source": "./ui-verify",
+      "description": "Chrome DevTools でフロントエンドの動作確認。起動中サーバーを自動検出し操作・デバッグ・パフォーマンス分析を実行",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["ui", "testing", "chrome-devtools", "verification", "e2e"]
+    },
+    {
+      "name": "spec-test",
+      "source": "./spec-test",
+      "description": "仕様駆動設計。仕様書からクラス責務を分析し、純粋関数を特定、テストファーストで単体テストを設計する",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["spec", "test", "tdd", "test-first", "pure-function", "design"]
+    },
+    {
+      "name": "database",
+      "source": "./database",
+      "description": "Drizzle ORM を使ったデータベーススキーマの管理とマイグレーションガイド",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["database", "drizzle", "orm", "migration", "sqlite"]
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "source": "./ui-ux-pro-max",
+      "description": "UI/UX design intelligence. 67 styles, 96 palettes, 57 font pairings, 25 charts, 13 stacks",
+      "version": "1.0.0",
+      "author": { "name": "sunagaku" },
+      "keywords": ["ui", "ux", "design", "color-palette", "typography", "accessibility"]
+    }
+  ]
+}

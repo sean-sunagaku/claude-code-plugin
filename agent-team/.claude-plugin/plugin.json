@@ -1,0 +1,8 @@
+{
+  "name": "agent-team",
+  "version": "1.0.0",
+  "description": "Multi-agent team orchestration for parallel task execution, research, and implementation",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["agent", "team", "parallel", "orchestration", "swarm"]
+}

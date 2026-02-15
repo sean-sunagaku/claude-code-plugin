@@ -1,0 +1,8 @@
+{
+  "name": "plan-review",
+  "version": "1.0.0",
+  "description": "Codex, Gemini, Claude の3つの AI で Plan ファイルを並列レビュー。実装計画の妥当性、抜け漏れ、リスクを分析する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["plan-review", "multi-ai", "architecture", "risk-analysis"]
+}
