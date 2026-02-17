@@ -1,0 +1,8 @@
+{
+  "name": "app-naming",
+  "version": "1.0.0",
+  "description": "4つの専門エージェント（ブランディング・商標・デジタルプレゼンス・国際展開）がチームで議論し、最適なアプリ名・サービス名を決定する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["naming", "branding", "trademark", "app-name", "agent-team", "SEO", "ASO"]
+}
