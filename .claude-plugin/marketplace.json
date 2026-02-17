@@ -170,6 +170,19 @@
         "packaging",
         "utility"
       ]
+    },
+    {
+      "name": "eas-deploy",
+      "source": "./eas-deploy",
+      "description": " Expo (EAS) iOS/Android アプリのデプロイ自動化スキル。 App ID 登録、証明書・プロビジョニングプロファイル作成、 EAS ビルド、TestFlight 配布、App Store 提出までを CLI から実行する。 任意の Expo プロジェクトで使える汎用スキル。 Use when: App ID を登録したい、証明書を作りたい、Bundle ID を設定したい、 EAS でビルドしたい、TestFlight に配布したい、App Store に提出したい。 Triggers: \"App ID\", \"Bundle ID\", \"証明書\", \"certificate\", \"provisioning\", \"プロビジョニング\", \"eas credentials\", \"eas build\", \"eas submit\", \"TestFlight\", \"App Store 提出\", \"署名\", \"signing\"",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "eas",
+        "deploy"
+      ]
     }
   ]
 }
