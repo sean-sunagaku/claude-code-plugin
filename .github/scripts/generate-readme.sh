@@ -15,8 +15,8 @@ TMP_INTERNAL=$(mktemp)
 trap 'rm -f "$TMP_TABLE" "$TMP_DETAILS" "$TMP_BETA" "$TMP_INTERNAL"' EXIT
 
 # --- 公開(stable) / 公開(beta) / 内部 に分離 ---
-STABLE_PLUGINS=$(jq -c '[.plugins[] | select((.source | startswith("./.internal") | not) and ((.status // "stable") != "beta"))]' "$MARKETPLACE")
-BETA_PLUGINS=$(jq -c '[.plugins[] | select((.source | startswith("./.internal") | not) and (.status == "beta"))]' "$MARKETPLACE")
+STABLE_PLUGINS=$(jq -c '[.plugins[] | select((.source | startswith("./.internal") | not) and (.description | startswith("[Beta]") | not))]' "$MARKETPLACE")
+BETA_PLUGINS=$(jq -c '[.plugins[] | select((.source | startswith("./.internal") | not) and (.description | startswith("[Beta]")))]' "$MARKETPLACE")
 INTERNAL_PLUGINS=$(jq -c '[.plugins[] | select(.source | startswith("./.internal"))]' "$MARKETPLACE")
 
 STABLE_COUNT=$(echo "$STABLE_PLUGINS" | jq 'length')
