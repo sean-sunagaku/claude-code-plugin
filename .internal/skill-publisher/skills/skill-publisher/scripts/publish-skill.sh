@@ -11,12 +11,14 @@ set -euo pipefail
 PLUGIN_REPO="/Users/babashunsuke/Desktop/claude-code-plugin"
 MARKETPLACE="$PLUGIN_REPO/.claude-plugin/marketplace.json"
 INTERNAL=false
+BETA=false
 
 # 引数パース
 POSITIONAL=()
 for arg in "$@"; do
   case $arg in
     --internal) INTERNAL=true ;;
+    --beta) BETA=true ;;
     *) POSITIONAL+=("$arg") ;;
   esac
 done
@@ -81,6 +83,10 @@ echo ""
 echo "=== Published: $SKILL_NAME ==="
 if [ "$INTERNAL" = true ]; then
   echo "    Type: internal"
+elif [ "$BETA" = true ]; then
+  echo "    Type: beta"
+else
+  echo "    Type: stable"
 fi
 echo ""
 find "$(dirname "$(dirname "$TARGET_DIR")")" -type f | sort | sed "s|$PLUGIN_REPO/||"
@@ -103,19 +109,40 @@ else
 
   # 最後のエントリの閉じ括弧の後にカンマと新エントリを追加
   # jq があれば使う、なければ sed で追加
+  # Beta の場合 description に [Beta] プレフィックスを付与
+  if [ "$BETA" = true ] && [[ ! "$DESCRIPTION" =~ ^\[Beta\] ]]; then
+    DESCRIPTION="[Beta] $DESCRIPTION"
+  fi
+
   if command -v jq &> /dev/null; then
-    jq --arg name "$SKILL_NAME" \
-       --arg source "$SOURCE_REF" \
-       --arg desc "$DESCRIPTION" \
-       --argjson keywords "$(echo "[\"$KEYWORDS\"]")" \
-       '.plugins += [{
-         "name": $name,
-         "source": $source,
-         "description": $desc,
-         "version": "1.0.0",
-         "author": { "name": "sunagaku" },
-         "keywords": $keywords
-       }]' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
+    if [ "$BETA" = true ]; then
+      jq --arg name "$SKILL_NAME" \
+         --arg source "$SOURCE_REF" \
+         --arg desc "$DESCRIPTION" \
+         --argjson keywords "$(echo "[\"$KEYWORDS\"]")" \
+         '.plugins += [{
+           "name": $name,
+           "source": $source,
+           "description": $desc,
+           "version": "1.0.0",
+           "status": "beta",
+           "author": { "name": "sunagaku" },
+           "keywords": $keywords
+         }]' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
+    else
+      jq --arg name "$SKILL_NAME" \
+         --arg source "$SOURCE_REF" \
+         --arg desc "$DESCRIPTION" \
+         --argjson keywords "$(echo "[\"$KEYWORDS\"]")" \
+         '.plugins += [{
+           "name": $name,
+           "source": $source,
+           "description": $desc,
+           "version": "1.0.0",
+           "author": { "name": "sunagaku" },
+           "keywords": $keywords
+         }]' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
+    fi
     echo "OK: marketplace.json に $SKILL_NAME を登録しました"
   else
     # jq がない場合は手動で追記案を表示

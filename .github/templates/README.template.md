@@ -42,6 +42,8 @@ Or use the slash command inside Claude Code:
 
 {{SKILL_DETAILS}}
 
+{{BETA_SECTION}}
+
 {{INTERNAL_SECTION}}
 
 ## Prerequisites
