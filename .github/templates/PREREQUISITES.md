@@ -6,10 +6,11 @@
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **EAS CLI** — eas-deploy
+- **EAS CLI (eas)** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / skill-publisher
 - **lsof** — ui-verify
 - **pnpm** — ci-check / database / ui-verify
+- **python3** — GitHub Actions
