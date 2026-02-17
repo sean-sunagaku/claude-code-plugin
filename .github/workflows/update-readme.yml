@@ -1,0 +1,61 @@
+name: Update README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.claude-plugin/marketplace.json'
+      - '.github/templates/README.template.md'
+      - '**/SKILL.md'
+      - '**/scripts/**'
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: "Step 1: Static scan for prerequisites"
+        run: |
+          chmod +x .github/scripts/detect-prerequisites.sh
+          bash .github/scripts/detect-prerequisites.sh --generate
+
+      - name: "Step 2: AI review & supplement prerequisites"
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            .github/scripts/detect-prerequisites.sh が静的スキャンで生成した
+            .github/templates/PREREQUISITES.md を確認してください。
+
+            追加で以下を実施:
+            1. **/SKILL.md 内で言及されているが、静的スキャンで漏れた外部ツールがないか確認
+            2. 見つかった場合のみ PREREQUISITES.md に追記（既存の行はそのまま維持）
+            3. 不要な項目（実際にはスクリプトで使われていないもの）があれば削除
+
+            ルール:
+            - 「Claude Code CLI」は常に先頭
+            - 各項目は「- **ツール名** (スキル名 で使用)」の形式
+            - OS 標準コマンド（bash, grep, sed, awk, cat 等）は除外
+            - 変更がなければファイルを書き換えない
+          claude_args: '--allowedTools "Read,Glob,Grep,Write,Edit"'
+
+      - name: "Step 3: Generate README from marketplace.json"
+        run: |
+          chmod +x .github/scripts/generate-readme.sh
+          .github/scripts/generate-readme.sh
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md .github/templates/PREREQUISITES.md
+          git diff --cached --quiet || git commit -m "docs: auto-update README and prerequisites"
+          git push
