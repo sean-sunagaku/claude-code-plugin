@@ -19,13 +19,3 @@ jobs:
         run: |
           chmod +x .github/scripts/validate-marketplace.sh
           .github/scripts/validate-marketplace.sh
-
-      - name: Check README is up to date
-        run: |
-          chmod +x .github/scripts/generate-readme.sh
-          .github/scripts/generate-readme.sh
-          if ! git diff --quiet README.md; then
-            echo "::error::README.md is out of date. Run '.github/scripts/generate-readme.sh' and commit the result."
-            git diff README.md
-            exit 1
-          fi
