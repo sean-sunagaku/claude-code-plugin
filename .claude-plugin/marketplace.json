@@ -183,6 +183,43 @@
         "eas",
         "deploy"
       ]
+    },
+    {
+      "name": "ui-review",
+      "source": "./ui-review",
+      "description": "5つの専門エージェント（UXデザイナー・ビジュアルデザイナー・アクセシビリティ専門家・モバイルUI専門家・コピーデザイナー）がチームでUIを添削・改善するスキル。Pencil(.pen)で画面デザインを作成・修正しながらリアルタイムで議論する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "ui",
+        "ux",
+        "design",
+        "review",
+        "accessibility",
+        "mobile",
+        "pencil",
+        "agent-team"
+      ]
+    },
+    {
+      "name": "logo-design",
+      "source": "./logo-design",
+      "description": "5つの専門エージェント（ブランド戦略・ロゴデザイン・カラー/タイポ・トレンド調査・競合分析）がチームでロゴを作成・議論するスキル。Pencil(.pen)で複数バリエーションを作成しSVGアイコンも出力する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "logo",
+        "brand",
+        "design",
+        "icon",
+        "svg",
+        "agent-team",
+        "pencil"
+      ]
     }
   ]
 }
