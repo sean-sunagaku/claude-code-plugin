@@ -170,6 +170,73 @@
         "packaging",
         "utility"
       ]
+    },
+    {
+      "name": "eas-deploy",
+      "source": "./eas-deploy",
+      "description": " Expo (EAS) iOS/Android アプリのデプロイ自動化スキル。 App ID 登録、証明書・プロビジョニングプロファイル作成、 EAS ビルド、TestFlight 配布、App Store 提出までを CLI から実行する。 任意の Expo プロジェクトで使える汎用スキル。 Use when: App ID を登録したい、証明書を作りたい、Bundle ID を設定したい、 EAS でビルドしたい、TestFlight に配布したい、App Store に提出したい。 Triggers: \"App ID\", \"Bundle ID\", \"証明書\", \"certificate\", \"provisioning\", \"プロビジョニング\", \"eas credentials\", \"eas build\", \"eas submit\", \"TestFlight\", \"App Store 提出\", \"署名\", \"signing\"",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "eas",
+        "deploy"
+      ]
+    },
+    {
+      "name": "ui-review",
+      "source": "./ui-review",
+      "description": "5つの専門エージェント（UXデザイナー・ビジュアルデザイナー・アクセシビリティ専門家・モバイルUI専門家・コピーデザイナー）がチームでUIを添削・改善するスキル。Pencil(.pen)で画面デザインを作成・修正しながらリアルタイムで議論する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "ui",
+        "ux",
+        "design",
+        "review",
+        "accessibility",
+        "mobile",
+        "pencil",
+        "agent-team"
+      ]
+    },
+    {
+      "name": "logo-design",
+      "source": "./logo-design",
+      "description": "5つの専門エージェント（ブランド戦略・ロゴデザイン・カラー/タイポ・トレンド調査・競合分析）がチームでロゴを作成・議論するスキル。Pencil(.pen)で複数バリエーションを作成しSVGアイコンも出力する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "logo",
+        "brand",
+        "design",
+        "icon",
+        "svg",
+        "agent-team",
+        "pencil"
+      ]
+    },
+    {
+      "name": "ci-fix",
+      "source": "./ci-fix",
+      "description": "GitHub Actions の CI 失敗を自動検出・ログ取得・修正・再検証するスキル。gh コマンドで PR のチェック状況を監視し、失敗時はログを分析してコードを修正、push 後に再度 CI を確認するループを回す",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "ci",
+        "github-actions",
+        "fix",
+        "gh",
+        "pull-request",
+        "automation"
+      ]
     }
   ]
 }

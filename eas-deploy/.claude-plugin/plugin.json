@@ -1,0 +1,8 @@
+{
+  "name": "eas-deploy",
+  "version": "1.0.0",
+  "description": "Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID登録、証明書作成、EASビルド、TestFlight配布、App Store提出までをCLIから実行",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["expo", "eas", "deploy", "ios", "android", "testflight", "app-store"]
+}

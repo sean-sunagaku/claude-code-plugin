@@ -1,0 +1,8 @@
+{
+  "name": "logo-design",
+  "version": "1.0.0",
+  "description": "5つの専門エージェント（ブランド戦略・ロゴデザイン・カラー/タイポ・トレンド調査・競合分析）がチームでロゴを作成・議論する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["logo", "brand", "design", "icon", "svg", "agent-team", "pencil"]
+}
