@@ -1,7 +1,8 @@
 name: Update README
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [main]
     paths:
       - '.claude-plugin/marketplace.json'
@@ -11,6 +12,7 @@ on:
 
 jobs:
   update-readme:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
