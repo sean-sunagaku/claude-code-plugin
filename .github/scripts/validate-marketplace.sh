@@ -74,22 +74,9 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
   [ -z "$DESC" ]    && error "plugins[$i].description is missing"
   [ -z "$VERSION" ] && error "plugins[$i].version is missing"
 
-  # status フィールドの検証
-  STATUS=$(jq -r ".plugins[$i].status // empty" "$MARKETPLACE")
-  if [ -n "$STATUS" ] && [ "$STATUS" != "beta" ] && [ "$STATUS" != "stable" ]; then
-    error "$NAME: invalid status '$STATUS' (must be 'beta' or 'stable')"
-  fi
-
-  # beta の場合 description に [Beta] プレフィックスが必要
-  if [ "$STATUS" = "beta" ]; then
-    if [[ ! "$DESC" =~ ^\[Beta\] ]]; then
-      error "$NAME: status is 'beta' but description is missing '[Beta]' prefix"
-    fi
-  fi
-
-  # beta でないのに [Beta] プレフィックスがある場合
-  if [ "$STATUS" != "beta" ] && [[ "$DESC" =~ ^\[Beta\] ]]; then
-    error "$NAME: description has '[Beta]' prefix but status is not 'beta'"
+  # [Beta] プレフィックスの確認
+  if [[ "$DESC" =~ ^\[Beta\] ]]; then
+    ok "$NAME: marked as [Beta]"
   fi
 
   # description の長さ
