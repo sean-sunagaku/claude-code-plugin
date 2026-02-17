@@ -10,15 +10,19 @@ PREREQUISITES="$REPO_ROOT/.github/templates/PREREQUISITES.md"
 README="$REPO_ROOT/README.md"
 TMP_TABLE=$(mktemp)
 TMP_DETAILS=$(mktemp)
+TMP_BETA=$(mktemp)
 TMP_INTERNAL=$(mktemp)
-trap 'rm -f "$TMP_TABLE" "$TMP_DETAILS" "$TMP_INTERNAL"' EXIT
+trap 'rm -f "$TMP_TABLE" "$TMP_DETAILS" "$TMP_BETA" "$TMP_INTERNAL"' EXIT
 
-# --- 公開スキルと内部スキルを分離 ---
-PUBLIC_PLUGINS=$(jq -c '[.plugins[] | select(.source | startswith("./.internal") | not)]' "$MARKETPLACE")
+# --- 公開(stable) / 公開(beta) / 内部 に分離 ---
+STABLE_PLUGINS=$(jq -c '[.plugins[] | select((.source | startswith("./.internal") | not) and ((.status // "stable") != "beta"))]' "$MARKETPLACE")
+BETA_PLUGINS=$(jq -c '[.plugins[] | select((.source | startswith("./.internal") | not) and (.status == "beta"))]' "$MARKETPLACE")
 INTERNAL_PLUGINS=$(jq -c '[.plugins[] | select(.source | startswith("./.internal"))]' "$MARKETPLACE")
 
-PUBLIC_COUNT=$(echo "$PUBLIC_PLUGINS" | jq 'length')
+STABLE_COUNT=$(echo "$STABLE_PLUGINS" | jq 'length')
+BETA_COUNT=$(echo "$BETA_PLUGINS" | jq 'length')
 INTERNAL_COUNT=$(echo "$INTERNAL_PLUGINS" | jq 'length')
+PUBLIC_COUNT=$((STABLE_COUNT + BETA_COUNT))
 
 # --- バッジを生成 ---
 BADGES="![Skills](https://img.shields.io/badge/skills-${PUBLIC_COUNT}-blue) ![License](https://img.shields.io/badge/license-MIT-green)"
@@ -37,25 +41,29 @@ extract_overview() {
   ' "$skill_md"
 }
 
-# --- Skills テーブル ---
+# --- description から [Beta] プレフィックスを除去 ---
+strip_prefix() {
+  echo "$1" | sed 's/^\[Beta\] //'
+}
+
+# --- Skills テーブル (stable) ---
 {
   echo "| Skill | Command | Description | Keywords |"
   echo "|-------|---------|-------------|----------|"
-  for i in $(seq 0 $((PUBLIC_COUNT - 1))); do
-    NAME=$(echo "$PUBLIC_PLUGINS" | jq -r ".[$i].name")
-    DESC=$(echo "$PUBLIC_PLUGINS" | jq -r ".[$i].description")
-    KEYWORDS=$(echo "$PUBLIC_PLUGINS" | jq -r ".[$i].keywords // [] | join(\", \")")
+  for i in $(seq 0 $((STABLE_COUNT - 1))); do
+    NAME=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].name")
+    DESC=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].description")
+    KEYWORDS=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].keywords // [] | join(\", \")")
     echo "| **$NAME** | \`/$NAME\` | $DESC | \`$KEYWORDS\` |"
   done
 } > "$TMP_TABLE"
 
-# --- Skill Details ---
+# --- Skill Details (stable) ---
 {
-  for i in $(seq 0 $((PUBLIC_COUNT - 1))); do
-    NAME=$(echo "$PUBLIC_PLUGINS" | jq -r ".[$i].name")
-    SOURCE=$(echo "$PUBLIC_PLUGINS" | jq -r ".[$i].source")
-    DESC=$(echo "$PUBLIC_PLUGINS" | jq -r ".[$i].description")
-
+  for i in $(seq 0 $((STABLE_COUNT - 1))); do
+    NAME=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].name")
+    SOURCE=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].source")
+    DESC=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].description")
     SKILL_MD="$REPO_ROOT/${SOURCE#./}/skills/$NAME/SKILL.md"
     OVERVIEW=$(extract_overview "$SKILL_MD" 2>/dev/null || echo "")
 
@@ -73,6 +81,45 @@ extract_overview() {
     echo ""
   done
 } > "$TMP_DETAILS"
+
+# --- Beta セクション ---
+{
+  if [ "$BETA_COUNT" -gt 0 ]; then
+    echo "## Beta Skills"
+    echo ""
+    echo "> 以下のスキルは現在開発中です。動作やインターフェースが変更される可能性があります。"
+    echo ""
+    echo "| Skill | Command | Description | Keywords |"
+    echo "|-------|---------|-------------|----------|"
+    for i in $(seq 0 $((BETA_COUNT - 1))); do
+      NAME=$(echo "$BETA_PLUGINS" | jq -r ".[$i].name")
+      DESC=$(strip_prefix "$(echo "$BETA_PLUGINS" | jq -r ".[$i].description")")
+      KEYWORDS=$(echo "$BETA_PLUGINS" | jq -r ".[$i].keywords // [] | join(\", \")")
+      echo "| **$NAME** | \`/$NAME\` | $DESC | \`$KEYWORDS\` |"
+    done
+    echo ""
+    for i in $(seq 0 $((BETA_COUNT - 1))); do
+      NAME=$(echo "$BETA_PLUGINS" | jq -r ".[$i].name")
+      SOURCE=$(echo "$BETA_PLUGINS" | jq -r ".[$i].source")
+      DESC=$(strip_prefix "$(echo "$BETA_PLUGINS" | jq -r ".[$i].description")")
+      SKILL_MD="$REPO_ROOT/${SOURCE#./}/skills/$NAME/SKILL.md"
+      OVERVIEW=$(extract_overview "$SKILL_MD" 2>/dev/null || echo "")
+
+      echo "### $NAME"
+      echo ""
+      echo "$DESC"
+      if [ -n "$OVERVIEW" ]; then
+        echo ""
+        echo "$OVERVIEW"
+      fi
+      echo ""
+      echo '```'
+      echo "/$NAME"
+      echo '```'
+      echo ""
+    done
+  fi
+} > "$TMP_BETA"
 
 # --- Internal セクション ---
 {
@@ -96,6 +143,7 @@ python3 -c "
 template = open('$TEMPLATE').read()
 table = open('$TMP_TABLE').read().strip()
 details = open('$TMP_DETAILS').read().strip()
+beta = open('$TMP_BETA').read().strip()
 internal = open('$TMP_INTERNAL').read().strip()
 prereqs = open('$PREREQUISITES').read().strip() if __import__('os').path.exists('$PREREQUISITES') else '- **Claude Code** CLI'
 badges = '$BADGES'
@@ -103,10 +151,11 @@ badges = '$BADGES'
 result = template.replace('{{BADGES}}', badges)
 result = result.replace('{{SKILLS_TABLE}}', table)
 result = result.replace('{{SKILL_DETAILS}}', details)
+result = result.replace('{{BETA_SECTION}}', beta)
 result = result.replace('{{INTERNAL_SECTION}}', internal)
 result = result.replace('{{PREREQUISITES}}', prereqs)
 
 open('$README', 'w').write(result)
 "
 
-echo "README.md generated ($PUBLIC_COUNT public, $INTERNAL_COUNT internal skills)"
+echo "README.md generated ($STABLE_COUNT stable, $BETA_COUNT beta, $INTERNAL_COUNT internal skills)"

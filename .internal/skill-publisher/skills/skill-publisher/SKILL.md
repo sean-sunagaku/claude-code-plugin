@@ -53,6 +53,7 @@ claude-code-plugin/
 - コピー元のスキルパス（例: `~/.claude/skills/app-naming/`）
 - または `~/.claude/skills/` 内のスキル一覧から選択
 - **配置先**: 公開用（ルート直下）か 内部用（`.internal/` 配下）か
+- **ステータス**: `stable`（デフォルト）か `beta` か
 - **agents/**: ソースに `agents/` ディレクトリがあるか確認
 
 ### Step 2: 構造検証
@@ -78,12 +79,16 @@ PLUGIN_REPO に同名のスキルが既に存在するか確認。
 # 公開用（ルート直下に配置）
 scripts/publish-skill.sh <source-path> [skill-name]
 
+# Beta として公開
+scripts/publish-skill.sh <source-path> [skill-name] --beta
+
 # 内部用（.internal/ 配下に配置）
 scripts/publish-skill.sh <source-path> [skill-name] --internal
 ```
 
 - `source-path`: コピー元（SKILL.md があるディレクトリ）
 - `skill-name`: 省略時は source-path のディレクトリ名を使用
+- `--beta`: Beta スキルとして配置（description に `[Beta]` プレフィックス付与、`"status": "beta"` を設定）
 - `--internal`: 内部用として `.internal/` 配下に配置
 
 スクリプトが行うこと:
@@ -91,6 +96,14 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 2. `agents/` があれば plugin root 直下にコピー
 3. 不要ファイル（README.md, CHANGELOG.md 等）を除外
 4. `.claude-plugin/marketplace.json` にスキルを自動登録
+5. `--beta` の場合: description に `[Beta]` プレフィックス付与、`"status": "beta"` を設定
+
+### Beta スキルのルール
+
+- marketplace.json の `status` フィールドが `"beta"` であること
+- description が `[Beta] ` で始まること（バリデーションで検証される）
+- README 生成時に「Beta Skills」として独立セクションに表示される
+- stable に昇格する際は `status` フィールド削除 + `[Beta]` プレフィックス除去
 
 ### Step 5: 配置確認
 
