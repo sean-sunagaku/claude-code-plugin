@@ -1,0 +1,8 @@
+{
+  "name": "ci-fix",
+  "version": "1.0.0",
+  "description": "GitHub Actions の CI 失敗を自動検出・ログ取得・修正・再検証するスキル。gh コマンドで PR のチェック状況を監視し、失敗時はログを分析してコードを修正、push 後に再度 CI を確認するループを回す",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["ci", "github-actions", "fix", "gh", "pull-request", "automation"]
+}
