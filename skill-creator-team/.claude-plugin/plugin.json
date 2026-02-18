@@ -1,0 +1,16 @@
+{
+  "name": "skill-creator-team",
+  "version": "1.0.0",
+  "description": "4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "skill",
+    "creator",
+    "agent-team",
+    "quality",
+    "best-practice"
+  ]
+}

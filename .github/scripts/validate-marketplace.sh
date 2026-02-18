@@ -141,6 +141,12 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
       if [ "$PJ_NAME" != "$NAME" ]; then
         error "$NAME: plugin.json name '$PJ_NAME' does not match marketplace.json name '$NAME'"
       fi
+
+      # version の一致チェック
+      PJ_VERSION=$(jq -r '.version // empty' "$PLUGIN_JSON")
+      if [ -n "$PJ_VERSION" ] && [ "$PJ_VERSION" != "$VERSION" ]; then
+        error "$NAME: version mismatch - plugin.json '$PJ_VERSION' vs marketplace.json '$VERSION'"
+      fi
     fi
   fi
 

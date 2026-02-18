@@ -1,96 +1,90 @@
 ---
 name: ci-check
-description: 全パッケージの lint・fmt・test・audit を実行し、エラーがあれば修正する
-disable-model-invocation: false
+description: >
+  .github/workflows/*.yml を自動解析し、CI で定義されたチェックをローカル実行する汎用スキル。
+  lint・fmt・test・build・audit 等に限定せず、ワークフローの run ステップを抽出して実行する。
+  エラーがあれば修正し、再実行して確認する。
+  Use when: CI を通したい、lint/test を実行したい、CI チェックしたい、
+  ワークフローをローカルで試したい。
+  Triggers: "CI", "ci-check", "lint", "test", "format", "fmt", "audit",
+  "チェック", "検証", "CI 通して", "テスト実行", "ビルド確認"
 ---
 
-# Check Runner (Lint / Format / Test)
+# CI Check
 
-全パッケージの lint、フォーマットチェック、テスト、セキュリティ監査を一括実行し、問題があれば修正する。
+`.github/workflows/*.yml` を解析し、CI 定義のチェックをローカル実行する。
 
-## Instructions
+## ワークフロー
 
-1. **まず `.claude/scripts/ci-check.sh` を実行**して全チェックを一括実行
-2. エラーがあれば内容を分析し、修正を実施する
-3. 修正後、再度スクリプトを実行して問題が解消されたことを確認する
-
----
-
-## Quick Start
+### Step 1: CI 定義の確認
 
 ```bash
-.claude/skills/ci-check/scripts/run.sh
+# 実行可能なステップを一覧表示
+scripts/run.sh --list
 ```
 
-これで全パッケージの lint / fmt:check / test を一括実行できる。
+`--list` で以下を表示:
+- **RUN**: ローカル実行可能なステップ（`run:` コマンド）
+- **SKIP**: ローカル実行不可（GitHub Actions、deploy、secrets 依存）
 
----
-
-## Commands
-
-すべてのコマンドはプロジェクトルートからの相対パスで実行する。
-
-### 1. Lint
+### Step 2: 実行
 
 ```bash
-cd packages/web && pnpm run lint
-cd packages/server && pnpm run lint
-cd packages/shared && pnpm run lint
+# 全ワークフローを実行
+scripts/run.sh
+
+# 特定のワークフローのみ
+scripts/run.sh validate.yml
+
+# dry-run（コマンド確認のみ）
+scripts/run.sh --dry-run
 ```
 
-| Package  | Tool                       |
-| -------- | -------------------------- |
-| `web`    | `next lint` (ESLint)       |
-| `server` | `tsc --noEmit` (TypeCheck) |
-| `shared` | `tsc --noEmit` (TypeCheck) |
+スクリプトが自動で行うこと:
+- `.github/workflows/*.yml` の `run:` ステップを抽出
+- `working-directory:` を尊重して実行ディレクトリを切り替え
+- deploy/secrets 依存/GitHub Actions (`uses:`) を自動スキップ
+- 各ステップの pass/fail を表示
 
-### 2. Format Check
+### Step 3: エラー修正
+
+失敗したステップがあれば:
+
+1. エラー出力を分析して原因を特定
+2. ソースコードを修正
+3. 失敗したステップだけ再実行して確認
+
+### Step 4: 全体再検証
 
 ```bash
-cd packages/web && pnpm run fmt:check
-cd packages/server && pnpm run fmt:check
-cd packages/shared && pnpm run fmt:check
+scripts/run.sh
 ```
 
-違反がある場合の自動修正:
+## スキップされるステップ
 
-```bash
-cd packages/<package> && pnpm run fmt
-```
+以下のパターンを含む `run:` コマンドは自動スキップ:
 
-- `fmt` = `prettier --write .`（ファイル直接書き換え）
-- `fmt:check` = `prettier --check .`（チェックのみ）
-- web パッケージは `prettier-plugin-tailwindcss` を使用
+| パターン | 理由 |
+|----------|------|
+| `deploy`, `firebase`, `aws`, `gcloud` | デプロイ系 |
+| `docker push` | レジストリ操作 |
+| `secrets.`, `GITHUB_TOKEN`, `GCP_SA_KEY` | シークレット依存 |
+| `gh pr`, `gh issue` | GitHub API 操作 |
+| `uses:` (GitHub Actions) | ローカル実行不可 |
 
-### 3. Test
+## Claude が直接ワークフローを読む場合
 
-```bash
-cd packages/server && pnpm run test
-```
+スクリプトで対応できない複雑なケース（matrix、env 変数、条件分岐など）は、
+`.github/workflows/*.yml` を直接 Read して判断する:
 
-- テストは `packages/server` のみ（Vitest）
-- テストファイル: `packages/server/src/__tests__/**/*.test.ts`
-- カバレッジ: `pnpm run test:coverage`
+1. `Glob` で `.github/workflows/*.yml` を検索
+2. 各ファイルを `Read` して jobs/steps を確認
+3. `run:` ステップの内容と `working-directory` を把握
+4. ローカルで実行可能なコマンドを `Bash` で実行
+5. `if:` 条件や `matrix` がある場合は適切に展開
 
-### 4. Audit
+### 判断基準
 
-```bash
-cd packages/web && pnpm audit --audit-level=moderate
-cd packages/server && pnpm audit --audit-level=moderate
-```
-
-- `--audit-level=moderate` で moderate 以上の脆弱性を検出
-- 直接依存のバージョンアップで解決できない場合は `pnpm.overrides` で対応
-- overrides は対象パッケージの `package.json` の `pnpm.overrides` に記述
-
----
-
-## Execution Flow
-
-1. **並列実行**: 3 パッケージの lint + fmt:check + test + audit を同時に実行
-2. **結果確認**: 各チェックの pass/fail を確認
-3. **修正**:
-   - **Lint エラー**: 型定義・ESLint ルール違反を修正（web は `next lint --fix` 可）
-   - **Format 違反**: `pnpm run fmt` で自動修正
-   - **Test 失敗**: エラーメッセージを分析し、テストコードまたはソースコードを修正
-4. **再検証**: 修正後に該当チェックを再実行して確認
+- **実行する**: `npm run`, `pnpm run`, `yarn`, `bash`, `chmod +x && ./script.sh`, `python`
+- **スキップ**: `uses:` (Actions), secrets 参照, deploy/push 系, `gh` CLI (API操作)
+- **確認する**: `env:` にローカルで設定可能な値があるか、`if:` 条件を満たすか

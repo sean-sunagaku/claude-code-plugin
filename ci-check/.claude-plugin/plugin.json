@@ -1,8 +1,8 @@
 {
   "name": "ci-check",
-  "version": "1.0.0",
-  "description": "全パッケージの lint, format, test, audit を一括実行し、エラーがあれば修正する",
+  "version": "2.0.0",
+  "description": ".github/workflows/*.yml を自動解析し、CI 定義のチェックをローカル実行する汎用スキル",
   "author": { "name": "sunagaku" },
   "license": "MIT",
-  "keywords": ["ci", "lint", "format", "test", "audit", "automation"]
+  "keywords": ["ci", "workflow", "lint", "test", "audit", "automation", "github-actions"]
 }

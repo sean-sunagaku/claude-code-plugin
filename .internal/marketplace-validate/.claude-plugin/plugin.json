@@ -1,0 +1,8 @@
+{
+  "name": "marketplace-validate",
+  "version": "1.0.0",
+  "description": "[Internal] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["validate", "marketplace", "ci", "internal", "structure-check"]
+}

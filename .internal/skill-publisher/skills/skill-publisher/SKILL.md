@@ -94,9 +94,16 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 スクリプトが行うこと:
 1. 正しいディレクトリ構造を作成しファイルをコピー
 2. `agents/` があれば plugin root 直下にコピー
-3. 不要ファイル（README.md, CHANGELOG.md 等）を除外
-4. `.claude-plugin/marketplace.json` にスキルを自動登録
-5. `--beta` の場合: description に `[Beta]` プレフィックス付与、`"status": "beta"` を設定
+3. `.claude-plugin/plugin.json` があればコピー
+4. 不要ファイル（README.md, CHANGELOG.md 等）を除外
+5. `.claude-plugin/marketplace.json` にスキルを自動登録
+6. `--beta` の場合: description に `[Beta]` プレフィックス付与、`"status": "beta"` を設定
+
+### marketplace.json 登録時の自動処理
+
+- **description 要約**: SKILL.md の description から `Use when:` / `Triggers:` 以降を自動カットし、要約版を登録
+- **version 自動取得**: `.claude-plugin/plugin.json` の version を使用（なければ `1.0.0`）
+- SKILL.md の description はフル版のまま維持（Claude のスキルマッチングに使用）
 
 ### Beta スキルのルール
 
