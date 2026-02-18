@@ -1,0 +1,19 @@
+{
+  "name": "aso-optimize",
+  "version": "1.0.0",
+  "description": "4つの専門エージェント（ASO戦略・キーワード調査・コピーライティング・ローカライゼーション）がチームでApp Store/Google Playのメタデータを最適化する",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ASO",
+    "App Store",
+    "keyword",
+    "copywriting",
+    "localization",
+    "agent-team",
+    "SEO",
+    "Google Play"
+  ]
+}

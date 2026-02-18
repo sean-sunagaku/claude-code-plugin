@@ -74,8 +74,8 @@
     {
       "name": "ci-check",
       "source": "./ci-check",
-      "description": "全パッケージの lint, format, test, audit を一括実行し、エラーがあれば修正する",
-      "version": "1.0.0",
+      "description": ".github/workflows/*.yml を自動解析し、CI 定義のチェックをローカル実行する汎用スキル。エラーがあれば修正する",
+      "version": "2.0.0",
       "author": {
         "name": "sunagaku"
       },
@@ -266,6 +266,22 @@
         "skill",
         "creator",
         "team"
+      ]
+    },
+    {
+      "name": "marketplace-validate",
+      "source": "./.internal/marketplace-validate",
+      "description": "[Internal] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ。CI バリデーションと同等のチェックをローカルで実行し、missing plugin.json、未登録スキル、frontmatter 不備などを検出・修正する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "validate",
+        "marketplace",
+        "ci",
+        "internal",
+        "structure-check"
       ]
     }
   ]
