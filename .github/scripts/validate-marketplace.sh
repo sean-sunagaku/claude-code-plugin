@@ -60,6 +60,15 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
 
   echo "--- [$NAME] ---"
 
+  # スキーマ不正キーチェック（許可: name, source, description, version, author, keywords）
+  ALLOWED_KEYS='["name","source","description","version","author","keywords"]'
+  EXTRA_KEYS=$(jq -r --argjson allowed "$ALLOWED_KEYS" ".plugins[$i] | keys[] | select(. as \$k | \$allowed | index(\$k) | not)" "$MARKETPLACE")
+  if [ -n "$EXTRA_KEYS" ]; then
+    for ek in $EXTRA_KEYS; do
+      error "$NAME: unrecognized key '$ek' (schema only allows: name, source, description, version, author, keywords)"
+    done
+  fi
+
   # 名前の重複チェック
   for seen in "${NAMES_SEEN[@]+"${NAMES_SEEN[@]}"}"; do
     if [ "$seen" = "$NAME" ]; then
