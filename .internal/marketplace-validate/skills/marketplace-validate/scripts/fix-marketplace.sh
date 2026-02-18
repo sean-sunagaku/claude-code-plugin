@@ -48,6 +48,21 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
         skip "$NAME: would update plugin.json name (dry-run)"
       fi
     fi
+
+    # plugin.json の version が marketplace.json と一致するかチェック
+    PJ_VERSION=$(jq -r '.version // empty' "$PLUGIN_JSON" 2>/dev/null || echo "")
+    if [ -n "$PJ_VERSION" ] && [ "$PJ_VERSION" != "$VERSION" ]; then
+      info "$NAME: version mismatch - plugin.json '$PJ_VERSION' vs marketplace.json '$VERSION'"
+      if [ "$DRY_RUN" = false ]; then
+        # plugin.json の version を正とし、marketplace.json を更新
+        jq --arg name "$NAME" --arg ver "$PJ_VERSION" \
+          '(.plugins[] | select(.name == $name)).version = $ver' "$MARKETPLACE" > "$MARKETPLACE.tmp" \
+          && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
+        fix "$NAME: updated marketplace.json version to '$PJ_VERSION' (from plugin.json)"
+      else
+        skip "$NAME: would update marketplace.json version to '$PJ_VERSION' (dry-run)"
+      fi
+    fi
     continue
   fi
 
