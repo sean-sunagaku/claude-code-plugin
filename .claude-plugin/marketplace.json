@@ -244,8 +244,9 @@
     {
       "name": "aso-optimize",
       "source": "./aso-optimize",
-      "description": "4つの専門エージェントチームで App Store / Google Play のメタデータ（タイトル・サブタイトル・キーワード・説明文・宣伝テキスト・What's New）を最適化し、最終レポートを出力する。多言語対応",
+      "description": "[Beta] 4つの専門エージェントチームで App Store / Google Play のメタデータ（タイトル・サブタイトル・キーワード・説明文・宣伝テキスト・What's New）を最適化し、最終レポートを出力する。多言語対応",
       "version": "1.0.0",
+      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -257,8 +258,9 @@
     {
       "name": "skill-creator-team",
       "source": "./skill-creator-team",
-      "description": "4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する。skill-creator ベストプラクティスに準拠",
+      "description": "[Beta] 4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する。skill-creator ベストプラクティスに準拠",
       "version": "1.0.0",
+      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -271,8 +273,9 @@
     {
       "name": "marketplace-validate",
       "source": "./.internal/marketplace-validate",
-      "description": "[Internal] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ。CI バリデーションと同等のチェックをローカルで実行し、missing plugin.json、未登録スキル、frontmatter 不備などを検出・修正する",
+      "description": "[Internal] [Beta] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ。CI バリデーションと同等のチェックをローカルで実行し、missing plugin.json、未登録スキル、frontmatter 不備などを検出・修正する",
       "version": "1.0.0",
+      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
