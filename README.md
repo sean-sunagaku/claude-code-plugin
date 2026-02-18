@@ -232,8 +232,7 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **Docker** — ci-check
-- **eas-cli** — eas-deploy
+- **EAS CLI** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
