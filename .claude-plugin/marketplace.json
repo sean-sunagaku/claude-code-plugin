@@ -240,6 +240,33 @@
         "pull-request",
         "automation"
       ]
+    },
+    {
+      "name": "aso-optimize",
+      "source": "./aso-optimize",
+      "description": " App Store / Google Play のメタデータ最適化（ASO）を、4つの専門エージェントチームで実行するスキル。 キーワード調査、宣伝テキスト作成、競合分析、多言語ローカライゼーションの4観点から App Store 向けテキスト一式（タイトル、サブタイトル、キーワード、説明文、宣伝テキスト、What's New）を 生成し、最終レポート(MD)を出力する。多言語対応（日本語・英語+他言語）。 Use when: App Store の説明文を書きたい、ASO対策したい、キーワード選定したい、 宣伝文章を作りたい、App Store テキストを多言語化したい、What's New を書きたい。 Triggers: \"ASO\", \"App Store\", \"宣伝文\", \"説明文\", \"キーワード\", \"サブタイトル\", \"What's New\", \"promotional text\", \"app description\", \"keyword optimization\", \"ストア掲載\", \"メタデータ\", \"アプリ紹介文\", \"Google Play\", \"多言語ASO\"",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "aso",
+        "optimize"
+      ]
+    },
+    {
+      "name": "skill-creator-team",
+      "source": "./skill-creator-team",
+      "description": " 4つの専門エージェントチームで高品質なスキルを設計・作成するスキル。 アーキテクト、ドメインリサーチャー、スキルライター、品質レビュアーが 議論・フィードバックし合い、ベストプラクティスに準拠したスキルを生成する。 既存の skill-creator のリファレンスと既存スキルのパターンを直接参照して品質を担保する。 Use when: 新しいスキルを作りたい、スキルを高品質に作成したい、 チームでスキルを設計したい、既存スキルを改善したい。 Triggers: \"スキル作成\", \"スキルを作りたい\", \"skill create\", \"新しいスキル\", \"create skill\", \"スキル設計\", \"skill design\", \"高品質スキル\", \"チームでスキル\", \"スキル改善\", \"skill improve\"",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "skill",
+        "creator",
+        "team"
+      ]
     }
   ]
 }
