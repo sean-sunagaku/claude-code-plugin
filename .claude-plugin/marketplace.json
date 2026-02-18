@@ -189,7 +189,6 @@
       "source": "./ui-review",
       "description": "[Beta] 5つの専門エージェント（UXデザイナー・ビジュアルデザイナー・アクセシビリティ専門家・モバイルUI専門家・コピーデザイナー）がチームでUIを添削・改善するスキル。Pencil(.pen)で画面デザインを作成・修正しながらリアルタイムで議論する",
       "version": "1.0.0",
-      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -209,7 +208,6 @@
       "source": "./logo-design",
       "description": "[Beta] 6つの専門エージェント（ブランド戦略・ロゴデザイン・カラー/タイポ・トレンド調査・競合分析・コンテキスト管理）がチームで相互フィードバックしながらロゴを作成・議論するスキル。Pencil(.pen)で複数バリエーションを作成しSVGアイコンも出力する",
       "version": "1.1.0",
-      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -228,7 +226,6 @@
       "source": "./ci-fix",
       "description": "[Beta] GitHub Actions の CI 失敗を自動検出・ログ取得・修正・再検証するスキル。gh コマンドで PR のチェック状況を監視し、失敗時はログを分析してコードを修正、push 後に再度 CI を確認するループを回す",
       "version": "1.0.0",
-      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -246,7 +243,6 @@
       "source": "./aso-optimize",
       "description": "[Beta] 4つの専門エージェントチームで App Store / Google Play のメタデータ（タイトル・サブタイトル・キーワード・説明文・宣伝テキスト・What's New）を最適化し、最終レポートを出力する。多言語対応",
       "version": "1.0.0",
-      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -260,7 +256,6 @@
       "source": "./skill-creator-team",
       "description": "[Beta] 4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する。skill-creator ベストプラクティスに準拠",
       "version": "1.0.0",
-      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
@@ -275,7 +270,6 @@
       "source": "./.internal/marketplace-validate",
       "description": "[Internal] [Beta] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ。CI バリデーションと同等のチェックをローカルで実行し、missing plugin.json、未登録スキル、frontmatter 不備などを検出・修正する",
       "version": "1.0.0",
-      "status": "beta",
       "author": {
         "name": "sunagaku"
       },
