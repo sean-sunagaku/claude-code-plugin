@@ -6,6 +6,9 @@
   "owner": {
     "name": "sunagaku"
   },
+  "metadata": {
+    "description": "Claude Code development skills: multi-AI review, agent team orchestration, git workflow, CI checks, UI verification, spec-driven testing, and more."
+  },
   "plugins": [
     {
       "name": "multi-ai-review",
