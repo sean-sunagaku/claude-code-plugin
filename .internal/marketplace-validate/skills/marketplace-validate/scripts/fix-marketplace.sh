@@ -108,7 +108,31 @@ done
 
 echo ""
 
-# --- 2. SKILL.md frontmatter の修正 ---
+# --- 2. 不正キーの削除 ---
+echo "--- Checking unrecognized keys ---"
+ALLOWED_KEYS='["name","source","description","version","author","keywords"]'
+PLUGIN_COUNT=$(jq '.plugins | length' "$MARKETPLACE")
+for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
+  NAME=$(jq -r ".plugins[$i].name" "$MARKETPLACE")
+  EXTRA_KEYS=$(jq -r --argjson allowed "$ALLOWED_KEYS" ".plugins[$i] | keys[] | select(. as \$k | \$allowed | index(\$k) | not)" "$MARKETPLACE")
+  if [ -n "$EXTRA_KEYS" ]; then
+    for ek in $EXTRA_KEYS; do
+      info "$NAME: unrecognized key '$ek'"
+      if [ "$DRY_RUN" = false ]; then
+        jq --arg name "$NAME" --arg key "$ek" \
+          '(.plugins[] | select(.name == $name)) |= del(.[$key])' "$MARKETPLACE" > "$MARKETPLACE.tmp" \
+          && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
+        fix "$NAME: removed unrecognized key '$ek'"
+      else
+        skip "$NAME: would remove key '$ek' (dry-run)"
+      fi
+    done
+  fi
+done
+
+echo ""
+
+# --- 3. SKILL.md frontmatter の修正 ---
 echo "--- Checking SKILL.md frontmatter ---"
 for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
   NAME=$(jq -r ".plugins[$i].name" "$MARKETPLACE")
@@ -128,7 +152,7 @@ done
 
 echo ""
 
-# --- 3. orphaned marketplace entries (--fix で削除) ---
+# --- 4. orphaned marketplace entries (--fix で削除) ---
 echo "--- Checking orphaned entries ---"
 for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
   NAME=$(jq -r ".plugins[$i].name" "$MARKETPLACE")
@@ -149,7 +173,7 @@ done
 
 echo ""
 
-# --- 4. unregistered skills ---
+# --- 5. unregistered skills ---
 echo "--- Checking unregistered skills ---"
 for dir in "$REPO_ROOT"/*/skills/*/SKILL.md "$REPO_ROOT"/.internal/*/skills/*/SKILL.md; do
   [ -f "$dir" ] || continue

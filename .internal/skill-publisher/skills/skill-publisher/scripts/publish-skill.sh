@@ -141,36 +141,19 @@ else
   fi
 
   if command -v jq &> /dev/null; then
-    if [ "$BETA" = true ]; then
-      jq --arg name "$SKILL_NAME" \
-         --arg source "$SOURCE_REF" \
-         --arg desc "$DESCRIPTION" \
-         --arg ver "$SKILL_VERSION" \
-         --argjson keywords "$(echo "[\"$KEYWORDS\"]")" \
-         '.plugins += [{
-           "name": $name,
-           "source": $source,
-           "description": $desc,
-           "version": $ver,
-           "status": "beta",
-           "author": { "name": "sunagaku" },
-           "keywords": $keywords
-         }]' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
-    else
-      jq --arg name "$SKILL_NAME" \
-         --arg source "$SOURCE_REF" \
-         --arg desc "$DESCRIPTION" \
-         --arg ver "$SKILL_VERSION" \
-         --argjson keywords "$(echo "[\"$KEYWORDS\"]")" \
-         '.plugins += [{
-           "name": $name,
-           "source": $source,
-           "description": $desc,
-           "version": $ver,
-           "author": { "name": "sunagaku" },
-           "keywords": $keywords
-         }]' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
-    fi
+    jq --arg name "$SKILL_NAME" \
+       --arg source "$SOURCE_REF" \
+       --arg desc "$DESCRIPTION" \
+       --arg ver "$SKILL_VERSION" \
+       --argjson keywords "$(echo "[\"$KEYWORDS\"]")" \
+       '.plugins += [{
+         "name": $name,
+         "source": $source,
+         "description": $desc,
+         "version": $ver,
+         "author": { "name": "sunagaku" },
+         "keywords": $keywords
+       }]' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
     echo "OK: marketplace.json に $SKILL_NAME を登録しました"
   else
     # jq がない場合は手動で追記案を表示

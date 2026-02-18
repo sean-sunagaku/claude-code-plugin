@@ -88,7 +88,7 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 
 - `source-path`: コピー元（SKILL.md があるディレクトリ）
 - `skill-name`: 省略時は source-path のディレクトリ名を使用
-- `--beta`: Beta スキルとして配置（description に `[Beta]` プレフィックス付与、`"status": "beta"` を設定）
+- `--beta`: Beta スキルとして配置（description に `[Beta]` プレフィックス付与）
 - `--internal`: 内部用として `.internal/` 配下に配置
 
 スクリプトが行うこと:
@@ -97,7 +97,7 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 3. `.claude-plugin/plugin.json` があればコピー
 4. 不要ファイル（README.md, CHANGELOG.md 等）を除外
 5. `.claude-plugin/marketplace.json` にスキルを自動登録
-6. `--beta` の場合: description に `[Beta]` プレフィックス付与、`"status": "beta"` を設定
+6. `--beta` の場合: description に `[Beta]` プレフィックス付与
 
 ### marketplace.json 登録時の自動処理
 
@@ -107,10 +107,9 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 
 ### Beta スキルのルール
 
-- marketplace.json の `status` フィールドが `"beta"` であること
 - description が `[Beta] ` で始まること（バリデーションで検証される）
-- README 生成時に「Beta Skills」として独立セクションに表示される
-- stable に昇格する際は `status` フィールド削除 + `[Beta]` プレフィックス除去
+- marketplace.json スキーマは `name, source, description, version, author, keywords` のみ許可（`"status"` 等の追加フィールドは不可）
+- stable に昇格する際は `[Beta]` プレフィックスを除去
 
 ### Step 5: 配置確認
 
