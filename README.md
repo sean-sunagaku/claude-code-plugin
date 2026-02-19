@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-15-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-16-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -162,6 +162,7 @@ Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証�
 | **ci-fix** | `/ci-fix` | GitHub Actions の CI 失敗を自動検出・ログ取得・修正・再検証するスキル。gh コマンドで PR のチェック状況を監視し、失敗時はログを分析してコードを修正、push 後に再度 CI を確認するループを回す | `ci, github-actions, fix, gh, pull-request, automation` |
 | **aso-optimize** | `/aso-optimize` | 4つの専門エージェントチームで App Store / Google Play のメタデータ（タイトル・サブタイトル・キーワード・説明文・宣伝テキスト・What's New）を最適化し、最終レポートを出力する。多言語対応 | `aso, optimize` |
 | **skill-creator-team** | `/skill-creator-team` | 4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する。skill-creator ベストプラクティスに準拠 | `skill, creator, team` |
+| **ui-variations** | `/ui-variations` | 5つの異なるUIデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。各デザイナーがMCP経由でPencilに直接構築。3人チーム x5の並列実行。 | `ui, design, variations, pencil, agent-team, parallel, mcp` |
 
 ### ui-review
 
@@ -211,6 +212,16 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 
 ```
 /skill-creator-team
+```
+
+### ui-variations
+
+5つの異なるUIデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。各デザイナーがMCP経由でPencilに直接構築。3人チーム x5の並列実行。
+
+5つの異なるスタイル方向で同一画面のUIバリエーションを**並列生成**し、Pencilで横並び比較する。
+
+```
+/ui-variations
 ```
 
 ## Internal Skills
