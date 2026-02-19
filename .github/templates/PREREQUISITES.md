@@ -12,7 +12,7 @@
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
-- **npm** — ci-check
+- **npm** — ci-check / svg-to-png
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
 - **python3** — GitHub Actions
