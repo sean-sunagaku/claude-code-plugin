@@ -1,0 +1,8 @@
+{
+  "name": "svg-to-png",
+  "version": "0.1.0",
+  "description": "SVG を高品質 PNG に変換。サイズ・背景色指定、mix-blend-mode 等 CSS 対応、アプリアイコン/スプラッシュ/favicon のプリセットバッチ生成に対応",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["svg", "png", "convert", "app-icon", "splash", "favicon", "sharp"]
+}
