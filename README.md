@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-16-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-17-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -48,6 +48,7 @@ Or use the slash command inside Claude Code:
 | **database** | `/database` | Drizzle ORM を使ったデータベーススキーマの管理とマイグレーションガイド | `database, drizzle, orm, migration, sqlite` |
 | **app-naming** | `/app-naming` | 5つの専門エージェント（ブランディング・商標・デジタルプレゼンス・国際展開・コンテキスト管理）がチームで相互フィードバックしながら議論し、最適なアプリ名を決定する | `naming, branding, trademark, app-name, agent-team, SEO, ASO` |
 | **eas-deploy** | `/eas-deploy` | Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証明書・プロビジョニングプロファイル作成、EAS ビルド、TestFlight 配布、App Store 提出までを CLI から実行する | `eas, deploy` |
+| **agent-teams-log** | `/agent-teams-log` | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
 
 ## Skill Details
 
@@ -151,6 +152,14 @@ Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証�
 /eas-deploy
 ```
 
+### agent-teams-log
+
+Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する
+
+```
+/agent-teams-log
+```
+
 ## Beta Skills
 
 > 以下のスキルは現在開発中です。動作やインターフェースが変更される可能性があります。
@@ -232,6 +241,7 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 |-------|-------------|
 | **skill-publisher** | 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します |
 | **marketplace-validate** | [Beta] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ。CI バリデーションと同等のチェックをローカルで実行し、missing plugin.json、未登録スキル、frontmatter 不備などを検出・修正する |
+| **hook-publisher** | Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ。hook の構造検証、plugin.json 生成、marketplace.json 自動登録を行う |
 
 ## Prerequisites
 
@@ -243,16 +253,17 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **EAS CLI** — eas-deploy
+- **Docker** — ci-check
+- **eas-cli** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
-- **jq** — GitHub Actions / ci-fix / marketplace-validate / skill-publisher
+- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
 - **npm** — ci-check / svg-to-png
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
-- **python3** — GitHub Actions
+- **python3** — GitHub Actions / hook-publisher
 - **yarn** — ci-check
 
 ## FAQ
