@@ -405,6 +405,33 @@ def test_shutdown_recipient_team_match(t: TestRunner) -> None:
     t.cleanup_mock_teams()
 
 
+def test_leader_same_session_merges(t: TestRunner) -> None:
+    print("\n=== Test 17: Leader message merges into existing session (different team_name) ===")
+    t.reset_log()
+    sid = f"session-merge-{os.getpid()}"
+    t.setup_mock_team("_test-chat", "alice", "bob")
+
+    # Agent sends first (detected as _test-chat)
+    t.run_hook(t.make_json("alice", "bob", "Hello from alice", session=sid))
+    count_before = t.count_logs()
+
+    # Leader sends with team-lead sender (may detect different team_name)
+    t.run_hook(t.make_json("team-lead", "bob", "Please respond to alice", session=sid))
+    count_after = t.count_logs()
+
+    if count_before == 1 and count_after == 1:
+        print("  ✅ leader message merged into existing session dir")
+        t.passed += 1
+    else:
+        print(f"  ❌ expected 1 dir, got {count_before} then {count_after}")
+        t.failed += 1
+
+    f = t.find_log()
+    t.assert_contains("alice message", "Hello from alice", f)
+    t.assert_contains("leader message", "Please respond to alice", f)
+    t.cleanup_mock_teams()
+
+
 # --- Run ---
 
 def main() -> None:
@@ -427,6 +454,7 @@ def main() -> None:
         test_flat_directory_structure(t)
         test_session_id_file_created(t)
         test_shutdown_recipient_team_match(t)
+        test_leader_same_session_merges(t)
     finally:
         t.cleanup()
 

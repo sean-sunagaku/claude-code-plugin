@@ -133,7 +133,7 @@ def detect_team_name(sender: str, recipient: str) -> str:
         return teams[0]
 
     # 複数チーム → sender、次に recipient でメンバーマッチ
-    skip = {"leader", "all"}
+    skip = {"leader", "team-lead", "all"}
     for name in (sender, recipient):
         if name in skip:
             continue
@@ -164,9 +164,9 @@ def resolve_log_path(
     logs_dir = project_dir / ".claude" / LOGS_DIR_NAME
     logs_dir.mkdir(parents=True, exist_ok=True)
 
-    # 既存セッションを探す
+    # 既存セッションを探す（session_id が同じなら team_name が違っても再利用）
     for d in sorted(logs_dir.iterdir()):
-        if not d.is_dir() or not d.name.startswith(f"{team_name}-"):
+        if not d.is_dir():
             continue
         sid_file = d / ".session_id"
         if sid_file.exists() and sid_file.read_text().strip() == session_id:
