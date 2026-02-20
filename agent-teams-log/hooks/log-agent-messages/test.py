@@ -392,8 +392,44 @@ def test_session_id_file_created(t: TestRunner) -> None:
         t.failed += 1
 
 
+def test_gitignore_created(t: TestRunner) -> None:
+    print("\n=== Test 16: .gitignore created in agent-teams-log ===")
+    t.reset_log()
+    t.run_hook(t.make_json("a", "b", "gitignore test"))
+
+    gitignore = t.test_dir / ".claude" / "agent-teams-log" / ".gitignore"
+    if gitignore.exists():
+        content = gitignore.read_text()
+        if "*" in content and "!.gitignore" in content:
+            print("  ✅ .gitignore created with correct content")
+            t.passed += 1
+        else:
+            print(f"  ❌ .gitignore content unexpected: {content!r}")
+            t.failed += 1
+    else:
+        print("  ❌ .gitignore not created")
+        t.failed += 1
+
+
+def test_gitignore_not_overwritten(t: TestRunner) -> None:
+    print("\n=== Test 17: .gitignore not overwritten on second run ===")
+    t.reset_log()
+    t.run_hook(t.make_json("a", "b", "first run"))
+
+    gitignore = t.test_dir / ".claude" / "agent-teams-log" / ".gitignore"
+    gitignore.write_text("# custom\n*\n")
+
+    t.run_hook(t.make_json("a", "b", "second run"))
+    if gitignore.read_text() == "# custom\n*\n":
+        print("  ✅ existing .gitignore preserved")
+        t.passed += 1
+    else:
+        print("  ❌ .gitignore was overwritten")
+        t.failed += 1
+
+
 def test_shutdown_recipient_team_match(t: TestRunner) -> None:
-    print("\n=== Test 16: Shutdown from leader matches team via recipient ===")
+    print("\n=== Test 18: Shutdown from leader matches team via recipient ===")
     t.reset_log()
     t.setup_mock_team("_test-shutdown", "designer", "reviewer")
     t.setup_mock_team("_test-other", "alpha", "beta")
@@ -406,7 +442,7 @@ def test_shutdown_recipient_team_match(t: TestRunner) -> None:
 
 
 def test_leader_same_session_merges(t: TestRunner) -> None:
-    print("\n=== Test 17: Leader message merges into existing session (different team_name) ===")
+    print("\n=== Test 19: Leader message merges into existing session (different team_name) ===")
     t.reset_log()
     sid = f"session-merge-{os.getpid()}"
     t.setup_mock_team("_test-chat", "alice", "bob")
@@ -453,6 +489,8 @@ def main() -> None:
         test_session_directory_reuse(t)
         test_flat_directory_structure(t)
         test_session_id_file_created(t)
+        test_gitignore_created(t)
+        test_gitignore_not_overwritten(t)
         test_shutdown_recipient_team_match(t)
         test_leader_same_session_merges(t)
     finally:
