@@ -43,7 +43,7 @@ Hook プラグインの plugin.json には hook の登録設定を含める:
 ```json
 {
   "name": "<hook-plugin-name>",
-  "version": "1.0.0",
+  "version": "<version>",
   "description": "...",
   "hooks": {
     "<HookEvent>": [
@@ -52,7 +52,7 @@ Hook プラグインの plugin.json には hook の登録設定を含める:
         "hooks": [
           {
             "type": "command",
-            "command": "python3 .claude/hooks/<hook-name>/hook.py"
+            "command": "python3 \"$HOME/.claude/plugins/cache/<marketplace>/<hook-plugin-name>/<version>/hooks/<hook-name>/hook.py\""
           }
         ]
       }
@@ -62,6 +62,27 @@ Hook プラグインの plugin.json には hook の登録設定を含める:
 ```
 
 HookEvent: `PreToolUse`, `PostToolUse`, `Stop` など。
+
+### ポータブルな command パスのルール
+
+**重要**: hook の command は**プロジェクトの cwd から相対パス**で実行される。
+プラグインのキャッシュディレクトリは自動解決されないため、以下のルールに従うこと:
+
+1. **`$HOME` を使う** - ユーザー間でポータブルにするため絶対パスの先頭は `$HOME` にする
+2. **キャッシュパスの構造**: `$HOME/.claude/plugins/cache/<marketplace>/<plugin-name>/<version>/hooks/<hook-name>/hook.py`
+3. **バージョンはハードコード OK** - plugin.json はバージョンごとにパッケージされるため、version 部分はそのバージョンの値を直接書く
+4. **marketplace 名を含める** - 例: `sunagaku-marketplace`
+
+例（sunagaku-marketplace の agent-teams-log v1.0.0）:
+```
+python3 "$HOME/.claude/plugins/cache/sunagaku-marketplace/agent-teams-log/1.0.0/hooks/log-agent-messages/hook.py"
+```
+
+**NG パターン（プロジェクトローカル依存）**:
+```
+python3 .claude/hooks/log-agent-messages/hook.py
+```
+→ プロジェクトにファイルがないと動かない。プラグインのインストールだけで完結しない。
 
 ## ワークフロー
 
@@ -104,7 +125,7 @@ scripts/publish-hook.sh <source-path> <plugin-name> <hook-event> <matcher> <comm
 - `plugin-name`: プラグイン名（例: agent-teams-log）
 - `hook-event`: PostToolUse, PreToolUse, Stop 等
 - `matcher`: ツール名マッチャー（例: SendMessage）。空文字なら全ツール対象
-- `command`: 実行コマンド（例: `python3 .claude/hooks/log-agent-messages/hook.py`）
+- `command`: 実行コマンド（`$HOME` ベースのキャッシュパスを使う。上記「ポータブルな command パスのルール」参照）
 - `--internal`: .internal/ 配下に配置
 
 スクリプトが行うこと:

@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 .claude/hooks/log-agent-messages/hook.py"
+            "command": "python3 \"$HOME/.claude/plugins/cache/sunagaku-marketplace/agent-teams-log/1.0.0/hooks/log-agent-messages/hook.py\""
           }
         ]
       }
