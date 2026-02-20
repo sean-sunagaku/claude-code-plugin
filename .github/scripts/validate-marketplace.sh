@@ -149,6 +149,12 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
             error "$NAME: version mismatch - plugin.json '$PJ_VERSION' vs marketplace '$VERSION'"
           fi
 
+          # description の存在チェック
+          PJ_DESC=$(jq -r '.description // empty' "$PLUGIN_JSON")
+          if [ -z "$PJ_DESC" ]; then
+            error "$NAME: plugin.json description is missing"
+          fi
+
           # hooks キーの存在チェック
           HOOKS_KEY=$(jq -r '.hooks // empty' "$PLUGIN_JSON")
           if [ -z "$HOOKS_KEY" ] || [ "$HOOKS_KEY" = "null" ]; then
@@ -285,6 +291,12 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
           PJ_VERSION=$(jq -r '.version // empty' "$PLUGIN_JSON")
           if [ -n "$PJ_VERSION" ] && [ "$PJ_VERSION" != "$VERSION" ]; then
             error "$NAME: version mismatch - plugin.json '$PJ_VERSION' vs marketplace '$VERSION'"
+          fi
+
+          # description の存在チェック
+          PJ_DESC=$(jq -r '.description // empty' "$PLUGIN_JSON")
+          if [ -z "$PJ_DESC" ]; then
+            error "$NAME: plugin.json description is missing"
           fi
         fi
       fi
