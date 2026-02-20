@@ -25,6 +25,8 @@ PLUGIN_REPO=/Users/babashunsuke/Desktop/claude-code-plugin
 ```
 claude-code-plugin/
 ├── <skill-name>/              # 公開用
+│   ├── .claude-plugin/
+│   │   └── plugin.json        # プラグインメタデータ（CI 必須）
 │   ├── agents/                # サブエージェント定義（あれば）
 │   │   └── <agent-name>.md
 │   └── skills/<skill-name>/
@@ -34,6 +36,8 @@ claude-code-plugin/
 │       └── assets/      (あれば)
 ├── .internal/                 # 内部用（自分のリポジトリ向け）
 │   └── <skill-name>/
+│       ├── .claude-plugin/
+│       │   └── plugin.json    # CI 必須
 │       └── skills/<skill-name>/...
 └── .claude-plugin/
     └── marketplace.json       # スキル登録設定（公開・内部どちらも登録が必要）
@@ -94,7 +98,7 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 スクリプトが行うこと:
 1. 正しいディレクトリ構造を作成しファイルをコピー
 2. `agents/` があれば plugin root 直下にコピー
-3. `.claude-plugin/plugin.json` があればコピー
+3. `.claude-plugin/plugin.json` があればコピー、**なければ SKILL.md から自動生成**（CI 必須）
 4. 不要ファイル（README.md, CHANGELOG.md 等）を除外
 5. `.claude-plugin/marketplace.json` にスキルを自動登録
 6. `--beta` の場合: description に `[Beta]` プレフィックス付与
