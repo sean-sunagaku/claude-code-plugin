@@ -6,8 +6,7 @@
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **Docker** — ci-check
-- **eas-cli** — eas-deploy
+- **eas** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
