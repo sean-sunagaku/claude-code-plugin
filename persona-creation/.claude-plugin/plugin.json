@@ -1,0 +1,8 @@
+{
+  "name": "persona-creation",
+  "version": "1.1.0",
+  "description": "5つの専門エージェント（ペルソナ設計・ユーザーリサーチ・ナラティブ執筆・バイアスレビュー・コンテキスト管理）がチームでUX/マーケティング向けユーザーペルソナを作成するスキル",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["persona", "ux", "marketing", "user-research", "agent-team", "bias-review", "segmentation"]
+}

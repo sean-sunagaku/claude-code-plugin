@@ -86,6 +86,36 @@ elif [ -d "$SOURCE_PATH/../.claude-plugin" ]; then
   echo "OK: .claude-plugin/plugin.json をコピーしました"
 fi
 
+# .claude-plugin/plugin.json がなければ自動生成（CI バリデーション必須）
+if [ ! -f "$PLUGIN_ROOT/.claude-plugin/plugin.json" ]; then
+  mkdir -p "$PLUGIN_ROOT/.claude-plugin"
+
+  # SKILL.md から description を抽出
+  AUTO_DESC=$(sed -n '/^description:/,/^[a-z]/{ /^description:/{ s/^description: *>* *//; p; d; }; /^  /{ s/^  *//; p; }; /^[a-z]/q; }' "$SOURCE_PATH/SKILL.md" | tr '\n' ' ' | sed 's/  */ /g; s/ *$//')
+  AUTO_DESC=$(echo "$AUTO_DESC" | sed 's/[[:space:]]*Use when:.*//; s/[[:space:]]*Triggers:.*//; s/ *$//')
+  [ -z "$AUTO_DESC" ] && AUTO_DESC="$SKILL_NAME skill plugin"
+
+  # keywords を生成
+  AUTO_KEYWORDS=$(echo "$SKILL_NAME" | tr '-' '\n' | jq -R . | jq -s '.')
+
+  # plugin.json を生成
+  jq -n \
+    --arg name "$SKILL_NAME" \
+    --arg ver "1.0.0" \
+    --arg desc "$AUTO_DESC" \
+    --argjson keywords "$AUTO_KEYWORDS" \
+    '{
+      name: $name,
+      version: $ver,
+      description: $desc,
+      author: { name: "sunagaku" },
+      license: "MIT",
+      keywords: $keywords
+    }' > "$PLUGIN_ROOT/.claude-plugin/plugin.json"
+
+  echo "OK: .claude-plugin/plugin.json を自動生成しました（ソースに存在しなかったため）"
+fi
+
 # 不要ファイルを除外
 for f in README.md CHANGELOG.md INSTALLATION_GUIDE.md QUICK_REFERENCE.md LICENSE.txt; do
   rm -f "$TARGET_DIR/$f"

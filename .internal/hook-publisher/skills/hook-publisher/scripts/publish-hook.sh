@@ -133,6 +133,11 @@ cat > "$TARGET_ROOT/plugin.json" <<EOF
 }
 EOF
 
+# 生成確認（CI バリデーション必須）
+if [ ! -f "$TARGET_ROOT/plugin.json" ]; then
+  echo "ERROR: plugin.json の生成に失敗しました"
+  exit 1
+fi
 echo "OK: plugin.json を生成しました（$HOME ベースのポータブルパス）"
 
 # --- 配置結果の表示 ---
