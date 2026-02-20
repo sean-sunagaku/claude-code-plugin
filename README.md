@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-17-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-18-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -172,6 +172,7 @@ Agent Teams の SendMessage を自動ログする PostToolUse hook。エージ�
 | **aso-optimize** | `/aso-optimize` | 4つの専門エージェントチームで App Store / Google Play のメタデータ（タイトル・サブタイトル・キーワード・説明文・宣伝テキスト・What's New）を最適化し、最終レポートを出力する。多言語対応 | `aso, optimize` |
 | **skill-creator-team** | `/skill-creator-team` | 4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する。skill-creator ベストプラクティスに準拠 | `skill, creator, team` |
 | **ui-variations** | `/ui-variations` | 5つの異なるUIデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。各デザイナーがMCP経由でPencilに直接構築。3人チーム x5の並列実行。 | `ui, design, variations, pencil, agent-team, parallel, mcp` |
+| **persona-creation** | `/persona-creation` | 5つの専門エージェント（ペルソナ設計・ユーザーリサーチ・ナラティブ執筆・バイアスレビュー・コンテキスト管理）がチームでUX/マーケティング向けユーザーペルソナを作成するスキル。セグメント設計からプロファイル執筆・多様性レビューまでを議論・作成しMarkdownで出力する | `persona, ux, marketing, user-research, agent-team, bias-review, segmentation` |
 
 ### ui-review
 
@@ -233,6 +234,16 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 /ui-variations
 ```
 
+### persona-creation
+
+5つの専門エージェント（ペルソナ設計・ユーザーリサーチ・ナラティブ執筆・バイアスレビュー・コンテキスト管理）がチームでUX/マーケティング向けユーザーペルソナを作成するスキル。セグメント設計からプロファイル執筆・多様性レビューまでを議論・作成しMarkdownで出力する
+
+5つの専門エージェントがチームで議論し、UX/マーケティング向けのユーザーペルソナを作成する。
+
+```
+/persona-creation
+```
+
 ## Internal Skills
 
 > 以下は作者の内部リポジトリ向けスキルです。一般利用者向けではありません。
@@ -253,7 +264,7 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **eas** — eas-deploy
+- **EAS CLI** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
