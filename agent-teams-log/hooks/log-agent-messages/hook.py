@@ -164,6 +164,11 @@ def resolve_log_path(
     logs_dir = project_dir / ".claude" / LOGS_DIR_NAME
     logs_dir.mkdir(parents=True, exist_ok=True)
 
+    # ログディレクトリが git に追跡されないよう .gitignore を配置
+    gitignore = logs_dir / ".gitignore"
+    if not gitignore.exists():
+        gitignore.write_text("# Auto-generated: keep agent team logs out of git\n*\n!.gitignore\n")
+
     # 既存セッションを探す（session_id が同じなら team_name が違っても再利用）
     for d in sorted(logs_dir.iterdir()):
         if not d.is_dir():
