@@ -1,14 +1,18 @@
-name: Validate Skills
+name: Validate Plugins
 
 on:
   pull_request:
     paths:
       - '.claude-plugin/marketplace.json'
+      # Skills
       - '**/SKILL.md'
       - '**/.claude-plugin/plugin.json'
       - '**/references/**'
       - '**/scripts/**'
       - '**/agents/**'
+      # Hooks
+      - '**/hooks/**'
+      - '**/plugin.json'
 
 jobs:
   validate-structure:
@@ -17,7 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate marketplace.json & skill structure
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate marketplace.json & plugin structure
         run: |
           chmod +x .github/scripts/validate-marketplace.sh
           .github/scripts/validate-marketplace.sh

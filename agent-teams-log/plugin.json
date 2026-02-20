@@ -1,0 +1,18 @@
+{
+  "name": "agent-teams-log",
+  "version": "1.0.0",
+  "description": "Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論をリアルタイムで追跡できる。",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "SendMessage",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/log-agent-messages/hook.py"
+          }
+        ]
+      }
+    ]
+  }
+}

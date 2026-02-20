@@ -298,6 +298,39 @@
         "parallel",
         "mcp"
       ]
+    },
+    {
+      "name": "agent-teams-log",
+      "source": "./agent-teams-log",
+      "description": "Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "agent-team",
+        "hook",
+        "logging",
+        "SendMessage",
+        "PostToolUse",
+        "discussion"
+      ]
+    },
+    {
+      "name": "hook-publisher",
+      "source": "./.internal/hook-publisher",
+      "description": "[Internal] Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ。hook の構造検証、plugin.json 生成、marketplace.json 自動登録を行う",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "hook",
+        "publish",
+        "internal",
+        "packaging",
+        "utility"
+      ]
     }
   ],
   "metadata": {
