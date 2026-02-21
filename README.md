@@ -326,7 +326,6 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **Docker** — ci-check
 - **EAS CLI** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **ffprobe** — app-store-preview-movie / frame-inspect
