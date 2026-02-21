@@ -1,0 +1,8 @@
+{
+  "name": "agent-team-guide",
+  "version": "1.1.0",
+  "description": "Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["agent", "team", "guide", "best-practice", "SendMessage", "task-management"]
+}

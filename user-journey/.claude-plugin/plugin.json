@@ -1,0 +1,8 @@
+{
+  "name": "user-journey",
+  "version": "1.0.0",
+  "description": "ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["user", "journey", "ux", "customer-journey", "agent-team"]
+}

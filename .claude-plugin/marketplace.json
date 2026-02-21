@@ -349,6 +349,49 @@
         "bias-review",
         "segmentation"
       ]
+    },
+    {
+      "name": "agent-team-guide",
+      "source": "./agent-team-guide",
+      "description": "Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集",
+      "version": "1.1.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "agent",
+        "team",
+        "guide",
+        "best-practice",
+        "SendMessage",
+        "task-management"
+      ]
+    },
+    {
+      "name": "user-journey",
+      "source": "./user-journey",
+      "description": "ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "user",
+        "journey"
+      ]
+    },
+    {
+      "name": "team-plan",
+      "source": "./team-plan",
+      "description": "実装前にTask(Explore)エージェントを並列起動してコードベースを多角調査し、Plan Modeで実装計画を立ててからユーザー承認を経て実装する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "team",
+        "plan"
+      ]
     }
   ],
   "metadata": {

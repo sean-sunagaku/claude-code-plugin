@@ -1,0 +1,8 @@
+{
+  "name": "team-plan",
+  "version": "1.0.0",
+  "description": "実装前にTask(Explore)エージェントを並列起動してコードベースを多角調査し、Plan Modeで実装計画を立ててからユーザー承認を経て実装する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["explore", "plan-mode", "research", "implementation", "parallel", "code-analysis"]
+}
