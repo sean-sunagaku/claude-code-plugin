@@ -48,10 +48,10 @@ Or use the slash command inside Claude Code:
 | **database** | `/database` | Drizzle ORM を使ったデータベーススキーマの管理とマイグレーションガイド | `database, drizzle, orm, migration, sqlite` |
 | **app-naming** | `/app-naming` | 5つの専門エージェント（ブランディング・商標・デジタルプレゼンス・国際展開・コンテキスト管理）がチームで相互フィードバックしながら議論し、最適なアプリ名を決定する | `naming, branding, trademark, app-name, agent-team, SEO, ASO` |
 | **eas-deploy** | `/eas-deploy` | Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証明書・プロビジョニングプロファイル作成、EAS ビルド、TestFlight 配布、App Store 提出までを CLI から実行する | `eas, deploy` |
-| **agent-teams-log** | `/agent-teams-log` | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
 | **agent-team-guide** | `/agent-team-guide` | Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集 | `agent, team, guide, best-practice, SendMessage, task-management` |
 | **user-journey** | `/user-journey` | ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する | `user, journey` |
 | **team-plan** | `/team-plan` | 実装前にTask(Explore)エージェントを並列起動してコードベースを多角調査し、Plan Modeで実装計画を立ててからユーザー承認を経て実装する | `team, plan` |
+| **subagent-best-practices** | `/subagent-best-practices` |  Claude Code の SubAgent（agents/*.md）を正しく定義するためのベストプラクティスガイド。 YAML frontmatter、ツール選択、3-Phase 構造、コンテキスト受け渡し、アンチパターンを網羅。 Use when: agents/*.md を書く、SubAgent 定義を改善する、エージェントの動作が想定外、 コンテキストが渡らない、ツール選択に迷う。 Triggers: "subagent", "agent definition", "agents/*.md", "エージェント定義", "サブエージェント", "3-Phase", "context passing", "コンテキスト渡し", "tool selection", "ツール選択", "subagent_type", "bypassPermissions" | `subagent, best, practices` |
 
 ## Skill Details
 
@@ -155,14 +155,6 @@ Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証�
 /eas-deploy
 ```
 
-### agent-teams-log
-
-Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する
-
-```
-/agent-teams-log
-```
-
 ### agent-team-guide
 
 Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集
@@ -191,6 +183,16 @@ Agent Teams スキルを設計・構築するためのベストプラクティ�
 
 ```
 /team-plan
+```
+
+### subagent-best-practices
+
+ Claude Code の SubAgent（agents/*.md）を正しく定義するためのベストプラクティスガイド。 YAML frontmatter、ツール選択、3-Phase 構造、コンテキスト受け渡し、アンチパターンを網羅。 Use when: agents/*.md を書く、SubAgent 定義を改善する、エージェントの動作が想定外、 コンテキストが渡らない、ツール選択に迷う。 Triggers: "subagent", "agent definition", "agents/*.md", "エージェント定義", "サブエージェント", "3-Phase", "context passing", "コンテキスト渡し", "tool selection", "ツール選択", "subagent_type", "bypassPermissions"
+
+Claude Code の `agents/*.md` ファイルで SubAgent を正しく定義するための実践ガイド。
+
+```
+/subagent-best-practices
 ```
 
 ## Beta Skills
@@ -316,6 +318,18 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 ```
 /domain-expertise-extractor
 ```
+
+## Hooks
+
+> PostToolUse / PreToolUse 等のフックプラグイン。インストールすると自動的に有効化されます。
+
+| Hook | Description | Event | Keywords |
+|------|-------------|-------|----------|
+| **agent-teams-log** | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `PostToolUse` | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
+
+### agent-teams-log
+
+Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する
 
 ## Internal Skills
 

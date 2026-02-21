@@ -1,0 +1,14 @@
+{
+  "name": "subagent-best-practices",
+  "version": "1.0.0",
+  "description": " Claude Code の SubAgent（agents/*.md）を正しく定義するためのベストプラクティスガイド。 YAML frontmatter、ツール選択、3-Phase 構造、コンテキスト受け渡し、アンチパターンを網羅。 Use when: agents/*.md を書く、SubAgent 定義を改善する、エージェントの動作が想定外、 コンテキストが渡らない、ツール選択に迷う。 Triggers: \"subagent\", \"agent definition\", \"agents/*.md\", \"エージェント定義\", \"サブエージェント\", \"3-Phase\", \"context passing\", \"コンテキスト渡し\", \"tool selection\", \"ツール選択\", \"subagent_type\", \"bypassPermissions\"",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "subagent",
+    "best",
+    "practices"
+  ]
+}

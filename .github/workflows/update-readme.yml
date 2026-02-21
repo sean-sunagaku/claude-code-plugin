@@ -10,6 +10,8 @@ on:
       - '.github/templates/README.template.md'
       - '**/SKILL.md'
       - '**/scripts/**'
+      - '**/hooks/**'
+      - '**/plugin.json'
 
 jobs:
   update-readme:

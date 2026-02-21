@@ -164,3 +164,10 @@ Task(
   - PostToolUse でエージェント通信を自動ログ、リアルタイム監視
 - **品質チェックリスト**: [references/quality-checklist.md](references/quality-checklist.md)
   - 30項目のレビュー観点（監査手順付き）
+
+## 関連スキル
+
+- **SubAgent 定義の品質向上**: `subagent-best-practices` スキル（`~/.claude/skills/subagent-best-practices/`）
+  - 個別の agents/*.md の書き方に特化したベストプラクティス
+  - Frontmatter 全フィールド解説、ツール選択マトリクス、3-Phase 詳細設計、アンチパターン集
+  - 本スキル（agent-team-guide）がチーム全体の設計を扱うのに対し、subagent-best-practices は個別エージェント定義の品質に特化
