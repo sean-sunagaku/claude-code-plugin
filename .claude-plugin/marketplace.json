@@ -392,6 +392,39 @@
         "team",
         "plan"
       ]
+    },
+    {
+      "name": "screenshot-creator",
+      "source": "./screenshot-creator",
+      "description": "[Beta] 4つの専門エージェント（クリエイティブディレクター・スクリーンショットデザイナー・コピーライター・品質レビュアー）がチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成するスキル",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "screenshot",
+        "app-store",
+        "pencil",
+        "agent-team",
+        "promotion"
+      ]
+    },
+    {
+      "name": "app-store-preview-movie",
+      "source": "./app-store-preview-movie",
+      "description": "[Beta] 4つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー）がチームで App Store プレビュー動画を Remotion (React) で生成するスキル",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "app-store",
+        "preview",
+        "video",
+        "remotion",
+        "agent-team",
+        "animation"
+      ]
     }
   ],
   "metadata": {
