@@ -148,6 +148,14 @@ run_in_background: true
 - シーンタイトルテキスト（日本語・英語）
 - 品質レビューレポート（ビジュアル検証結果含む）
 
+## アプリアイコンについて
+
+- **MiravyLogo コンポーネント（CSS で円を描画）は使わない**: 色味が実際のアイコンと異なるため
+- オープニング（IntroScene）とエンディング（OutroScene）には **実際のアプリアイコン画像**（`icon.png`）を使う
+- `<Img src={staticFile("icon.png")} />` + `borderRadius` で角丸表示
+- アイコン画像は `mobile/assets/icon.png` から `preview-video/public/icon.png` にコピーして使用
+- SVG 版が必要な場合は `assets/logos/` ディレクトリに各種バリアントがある
+
 ## 字幕（Caption）について
 
 - **Caption コンポーネントは使わない**: 画面下部の半透明オーバーレイ字幕は不要
