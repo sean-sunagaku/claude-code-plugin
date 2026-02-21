@@ -44,6 +44,8 @@ Or use the slash command inside Claude Code:
 
 {{BETA_SECTION}}
 
+{{HOOKS_SECTION}}
+
 {{INTERNAL_SECTION}}
 
 ## Prerequisites
