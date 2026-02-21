@@ -111,9 +111,46 @@ run_in_background: true
 
 ## Step 3: フィードバックループ
 
+### コピー作成フロー（チーム議論 → ユーザー確認）
+
+コピーは **チーム内で十分に議論・検討してから** ユーザーに提案する。
+いきなりユーザーに聞くのではなく、エージェント間で案を練り上げた上で選択肢を提示する。
+
+**Phase 1: チーム内ブレスト（エージェント間 SendMessage）**
+1. **copy-writer** がアプリの機能・ターゲットを分析し、各スクリーンのコピー案を **2〜3パターン** 作成
+2. **creative-director** がブランド戦略・トーン・構成の観点からコピー案にフィードバック
+3. **quality-reviewer** が簡潔さ・インパクト・ベネフィット訴求の観点でコピー案を評価
+4. copy-writer がフィードバックを反映し、**最終候補2案** に絞り込む
+
+**Phase 2: ユーザー確認（リーダー経由）**
+- copy-writer が最終候補をリーダーに送信
+- リーダーが `AskUserQuestion` でユーザーに選択肢を提示:
+  - コピーの方向性（A案 vs B案）
+  - トーンの好み（カジュアル / フォーマル / エモーショナル）
+  - 特定の表現の好み（例: 「"書くだけ" vs "入力するだけ"」）
+- ユーザー回答をリーダー → copy-writer に伝達
+
+**Phase 3: 確定・配置**
+- copy-writer がユーザー回答を反映した最終コピーを screenshot-designer に送信
+- screenshot-designer が CaptionArea に 3 ノード構成で配置
+
+**フロー図:**
+```
+copy-writer ←→ creative-director ←→ quality-reviewer  （Phase 1: チーム議論）
+       ↓
+copy-writer → リーダー → AskUserQuestion → ユーザー     （Phase 2: ユーザー確認）
+       ↓
+copy-writer → screenshot-designer                        （Phase 3: 確定・配置）
+```
+
+**copy-writer が自律的に判断してよい項目:**
+- 文字数の調整（ガイドライン内であれば）
+- 句読点の配置
+- ヘッドラインとサブテキストの分割位置
+
 ### Round 1: 構成計画 + コピー作成（並列）
 - creative-director がスクショ構成計画を作成 → screenshot-designer と copy-writer に共有
-- copy-writer が各スクリーンのコピーを作成 → screenshot-designer に共有
+- copy-writer が各スクリーンのコピー案を作成 → creative-director・quality-reviewer と議論 → **最終候補をリーダー経由でユーザーに確認** → screenshot-designer に共有
 
 ### Round 2: デザイン構築
 - screenshot-designer が Pencil でデザイン構築
@@ -122,10 +159,10 @@ run_in_background: true
 ### Round 3: 技術検証 + 品質レビュー（並列）
 - **spec-validator**: フレームサイズ・モックアップ面積比・画像fill・セーフエリア・テキストサイズ・コントラスト比・統一性・**テキスト行数・配置**を数値検証
   - FAIL 項目は U() 修正コード付きで screenshot-designer にフィードバック
-  - **テキスト検証項目**: CaptionArea 内のテキストノード数が2以下か / `alignItems: "center"` か / `textAlign: "center"` か / headline の fontSize ≥ 30 か
+  - **テキスト検証項目**: CaptionArea 内のテキストノード数が3以下か / `alignItems: "center"` か / `textAlign: "center"` か / headline の fontSize ≥ 30 か
 - **quality-reviewer**: ビジュアル品質・**コピー品質（簡潔さ・ベネフィット訴求）**・構成を主観評価し 10 点満点でスコアリング
   - 必須修正事項と推奨改善事項を screenshot-designer にフィードバック
-  - **コピー検証項目**: 1スクリーンあたり最大2行か / 機能説明ではなくベネフィットか / 読みやすさ・インパクト
+  - **コピー検証項目**: 1スクリーンあたり3ノード以下か / 機能説明ではなくベネフィットか / 読みやすさ・インパクト / チーム議論を経た最終案か
 
 ### Round 4: 修正 + 再検証
 - screenshot-designer が spec-validator と quality-reviewer のフィードバックを反映
@@ -196,31 +233,43 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 
 ### CaptionArea テキストガイドライン
 
-テキストは**短く、中央揃え**で配置する。1スクリーンにつき **1〜2行** が理想。
+テキストは**短く、中央揃え**で配置する。**ヘッドライン1行 + サブテキスト2行**の3行構成。
 
-**構成:**
+**構成（3ノード）:**
 - **ヘッドライン（1行）**: 短いキャッチコピー（fontSize 32, fontWeight 700）
-- **サブテキスト（1行・任意）**: ヘッドラインを補足する短い説明（fontSize 16）
+- **サブテキスト1（1行）**: 補足説明の前半（fontSize 16）
+- **サブテキスト2（1行）**: 補足説明の後半（fontSize 16）
 
 **ルール:**
-- テキストは最大2行まで（ヘッドライン + サブテキスト）
-- 3行以上のテキストは禁止（長文は読まれない）
+- テキストノードは最大3つまで（ヘッドライン + サブテキスト2行）
+- 4行以上のテキストは禁止（長文は読まれない）
 - CaptionArea は `alignItems: "center"`, `justifyContent: "center"` で中央配置
 - テキストノードは `textAlign: "center"` で中央揃え
 - `\n` 改行は使わない（縦長になるため）— 行を分けるには別テキストノードにする
 
 **コピーの書き方:**
 - 機能説明ではなく「ユーザーが得られるベネフィット」を書く
-- 動詞で終わる短い文（例: 「未来を、見てみよう。」）
-- サブテキストは体言止めや簡潔な一文（例: 「AIが描く、二つの未来」）
+- ヘッドラインは動詞で終わる短い文（例: 「悩みを、書くだけ。」）
+- サブテキストは短い2行で補足（例: 「テキストを入力して」「ボタンを押すだけでOK」）
+
+**各エージェントの責務:**
+
+| エージェント | テキストに関する責務 |
+|---|---|
+| **copy-writer** | ヘッドライン + サブテキスト2行のコピーを作成。短く・ベネフィット重視・中央揃えで映える文を提供 |
+| **screenshot-designer** | copy-writer のコピーを CaptionArea に 3 ノード構成で配置。fontSize・fill・textAlign を設定 |
+| **spec-validator** | テキストノード数 ≤ 3 / `alignItems: "center"` / `textAlign: "center"` / headline fontSize ≥ 30 を数値検証 |
+| **quality-reviewer** | コピーの簡潔さ・インパクト・ベネフィット訴求・全スクリーン間の一貫性を主観評価 |
 
 **CaptionArea ノード構成例:**
 ```javascript
 captionArea=I(frame, {type: "frame", layout: "vertical", alignItems: "center",
   justifyContent: "center", gap: 6, height: 160, padding: [40, 24, 12, 24]})
-headline=I(captionArea, {type: "text", content: "未来を、見てみよう。",
+headline=I(captionArea, {type: "text", content: "悩みを、書くだけ。",
   fontSize: 32, fontWeight: "700", textAlign: "center", fill: "#FFFFFF"})
-subtext=I(captionArea, {type: "text", content: "AIが描く、二つの未来",
+sub1=I(captionArea, {type: "text", content: "テキストを入力して",
+  fontSize: 16, textAlign: "center", fill: "rgba(255,255,255,0.85)"})
+sub2=I(captionArea, {type: "text", content: "ボタンを押すだけでOK",
   fontSize: 16, textAlign: "center", fill: "rgba(255,255,255,0.85)"})
 ```
 
