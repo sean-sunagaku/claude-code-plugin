@@ -5,7 +5,9 @@
 
 **Optional** (skill-specific)
 
+- **CocoaPods** — eas-deploy
 - **Codex CLI** — multi-ai-review / plan-review
+- **Docker** — ci-check
 - **EAS CLI** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review

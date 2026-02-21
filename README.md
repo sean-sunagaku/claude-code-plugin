@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-18-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-21-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -49,6 +49,9 @@ Or use the slash command inside Claude Code:
 | **app-naming** | `/app-naming` | 5つの専門エージェント（ブランディング・商標・デジタルプレゼンス・国際展開・コンテキスト管理）がチームで相互フィードバックしながら議論し、最適なアプリ名を決定する | `naming, branding, trademark, app-name, agent-team, SEO, ASO` |
 | **eas-deploy** | `/eas-deploy` | Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証明書・プロビジョニングプロファイル作成、EAS ビルド、TestFlight 配布、App Store 提出までを CLI から実行する | `eas, deploy` |
 | **agent-teams-log** | `/agent-teams-log` | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
+| **agent-team-guide** | `/agent-team-guide` | Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集 | `agent, team, guide, best-practice, SendMessage, task-management` |
+| **user-journey** | `/user-journey` | ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する | `user, journey` |
+| **team-plan** | `/team-plan` | 実装前にTask(Explore)エージェントを並列起動してコードベースを多角調査し、Plan Modeで実装計画を立ててからユーザー承認を経て実装する | `team, plan` |
 
 ## Skill Details
 
@@ -160,6 +163,36 @@ Agent Teams の SendMessage を自動ログする PostToolUse hook。エージ�
 /agent-teams-log
 ```
 
+### agent-team-guide
+
+Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集
+
+7つの実績あるチームスキルから抽出した Agent Teams 設計パターン集。
+
+```
+/agent-team-guide
+```
+
+### user-journey
+
+ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する
+
+5つの専門エージェントがチームで議論し、ユーザージャーニーマップを作成する。
+
+```
+/user-journey
+```
+
+### team-plan
+
+実装前にTask(Explore)エージェントを並列起動してコードベースを多角調査し、Plan Modeで実装計画を立ててからユーザー承認を経て実装する
+
+実装タスクを受け取ったとき、**まず並列に Explore エージェントでコードベースを調査**し、
+
+```
+/team-plan
+```
+
 ## Beta Skills
 
 > 以下のスキルは現在開発中です。動作やインターフェースが変更される可能性があります。
@@ -263,7 +296,9 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 
 **Optional** (skill-specific)
 
+- **CocoaPods** — eas-deploy
 - **Codex CLI** — multi-ai-review / plan-review
+- **Docker** — ci-check
 - **EAS CLI** — eas-deploy
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
