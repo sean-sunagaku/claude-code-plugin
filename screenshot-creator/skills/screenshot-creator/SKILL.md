@@ -157,7 +157,7 @@ copy-writer → screenshot-designer                        （Phase 3: 確定・
 - 完成後、spec-validator と quality-reviewer に**同時に**検証依頼
 
 ### Round 3: 技術検証 + 品質レビュー（並列）
-- **spec-validator**: フレームサイズ・モックアップ面積比・画像fill・セーフエリア・テキストサイズ・コントラスト比・統一性・**テキスト行数・配置**を数値検証
+- **spec-validator**: フレームサイズ・モックアップ面積比・画像fill・セーフエリア・テキストサイズ・コントラスト比・統一性・**カラーパターン・アクセントバー不在・サブテキスト視認性**を数値検証
   - FAIL 項目は U() 修正コード付きで screenshot-designer にフィードバック
   - **テキスト検証項目**: CaptionArea 内のテキストノード数が3以下か / `alignItems: "center"` か / `textAlign: "center"` か / headline の fontSize ≥ 30 か
 - **quality-reviewer**: ビジュアル品質・**コピー品質（簡潔さ・ベネフィット訴求）**・構成を主観評価し 10 点満点でスコアリング
@@ -181,7 +181,7 @@ copy-writer → screenshot-designer                        （Phase 3: 確定・
 ## Step 4: 最終確認
 
 リーダーが以下を確認:
-- **spec-validator**: 全 9 項目が PASS（FAIL なし）（フレームサイズ・モックアップ面積比・画像fill・セーフエリア・テキストサイズ・コントラスト比・統一性・テキスト行数・テキスト配置）
+- **spec-validator**: 全 10 項目が PASS（FAIL なし）（フレームサイズ・モックアップ面積比・画像fill・セーフエリア・テキストサイズ・コントラスト比・統一性・テキスト行数・テキスト配置）
 - **quality-reviewer**: 品質スコアが 7/10 以上
 - 全スクリーンショットに日本語・英語コピーが設定されている
 - .pen ファイルが正常に保存されている
@@ -196,7 +196,7 @@ copy-writer → screenshot-designer                        （Phase 3: 確定・
 - Pencil .pen ファイル（スクリーンショット全枚数）
 - 各スクリーンショットのノードID一覧
 - コピーテキスト一覧（日本語・英語）
-- 技術仕様バリデーションレポート（spec-validator: 7項目 PASS/WARN/FAIL）
+- 技術仕様バリデーションレポート（spec-validator: 10項目 PASS/WARN/FAIL）
 - 品質レビュースコア（quality-reviewer: 10点満点）
 
 ## PhoneMockup レイアウトガイドライン
@@ -237,8 +237,19 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 
 **構成（3ノード）:**
 - **ヘッドライン（1行）**: 短いキャッチコピー（fontSize 32, fontWeight 700）
-- **サブテキスト1（1行）**: 補足説明の前半（fontSize 16）
-- **サブテキスト2（1行）**: 補足説明の後半（fontSize 16）
+- **サブテキスト1（1行）**: 補足説明の前半（fontSize 18）
+- **サブテキスト2（1行）**: 補足説明の後半（fontSize 18）
+
+**CaptionArea カラーパターン（2種類）:**
+
+| パターン | 背景 | ヘッドライン | サブテキスト | ロゴ |
+|---------|------|-----------|-----------|-----|
+| **ライト（推奨）** | `#F2F7F5` | `#1A1A1A` | `#6B7B75` | `rgba(0,0,0,0.2)` |
+| **ダーク** | `#2D6B5E` | `#FFFFFF` | `#FFFFFF` | `rgba(255,255,255,0.5)` |
+
+- **ライトパターンを推奨** — 背景がアプリ画面と馴染み、テキストの視認性が高い
+- ダークパターンはコントラスト不足でサブテキストが見えにくくなるリスクがある
+- 全スクリーンで同一パターンに統一すること（混在NG）
 
 **ルール:**
 - テキストノードは最大3つまで（ヘッドライン + サブテキスト2行）
@@ -246,10 +257,15 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 - CaptionArea は `alignItems: "center"`, `justifyContent: "center"` で中央配置
 - テキストノードは `textAlign: "center"` で中央揃え
 - `\n` 改行は使わない（縦長になるため）— 行を分けるには別テキストノードにする
+- **サブテキストの横幅に注意** — 1行あたり約12文字以内なら1行でOK。それ以上は2行に分割する。横に長いテキストは読みにくく、中央揃えのバランスも崩れる
+- **サブテキストは fontSize 18 を使う** — fontSize 16 では小さすぎて視認性が低い。色は上記カラーパターン表に従う
+- **ノード追加時の順序に注意** — `I()` で CaptionArea にテキストノードを追加すると末尾（logo・accent の後）に配置される。必ず `M()` で正しい位置（headline の直後）に移動すること
+- **CaptionArea にアクセントバー（装飾線）を入れない** — 小さなフレーム（例: 40×3px）がCaptionAreaの高さからはみ出し、スマホモックアップの上端に緑色の線として表示されてしまう。ライトパターンでは不要
 
 **コピーの書き方:**
 - 機能説明ではなく「ユーザーが得られるベネフィット」を書く
-- ヘッドラインは動詞で終わる短い文（例: 「悩みを、書くだけ。」）
+- **ヘッドラインに句読点（「、」「。」）は使わない** — 読点で区切るパターンは避ける（例: NG「悩みを、書くだけ。」→ OK「悩みを書くだけ」）
+- ヘッドラインは動詞で終わる短い文（例: 「悩みを書くだけ」「未来を見てみよう」）
 - サブテキストは短い2行で補足（例: 「テキストを入力して」「ボタンを押すだけでOK」）
 
 **各エージェントの責務:**
@@ -263,14 +279,15 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 
 **CaptionArea ノード構成例:**
 ```javascript
+// ライトパターン（推奨）
 captionArea=I(frame, {type: "frame", layout: "vertical", alignItems: "center",
-  justifyContent: "center", gap: 6, height: 160, padding: [40, 24, 12, 24]})
-headline=I(captionArea, {type: "text", content: "悩みを、書くだけ。",
-  fontSize: 32, fontWeight: "700", textAlign: "center", fill: "#FFFFFF"})
+  justifyContent: "center", gap: 6, height: 160, padding: [40, 24, 12, 24], fill: "#F2F7F5"})
+headline=I(captionArea, {type: "text", content: "悩みを書くだけ",
+  fontSize: 32, fontWeight: "700", textAlign: "center", fill: "#1A1A1A"})
 sub1=I(captionArea, {type: "text", content: "テキストを入力して",
-  fontSize: 16, textAlign: "center", fill: "rgba(255,255,255,0.85)"})
+  fontSize: 18, textAlign: "center", fill: "#6B7B75"})
 sub2=I(captionArea, {type: "text", content: "ボタンを押すだけでOK",
-  fontSize: 16, textAlign: "center", fill: "rgba(255,255,255,0.85)"})
+  fontSize: 18, textAlign: "center", fill: "#6B7B75"})
 ```
 
 ### クリップ・見切れの禁止ルール

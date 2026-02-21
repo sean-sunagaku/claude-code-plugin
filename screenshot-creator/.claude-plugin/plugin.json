@@ -1,8 +1,0 @@
-{
-  "name": "screenshot-creator",
-  "version": "1.0.0",
-  "description": "5つの専門エージェントがチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成する（技術仕様バリデーション付き）",
-  "author": { "name": "sunagaku" },
-  "license": "MIT",
-  "keywords": ["screenshot", "app-store", "pencil", "agent-team", "promotion"]
-}
