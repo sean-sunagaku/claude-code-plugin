@@ -165,6 +165,29 @@ cd {outputDir} && npx remotion studio
 
 17. TaskUpdate で completed にする
 
+## スクリーンショット表示サイズルール（必須）
+
+PhoneMockup でスクリーンショットを表示する際のサイズ基準:
+
+- **PhoneMockup ベースサイズ**: `width=560`, `height=1140`（bezelRadius=52, screenRadius=42, bezelWidth=14）
+- フレーム幅 886px に対して **60〜70%** を占めること
+- `scale` は `1.0` を基準（0.9〜1.1 の範囲で微調整）
+- 配置: `bottom: 60px`、`left: 50%` + `translateX(-50%)` で水平中央
+
+### PhoneMockup コンポーネント例
+
+```tsx
+// PhoneMockup.tsx - ベースサイズ（これより小さくしない）
+const phoneWidth = 560 * scale;   // 最小 504px（scale=0.9）
+const phoneHeight = 1140 * scale; // 最小 1026px（scale=0.9）
+```
+
+### NG: 小さすぎる設定
+```tsx
+// NG: フレーム幅の 38% しかない
+const phoneWidth = 340 * scale;  // アプリ画面が見づらい
+```
+
 ## Remotion 実装ルール（必須）
 
 ### アニメーション

@@ -28,7 +28,7 @@ description: >
 ## 出力ディレクトリ構成
 
 ```
-user-journey/{YYYY-MM-DD}_{project}/
+.claude/user-journey/{YYYY-MM-DD}_{project}/
 ├── context.md              <- プロダクト情報・ユーザータイプ一覧
 ├── log.md                  <- 議事録
 ├── research-data.md        <- タッチポイント・行動パターン調査
@@ -101,7 +101,7 @@ run_in_background: true
 プロンプトに含める情報（全エージェント共通）:
 - プロダクト概要、ターゲット市場、ユーザータイプ情報
 - **ベースディレクトリの絶対パス**（⚠️必須）: `init.sh` が出力する絶対パスをそのまま使う
-  - 例: `/Users/babashunsuke/Desktop/miravy/user-journey/2026-02-21_miravy/`
+  - 例: `/Users/babashunsuke/Desktop/miravy/.claude/user-journey/2026-02-21_miravy/`
   - ⚠️ Write ツールは絶対パスのみ受け付ける。`.claude/...` のような相対パスは動作しない
 - **ファイル書き込み注意**: 「init.sh はディレクトリのみ作成し、テンプレートファイルは作成しない。全てのファイルはあなたが Write ツールで新規作成する必要がある」と明記する
 - **ジャーニーファイル命名規則**: journey-writer のプロンプトにファイル名を明示する（`journey-01.md`, `journey-02.md`, ... のゼロ埋め2桁。`journey-1.md` 形式は禁止）
@@ -208,5 +208,5 @@ bash scripts/init.sh <project-name>
 
 # 例
 bash scripts/init.sh miravy
-# -> user-journey/2026-02-21_miravy/ を作成（リポジトリルート直下）
+# -> .claude/user-journey/2026-02-21_miravy/ を作成（カレントディレクトリ直下）
 ```
