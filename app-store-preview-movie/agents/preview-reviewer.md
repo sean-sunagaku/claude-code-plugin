@@ -56,21 +56,39 @@ cd {outputDir} && npx tsc --noEmit 2>&1 | head -100
 
 10. **コードパターン検索**（禁止パターンの確認）:
 ```bash
+# CSS アニメーション禁止
 grep -r "transition:" {outputDir}/src --include="*.tsx" --include="*.ts"
 grep -r "animation:" {outputDir}/src --include="*.tsx" --include="*.ts"
 grep -r "animate-" {outputDir}/src --include="*.tsx" --include="*.ts"
+
+# Caption/オーバーレイ禁止
+grep -r "Caption" {outputDir}/src --include="*.tsx"
+grep -r "rgba(0.*0.*0" {outputDir}/src --include="*.tsx"
+
+# MiravyLogo 禁止（Intro/Outro では icon.png を使用）
+grep -r "MiravyLogo" {outputDir}/src/scenes/IntroScene.tsx {outputDir}/src/scenes/OutroScene.tsx 2>/dev/null
+
+# PhoneMockup ベゼル・影の禁止
+grep -r "bezel" {outputDir}/src --include="*.tsx"
+grep -r "boxShadow" {outputDir}/src/components/PhoneMockup.tsx 2>/dev/null
 ```
 
-### Phase 2.5: スクリーンショットサイズ検証
+### Phase 2.5: スクリーンショット表示検証
 
 11. **PhoneMockup のサイズをコードで確認**:
-- PhoneMockup.tsx の `phoneWidth` が 500px 以上か（フレーム幅 886px の 56% 以上）
-- 推奨: `phoneWidth = 560`（63%）〜 `620`（70%）
-- **500px 未満は NG** → motion-designer に拡大を指示
+- PhoneMockup.tsx の `phoneWidth` ベースが 540px か（フレーム幅 886px の 61%）
+- **scale = 1.2 を基準**（1.1〜1.3 の範囲で調整）
+- scale 1.2 で実効幅 648px（フレーム幅の 73%）→ 推奨
+- **scale 1.0 未満は NG** → motion-designer に拡大を指示
 
-12. **各シーンの scale 値を確認**:
-- `scale` が 0.9 未満なら NG
-- 推奨: `scale = 1.0`（0.9〜1.1 の範囲）
+12. **PhoneMockup のスタイルを確認**:
+- **ベゼル（bezelRadius, bezelWidth）が存在しないこと** → 端末枠は不要
+- **boxShadow が存在しないこと** → 影は不要
+- **borderRadius + overflow: hidden のみ** であること
+
+13. **配置位置を確認**:
+- `bottom: 120px` を基準（中央寄り配置）
+- **bottom: 40px 以下は NG** → 下端に張り付きすぎ
 
 ### Phase 3: ビジュアルフレーム検証
 
@@ -104,17 +122,19 @@ Read out/frames/frame_430.png  → OutroScene の見た目
 ```
 
 16. **ビジュアルチェック項目**:
-- スクリーンショットが十分な大きさで表示されているか（フレーム幅の 60% 以上）
+- スクリーンショットが十分な大きさで表示されているか（フレーム幅の 70% 以上）
 - テキストが読みやすいか（フォントサイズ・コントラスト）
 - レイアウトが崩れていないか（要素の重なり・はみ出し）
 - ブランドカラーが正しく適用されているか
-- 字幕の位置が適切か（スクリーンショットと重なっていないか）
+- タイトルテキストがスクリーンショットと重なっていないか（適切な余白があるか）
+- Caption オーバーレイ（半透明黒帯）が存在しないか
+- IntroScene/OutroScene で実際のアプリアイコン画像が表示されているか
 
 ### Phase 4: 仕様準拠チェック
 
 17. **解像度チェック**: Root.tsx の width/height を確認
 18. **長さチェック**: durationInFrames / fps が 15〜25秒内か（App Store 最大 25 秒）
-19. **字幕チェック**: Caption コンポーネントが適切に配置されているか
+19. **タイトルテキストチェック**: 各シーンにタイトルテキストが直接配置されているか（Caption オーバーレイは使わない）
 20. **トランジションチェック**: シーン間のトランジションが自然か
 
 ### Phase 5: スコアリングと報告
@@ -203,13 +223,16 @@ Read out/frames/frame_430.png  → OutroScene の見た目
 - [ ] fps: 30
 - [ ] 長さ: 15〜25秒（450〜750フレーム）※ App Store 最大 25 秒
 - [ ] コンポジションID: `AppStorePreview`
-- [ ] 字幕（Caption）が全シーンに配置
+- [ ] タイトルテキストが全シーンに配置（Caption オーバーレイは使わない）
 
-**スクリーンショット表示:**
-- [ ] PhoneMockup ベース幅が 500px 以上（フレーム幅の 56% 以上）
-- [ ] 推奨: 560px（63%）〜 620px（70%）
-- [ ] scale が 0.9〜1.1 の範囲内
-- [ ] 配置位置 bottom が 40〜80px の範囲（画面下部に適切に配置）
+**デザインガイドライン:**
+- [ ] アプリアイコン: IntroScene・OutroScene で `icon.png`（`staticFile`）を使用（CSS MiravyLogo 禁止）
+- [ ] Caption 禁止: Caption コンポーネント・半透明黒帯オーバーレイが存在しない
+- [ ] PhoneMockup スタイル: ベゼル（bezelRadius, bezelWidth）不使用
+- [ ] PhoneMockup スタイル: boxShadow 不使用（borderRadius + overflow:hidden のみ）
+- [ ] PhoneMockup サイズ: base width=540px, scale=1.2 基準（1.1〜1.3 範囲）
+- [ ] PhoneMockup 配置: bottom: 120px（中央寄り、下端張り付き NG）
+- [ ] タイトルテキスト: fontSize 48+, fontWeight 800 でシーン内に直接配置
 
 **構成品質:**
 - [ ] 最初の 3 秒にフック（インパクトのある開始）

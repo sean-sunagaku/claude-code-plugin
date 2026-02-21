@@ -107,7 +107,6 @@ export const TIMING = {
 
 10. **共通コンポーネントを実装**:
 
-`{outputDir}/src/components/Caption.tsx` - 字幕表示
 `{outputDir}/src/components/PhoneMockup.tsx` - スマホ枠
 
 11. **Root.tsx を作成** (`{outputDir}/src/Root.tsx`):
@@ -130,15 +129,19 @@ find {outputDir}/src -type f -name "*.tsx" -o -name "*.ts"
 
 ### Phase 4: script-writer との連携
 
-15. script-writer から字幕テキストが届いたら Caption コンポーネントに反映:
+15. script-writer からタイトルテキストが届いたら各シーンのタイトルエリアに反映:
 
 ```tsx
-// Root.tsx または各シーンコンポーネントに追加
-<Caption
-  text="{字幕テキスト}"
-  startFrame={90}
-  endFrame={180}
-/>
+// 各シーンコンポーネントのタイトルエリアに直接配置（Caption オーバーレイは使わない）
+<div style={{
+  fontSize: 48,
+  fontWeight: 800,
+  color: COLORS.textPrimary,
+  lineHeight: 1.3,
+  fontFamily: "'Noto Sans JP', sans-serif",
+}}>
+  {タイトルテキスト}
+</div>
 ```
 
 ### Phase 5: 完成報告
@@ -165,28 +168,64 @@ cd {outputDir} && npx remotion studio
 
 17. TaskUpdate で completed にする
 
-## スクリーンショット表示サイズルール（必須）
+## PhoneMockup 表示ルール（必須）
 
-PhoneMockup でスクリーンショットを表示する際のサイズ基準:
+### スタイル
+- **端末ベゼル（枠）は付けない**: bezelRadius, bezelWidth, 暗い背景色の枠は不要
+- **boxShadow は付けない**: スクリーンショットの周りに影を付けない。背景と自然に馴染ませる
+- **borderRadius + overflow: hidden のみ**: 角丸でクリッピングするだけのシンプルな表示
 
-- **PhoneMockup ベースサイズ**: `width=560`, `height=1140`（bezelRadius=52, screenRadius=42, bezelWidth=14）
-- フレーム幅 886px に対して **60〜70%** を占めること
-- `scale` は `1.0` を基準（0.9〜1.1 の範囲で微調整）
-- 配置: `bottom: 60px`、`left: 50%` + `translateX(-50%)` で水平中央
+### サイズ
+- **PhoneMockup ベースサイズ**: width=540px, height=1120px
+- **scale は 1.2 を基準**（1.1〜1.3 の範囲で調整）
+- フレーム幅（886px）に対して **70〜75%** を占めること
+- scale 1.2 で実効幅 648px（フレーム幅の 73%）→ 推奨
+
+### 配置
+- `bottom: 120px`（中央寄り配置）
+- `left: 50%` + `translateX(-50%)` で水平中央
+- 画面下端に張り付けない（`bottom: 20px` 等は NG）
 
 ### PhoneMockup コンポーネント例
 
 ```tsx
-// PhoneMockup.tsx - ベースサイズ（これより小さくしない）
-const phoneWidth = 560 * scale;   // 最小 504px（scale=0.9）
-const phoneHeight = 1140 * scale; // 最小 1026px（scale=0.9）
+// PhoneMockup.tsx - borderRadius + overflow:hidden のみ（ベゼル・影なし）
+<div style={{
+  width: 540 * scale,
+  height: 1120 * scale,
+  borderRadius: 44,
+  overflow: "hidden",
+}}>
+  <Img src={staticFile(screenshotName)} style={{ width: "100%", height: "100%" }} />
+</div>
 ```
 
-### NG: 小さすぎる設定
+### NG 例
 ```tsx
-// NG: フレーム幅の 38% しかない
-const phoneWidth = 340 * scale;  // アプリ画面が見づらい
+// NG: ベゼル付き
+const bezelRadius = 52;  // 不要
+const bezelWidth = 14;   // 不要
+
+// NG: 影付き
+boxShadow: "0 24px 80px rgba(0,0,0,0.35)"  // 不要
+
+// NG: 小さすぎ
+scale = 0.7  // フレーム幅の 43%、画面内容が読めない
 ```
+
+## アプリアイコン（IntroScene・OutroScene）
+
+- **MiravyLogo コンポーネント（CSS で円を描画）は使わない**: 色味が実際のアイコンと異なるため
+- IntroScene と OutroScene には **実際のアプリアイコン画像**（`icon.png`）を使う
+- `<Img src={staticFile("icon.png")} />` + `borderRadius` で角丸表示
+- アイコン画像は `mobile/assets/icon.png` から `{outputDir}/public/icon.png` にコピーして使用
+
+## 字幕（タイトルテキスト）について
+
+- **Caption コンポーネントは使わない**: 画面下部の半透明オーバーレイ字幕は不要
+- テキストはシーン内のタイトルエリアに直接配置する（`fontSize: 48`, `fontWeight: 800` 等）
+- 画面下部を覆う黒帯（`rgba(0, 0, 0, 0.65)` 等）はスクリーンショットと被って見づらくなるため禁止
+- script-writer が作成するテキストは、各シーンのタイトル部分に使用する
 
 ## Remotion 実装ルール（必須）
 
@@ -265,5 +304,5 @@ import { fade } from "@remotion/transitions/fade";
 
 - **ACK（了解メッセージ）は送らない** - 作業内容のみ送信
 - **メッセージを受け取ったら必ず返信する**（無視禁止）
-- 字幕テキストが届いたら即座に Caption コンポーネントに反映する
+- タイトルテキストが届いたら各シーンのタイトルエリアに反映する
 - 技術的な問題は具体的に報告: 「〇〇ファイルの〇〇行でエラー: {エラーメッセージ}」

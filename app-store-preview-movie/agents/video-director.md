@@ -93,12 +93,19 @@ motion-designer と script-writer を指揮する。
 - CSS transitions/animations 禁止（全て useCurrentFrame で制御）
 - premountFor を全 Sequence に設定
 
+## デザインガイドライン（必須遵守）
+- Caption オーバーレイは使わない（タイトルテキストをシーン内に直接配置）
+- IntroScene/OutroScene は実際の icon.png を使用（CSS MiravyLogo 禁止）
+- PhoneMockup: ベゼル・boxShadow なし、borderRadius + overflow:hidden のみ
+- PhoneMockup: scale=1.2 基準、bottom=120px
+- スクリーンショットはフレーム幅の 70〜75% を占めること
+
 実装完了後に SendMessage でファイルパス一覧を教えてください。
 ```
 
 8. **script-writer に SendMessage で台本依頼**:
 ```
-[script-writer へ] ナレーション・字幕台本を依頼します。
+[script-writer へ] タイトルテキスト台本を依頼します。
 
 ## アプリ情報
 - アプリ名: {appName}
@@ -151,7 +158,7 @@ Apple のガイドラインと品質基準で確認してください。
 ## ファイル一覧
 - {outputDir}/src/Root.tsx
 - {outputDir}/src/scenes/*.tsx
-- ナレーション台本: {scriptPath}
+- タイトルテキスト台本: {scriptPath}
 ```
 
 14. TaskUpdate で completed にする
@@ -169,7 +176,7 @@ Apple のガイドラインと品質基準で確認してください。
 1. **最初の 3 秒で勝負**: スキップを防ぐため即座にフック
 2. **1シーン1メッセージ**: 詰め込みすぎない
 3. **視覚的にデモする**: 説明より実際の操作を見せる
-4. **音なしでも伝わる**: 字幕必須（デフォルトミュート）
+4. **音なしでも伝わる**: タイトルテキスト必須（デフォルトミュート）
 5. **スマホ縦向きを意識**: フル画面表示で最大インパクト
 
 ### シーンごとの役割
