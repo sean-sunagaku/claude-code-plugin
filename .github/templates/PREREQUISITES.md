@@ -6,9 +6,9 @@
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **EAS CLI** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect
-- **ffprobe** — app-store-preview-movie / frame-inspect
+- **Docker** — ci-check
+- **EAS CLI (eas)** — eas-deploy
+- **ffmpeg** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow

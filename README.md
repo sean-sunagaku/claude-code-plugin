@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-24-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-25-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -209,6 +209,7 @@ Agent Teams スキルを設計・構築するためのベストプラクティ�
 | **screenshot-creator** | `/screenshot-creator` | 5つの専門エージェント（クリエイティブディレクター・スクリーンショットデザイナー・コピーライター・仕様バリデーター・品質レビュアー）がチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成するスキル | `screenshot, app-store, pencil, agent-team, promotion` |
 | **app-store-preview-movie** | `/app-store-preview-movie` | 5つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー・フレームインスペクター）がチームで App Store プレビュー動画を Remotion (React) で生成・検証するスキル | `app-store, preview, video, remotion, agent-team, animation` |
 | **frame-inspect** | `/frame-inspect` | 動画・画像のフレーム抽出、Remotion レンダリング、仕様チェック、目視検証を行う汎用ビデオツールキット。統一シェルスクリプト (video-tool.sh) で操作 | `video, frame, ffmpeg, ffprobe, remotion, render, inspection, quality, spec-check` |
+| **domain-expertise-extractor** | `/domain-expertise-extractor` | 4つの専門エージェント（ドメインリサーチャー・パターンアナリスト・ナレッジライター・品質チェッカー）がチームでデジタルプロダクト系ドメインの暗黙知を抽出・言語化・構造化し、他のSkillで使えるエージェント定義と評価基準を生成するスキル | `domain, expertise, extractor` |
 
 ### ui-review
 
@@ -306,6 +307,16 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 /frame-inspect
 ```
 
+### domain-expertise-extractor
+
+4つの専門エージェント（ドメインリサーチャー・パターンアナリスト・ナレッジライター・品質チェッカー）がチームでデジタルプロダクト系ドメインの暗黙知を抽出・言語化・構造化し、他のSkillで使えるエージェント定義と評価基準を生成するスキル
+
+4つの専門エージェントが連携して、デジタルプロダクト系ドメインの暗黙知を抽出・構造化する。
+
+```
+/domain-expertise-extractor
+```
+
 ## Internal Skills
 
 > 以下は作者の内部リポジトリ向けスキルです。一般利用者向けではありません。
@@ -326,9 +337,9 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **EAS CLI** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect
-- **ffprobe** — app-store-preview-movie / frame-inspect
+- **Docker** — ci-check
+- **EAS CLI (eas)** — eas-deploy
+- **ffmpeg** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
