@@ -33,7 +33,12 @@ creative-director は原則として MCP Pencil ツールを使用しない。
    - ターゲットユーザー・競合アプリ
    - ブランドカラー・トーン＆マナー
 4. `references/app-store-screenshot-specs.md` を Read で確認
-5. **スクリーンショット構成計画**を作成（最大 10 枚）:
+5. **Apple 公式ガイドラインを WebSearch で最新情報を確認**:
+   - 検索: `site:developer.apple.com app store screenshot specifications {current year}`
+   - 検索: `site:developer.apple.com app store review guidelines screenshots {current year}`
+   - サイズ要件・コンテンツポリシー・審査基準の最新版を確認
+   - 自動スケーリングの仕組み・A/B テスト機能も把握
+6. **スクリーンショット構成計画**を作成（最大 10 枚）:
 
 ```
 スクリーンショット構成計画:

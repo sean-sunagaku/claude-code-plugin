@@ -137,6 +137,14 @@ U("{subtextNodeId}", {content: "{新しいサブテキスト}"})
 - Copy した子ノードの更新は `descendants` プロパティ経由
 - 画像は `G()` 操作（AI生成: `"ai"` / stock: `"stock"`）
 - 画像は frame/rectangle ノードに fill として適用
+- **ローカル画像ファイルも fill として使用可能**:
+  ```javascript
+  // 実スクリーンショットを配置（絶対パス推奨 - 未保存 .pen でも動作）
+  mockup=I(parent, {type: "frame", width: 320, height: 520, fill: {type: "image", url: "/Users/xxx/project/screenshots/top.png", mode: "fill"}})
+  ```
+  - `mode`: `"stretch"` / `"fill"` / `"fit"`
+  - .pen ファイルが保存済み（パス確定）でないと相対パス解決に失敗する
+  - 実スクリーンショットが提供されている場合は `G()` ではなくこちらを優先使用する
 - 1回の `batch_design` は最大25操作
 - `filePath` パラメータは毎回必ず指定
 

@@ -32,6 +32,10 @@ model: claude-opus-4-6
    - フレームID一覧
    - スクリーンショット構成計画
 4. `references/app-store-screenshot-specs.md` を Read で確認
+5. **Apple 公式ガイドラインを WebSearch で最新審査基準を確認**:
+   - 検索: `site:developer.apple.com app store review guidelines screenshots {current year}`
+   - 特に「2.3 Accurate Metadata」セクションのスクリーンショット要件
+   - 最新のリジェクト理由・コンテンツポリシーを把握
 
 ### Phase 2: 各スクリーンのレビュー
 

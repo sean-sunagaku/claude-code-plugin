@@ -1,0 +1,8 @@
+{
+  "name": "frame-inspect",
+  "version": "0.2.0-beta",
+  "description": "[Beta] 動画・画像のフレーム抽出、Remotion レンダリング、仕様チェック、目視検証を行う汎用ビデオツールキット",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["video", "frame", "ffmpeg", "ffprobe", "remotion", "render", "inspection", "quality", "spec-check"]
+}

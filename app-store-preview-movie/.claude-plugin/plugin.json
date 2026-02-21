@@ -1,7 +1,7 @@
 {
   "name": "app-store-preview-movie",
-  "version": "1.0.0",
-  "description": "4つの専門エージェントがチームで App Store プレビュー動画を Remotion (React) で生成する",
+  "version": "0.1.0-beta",
+  "description": "[Beta] 5つの専門エージェントがチームで App Store プレビュー動画を Remotion (React) で生成・検証する",
   "author": { "name": "sunagaku" },
   "license": "MIT",
   "keywords": ["app-store", "preview", "video", "remotion", "agent-team", "animation"]

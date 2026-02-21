@@ -396,7 +396,7 @@
     {
       "name": "screenshot-creator",
       "source": "./screenshot-creator",
-      "description": "[Beta] 4つの専門エージェント（クリエイティブディレクター・スクリーンショットデザイナー・コピーライター・品質レビュアー）がチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成するスキル",
+      "description": "[Beta] 5つの専門エージェント（クリエイティブディレクター・スクリーンショットデザイナー・コピーライター・仕様バリデーター・品質レビュアー）がチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成するスキル",
       "version": "1.0.0",
       "author": {
         "name": "sunagaku"
@@ -412,8 +412,8 @@
     {
       "name": "app-store-preview-movie",
       "source": "./app-store-preview-movie",
-      "description": "[Beta] 4つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー）がチームで App Store プレビュー動画を Remotion (React) で生成するスキル",
-      "version": "1.0.0",
+      "description": "[Beta] 5つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー・フレームインスペクター）がチームで App Store プレビュー動画を Remotion (React) で生成・検証するスキル",
+      "version": "0.1.0-beta",
       "author": {
         "name": "sunagaku"
       },
@@ -424,6 +424,26 @@
         "remotion",
         "agent-team",
         "animation"
+      ]
+    },
+    {
+      "name": "frame-inspect",
+      "source": "./frame-inspect",
+      "description": "[Beta] 動画・画像のフレーム抽出、Remotion レンダリング、仕様チェック、目視検証を行う汎用ビデオツールキット。統一シェルスクリプト (video-tool.sh) で操作",
+      "version": "0.2.0-beta",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "video",
+        "frame",
+        "ffmpeg",
+        "ffprobe",
+        "remotion",
+        "render",
+        "inspection",
+        "quality",
+        "spec-check"
       ]
     }
   ],

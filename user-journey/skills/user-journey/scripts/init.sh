@@ -9,7 +9,7 @@ set -euo pipefail
 
 PROJECT_NAME="${1:?Usage: bash scripts/init.sh <project-name>}"
 DATE=$(date +%Y-%m-%d)
-BASE_DIR="$(pwd)/user-journey/${DATE}_${PROJECT_NAME}"
+BASE_DIR="$(pwd)/.claude/user-journey/${DATE}_${PROJECT_NAME}"
 
 if [ -d "$BASE_DIR" ]; then
   echo "Warning: $BASE_DIR already exists"
