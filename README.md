@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-21-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-23-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -206,6 +206,8 @@ Agent Teams スキルを設計・構築するためのベストプラクティ�
 | **skill-creator-team** | `/skill-creator-team` | 4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する。skill-creator ベストプラクティスに準拠 | `skill, creator, team` |
 | **ui-variations** | `/ui-variations` | 5つの異なるUIデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。各デザイナーがMCP経由でPencilに直接構築。3人チーム x5の並列実行。 | `ui, design, variations, pencil, agent-team, parallel, mcp` |
 | **persona-creation** | `/persona-creation` | 5つの専門エージェント（ペルソナ設計・ユーザーリサーチ・ナラティブ執筆・バイアスレビュー・コンテキスト管理）がチームでUX/マーケティング向けユーザーペルソナを作成するスキル。セグメント設計からプロファイル執筆・多様性レビューまでを議論・作成しMarkdownで出力する | `persona, ux, marketing, user-research, agent-team, bias-review, segmentation` |
+| **screenshot-creator** | `/screenshot-creator` | 4つの専門エージェント（クリエイティブディレクター・スクリーンショットデザイナー・コピーライター・品質レビュアー）がチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成するスキル | `screenshot, app-store, pencil, agent-team, promotion` |
+| **app-store-preview-movie** | `/app-store-preview-movie` | 4つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー）がチームで App Store プレビュー動画を Remotion (React) で生成するスキル | `app-store, preview, video, remotion, agent-team, animation` |
 
 ### ui-review
 
@@ -277,6 +279,22 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 /persona-creation
 ```
 
+### screenshot-creator
+
+4つの専門エージェント（クリエイティブディレクター・スクリーンショットデザイナー・コピーライター・品質レビュアー）がチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成するスキル
+
+```
+/screenshot-creator
+```
+
+### app-store-preview-movie
+
+4つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー）がチームで App Store プレビュー動画を Remotion (React) で生成するスキル
+
+```
+/app-store-preview-movie
+```
+
 ## Internal Skills
 
 > 以下は作者の内部リポジトリ向けスキルです。一般利用者向けではありません。
@@ -296,7 +314,7 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 
 **Optional** (skill-specific)
 
-- **CocoaPods** — eas-deploy
+- **CocoaPods (pod)** — eas-deploy
 - **Codex CLI** — multi-ai-review / plan-review
 - **Docker** — ci-check
 - **EAS CLI** — eas-deploy
@@ -305,6 +323,7 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
+- **Node.js** — svg-to-png
 - **npm** — ci-check / svg-to-png
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
