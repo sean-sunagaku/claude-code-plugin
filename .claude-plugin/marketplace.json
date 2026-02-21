@@ -445,6 +445,20 @@
         "quality",
         "spec-check"
       ]
+    },
+    {
+      "name": "domain-expertise-extractor",
+      "source": "./domain-expertise-extractor",
+      "description": "[Beta] 4つの専門エージェント（ドメインリサーチャー・パターンアナリスト・ナレッジライター・品質チェッカー）がチームでデジタルプロダクト系ドメインの暗黙知を抽出・言語化・構造化し、他のSkillで使えるエージェント定義と評価基準を生成するスキル",
+      "version": "0.1.0-beta",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "domain",
+        "expertise",
+        "extractor"
+      ]
     }
   ],
   "metadata": {
