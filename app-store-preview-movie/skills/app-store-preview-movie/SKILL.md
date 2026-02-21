@@ -150,9 +150,18 @@ run_in_background: true
 
 ## スクリーンショット表示ガイドライン
 
-PhoneMockup コンポーネントでスクリーンショットを表示する際のサイズ基準:
+PhoneMockup コンポーネントでスクリーンショットを表示する際のルール:
 
-- **PhoneMockup ベースサイズ**: width=560px, height=1140px
+### PhoneMockup のスタイル
+
+- **端末ベゼル（枠）は付けない**: 暗い枠や端末フレームは不要。スクリーンショットをそのまま表示する
+- **boxShadow は付けない**: スクリーンショットの周りに影を付けない。背景と自然に馴染ませる
+- **borderRadius + overflow: hidden のみ**: 角丸でクリッピングするだけのシンプルな表示
+- 動画の背景色とスクリーンショットの境界が目立たないようにする
+
+### サイズ基準
+
+- **PhoneMockup ベースサイズ**: width=540px, height=1120px
 - フレーム幅（886px）に対して **60〜70%** を占めるサイズにすること
 - 小さすぎるとアプリの画面が見づらく、App Store での訴求力が落ちる
 - **PhoneMockup の scale は 1.0 を基準**（0.9〜1.1 の範囲で調整）
@@ -161,10 +170,13 @@ PhoneMockup コンポーネントでスクリーンショットを表示する�
 ### NG 例
 - `phoneWidth = 340px`（フレーム幅の 38%）→ **小さすぎる**
 - `scale = 0.7` → **小さすぎて画面内容が読めない**
+- `backgroundColor: "#1A1A2E"` のベゼル → **端末フレーム不要**
+- `boxShadow: "0 24px 80px rgba(0,0,0,0.35)"` → **影が強すぎる**
 
 ### OK 例
-- `phoneWidth = 560px`（フレーム幅の 63%）→ **適切**
+- `phoneWidth = 540px`（フレーム幅の 61%）→ **適切**
 - `phoneWidth = 620px`（フレーム幅の 70%）→ **大きめで迫力あり**
+- `borderRadius: 44, overflow: "hidden"` のみ → **シンプルで良い**
 
 ## Remotion ベストプラクティス
 
