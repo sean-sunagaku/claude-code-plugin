@@ -14,6 +14,7 @@
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
+- **Node.js** — svg-to-png
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect
 - **pnpm** — ci-check / database / ui-verify
