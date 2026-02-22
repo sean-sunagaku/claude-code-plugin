@@ -50,7 +50,7 @@ Or use the slash command inside Claude Code:
 | **eas-deploy** | `/eas-deploy` | Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID 登録、証明書・プロビジョニングプロファイル作成、EAS ビルド、TestFlight 配布、App Store 提出までを CLI から実行する | `eas, deploy` |
 | **agent-team-guide** | `/agent-team-guide` | Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集 | `agent, team, guide, best-practice, SendMessage, task-management` |
 | **user-journey** | `/user-journey` | ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する | `user, journey` |
-| **team-plan** | `/team-plan` | 5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する | `agent-team, plan-mode, investigation, consensus, implementation, code-analysis` |
+| **team-plan** | `/team-plan` | 5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する。調査エージェントはExploreサブエージェントを無制限に並列起動可能 | `agent-team, plan-mode, investigation, consensus, implementation, code-analysis` |
 | **subagent-best-practices** | `/subagent-best-practices` |  Claude Code の SubAgent（agents/*.md）を正しく定義するためのベストプラクティスガイド。 YAML frontmatter、ツール選択、3-Phase 構造、コンテキスト受け渡し、アンチパターンを網羅。 Use when: agents/*.md を書く、SubAgent 定義を改善する、エージェントの動作が想定外、 コンテキストが渡らない、ツール選択に迷う。 Triggers: "subagent", "agent definition", "agents/*.md", "エージェント定義", "サブエージェント", "3-Phase", "context passing", "コンテキスト渡し", "tool selection", "ツール選択", "subagent_type", "bypassPermissions" | `subagent, best, practices` |
 | **team-implement** | `/team-implement` |  承認済みの実装計画（Plan）を Agent Team で並列に実装するスキル。 Plan をタスクに分割 → 依存関係を設定 → Wave ごとに並列エージェントを起動 → 完了を待って次の Wave → 最後にビルド＆テスト検証。 team-plan スキル（調査→計画）の後に使う「実装実行フェーズ」。 | `team, implement` |
 
@@ -178,7 +178,7 @@ Agent Teams スキルを設計・構築するためのベストプラクティ�
 
 ### team-plan
 
-5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する
+5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する。調査エージェントはExploreサブエージェントを無制限に並列起動可能
 
 5つの専門エージェントがチームでコードベースを調査・議論し、
 
@@ -373,7 +373,6 @@ Agent Teams の SendMessage を自動ログする PostToolUse hook。エージ�
 - **lsof** — ui-verify
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect
-- **pod** — eas-deploy
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher

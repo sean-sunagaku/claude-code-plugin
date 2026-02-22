@@ -17,7 +17,6 @@
 - **lsof** — ui-verify
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect
-- **pod** — eas-deploy
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
