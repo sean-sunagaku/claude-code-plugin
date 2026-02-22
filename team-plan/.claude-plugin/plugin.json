@@ -1,7 +1,7 @@
 {
   "name": "team-plan",
-  "version": "2.0.0",
-  "description": "5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する",
+  "version": "2.1.0",
+  "description": "5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する。調査エージェントはExploreサブエージェントを無制限に並列起動可能",
   "author": { "name": "sunagaku" },
   "license": "MIT",
   "keywords": ["agent-team", "plan-mode", "investigation", "consensus", "implementation", "code-analysis"]
