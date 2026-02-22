@@ -56,9 +56,9 @@ TeamCreate で `team-plan` チームを作成。
 
 | name | 役割 | 視点 | 主な手段 |
 |------|------|------|---------|
-| `code-researcher` | コードベース調査・既存実装の把握 | 「何がある」 | Read, Grep, Glob |
-| `dependency-analyst` | 依存関係・影響範囲・リスク評価 | 「何が壊れる」 | Read, Grep, Glob |
-| `pattern-expert` | 類似パターン・命名規則・慣例分析 | 「どう書くべき」 | Read, Grep, Glob |
+| `code-researcher` | コードベース調査・既存実装の把握 | 「何がある」 | Read, Grep, Glob, Task(全タイプ) |
+| `dependency-analyst` | 依存関係・影響範囲・リスク評価 | 「何が壊れる」 | Read, Grep, Glob, Task(全タイプ), WebSearch, WebFetch |
+| `pattern-expert` | 類似パターン・命名規則・慣例分析 | 「どう書くべき」 | Read, Grep, Glob, Task(全タイプ) |
 | `solution-architect` | 実装方針設計・議論リード・合意形成 | 「どう実装する」 | Read, Grep, Glob, WebSearch |
 | `plan-writer` | 議論の統合・計画書の執筆 | 「どう伝える」 | Read, Grep, Glob, Write, Edit |
 
@@ -252,4 +252,5 @@ Round 3:
 - **Plan Mode を省略しない**: チームの合意があっても必ず Plan Mode を経由してユーザーの承認を得る
 - **ユーザー質問は必ずリーダー経由**: エージェントは直接ユーザーに聞けない。リーダーが AskUserQuestion で橋渡しする
 - **実装は Plan Mode 承認後**: チーム議論中にコードを変更しない
-- **コスト意識**: 5体構成で約100,000トークン。軽微な変更にはスキップ条件を適用する
+- **Explore サブエージェント**: 調査エージェント (code-researcher, dependency-analyst, pattern-expert) は Task(Explore) を自由に並列起動して調査を分担できる。体数制限なし
+- **コスト意識**: 軽微な変更にはスキップ条件を適用する
