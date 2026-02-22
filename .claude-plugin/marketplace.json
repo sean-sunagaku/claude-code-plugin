@@ -473,6 +473,19 @@
         "best",
         "practices"
       ]
+    },
+    {
+      "name": "team-implement",
+      "source": "./team-implement",
+      "description": " 承認済みの実装計画（Plan）を Agent Team で並列に実装するスキル。 Plan をタスクに分割 → 依存関係を設定 → Wave ごとに並列エージェントを起動 → 完了を待って次の Wave → 最後にビルド＆テスト検証。 team-plan スキル（調査→計画）の後に使う「実装実行フェーズ」。",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "team",
+        "implement"
+      ]
     }
   ],
   "metadata": {
