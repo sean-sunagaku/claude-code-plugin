@@ -1,0 +1,19 @@
+{
+  "name": "task-granularity",
+  "version": "1.0.0",
+  "description": "TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する。",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "TaskCreate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/plugins/cache/sunagaku-marketplace/task-granularity/1.0.0/hooks/check-granularity/hook.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
