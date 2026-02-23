@@ -337,10 +337,15 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 | Hook | Description | Event | Keywords |
 |------|-------------|-------|----------|
 | **agent-teams-log** | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `PostToolUse` | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
+| **task-granularity** | TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する | `PreToolUse` | `task, granularity, hook, PreToolUse, TaskCreate, quality, haiku` |
 
 ### agent-teams-log
 
 Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する
+
+### task-granularity
+
+TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する
 
 ## Internal Skills
 
@@ -364,8 +369,7 @@ Agent Teams の SendMessage を自動ログする PostToolUse hook。エージ�
 - **Codex CLI** — multi-ai-review / plan-review
 - **Docker** — ci-check
 - **EAS CLI** — eas-deploy
-- **ffmpeg** — frame-inspect
-- **ffprobe** — frame-inspect
+- **ffmpeg** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
