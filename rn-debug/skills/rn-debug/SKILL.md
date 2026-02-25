@@ -144,20 +144,24 @@ rg '"extra"' .tmp_eas_preview_build_*.log
 # リポジトリルート/.easignore の例
 node_modules/
 .git/
-.claude/
 tmp/
 ios/
 android/
-functions/lib/
+
+# macOS メタデータ / エディタ一時ファイル（必須）
+**/._*
+**/*.swp
+**/*.swo
 
 # .env を明示的に含める（最後に書く）
-!mobile/.env
+!<app-dir>/.env
 ```
 
 **注意**:
 - `.easignore` が存在しない場合は `.gitignore` がそのまま使われるため、`.env` が除外される
 - `.easignore` を明示的に作成すること
-- モノレポ構成（ルートに mobile/ がある場合）では `!mobile/.env` のようにルートからの相対パスで指定する
+- モノレポ構成（ルートに `<app-dir>/` がある場合）では `!<app-dir>/.env` のようにルートからの相対パスで指定する
+- `**/._*` と `**/*.swp` を必ず除外する（後述 Part 6 参照）
 
 ### 対策 2: ビルドスクリプトで環境変数を export する
 `.easignore` が使えない場合や確実性を上げたい場合:
@@ -174,6 +178,44 @@ functions/lib/
 
 ### 対策 3: firebase.ts で未設定時にダミー config でフォールバック
 万が一 env が空のまま起動しても即クラッシュしないよう、`resolveFirebaseConfig()` でバリデーション → ダミー config フォールバック → `console.warn` で警告を出す防御コードを入れる。
+
+---
+
+## Part 6: EAS ビルドの PREPARE_PROJECT tar エラー
+
+### 症状
+- `eas build --local` の `PREPARE_PROJECT` フェーズで tar 展開エラーが出る
+- `Failed to restore metadata: File exists` のようなメッセージ
+
+### 原因
+macOS のメタデータファイル（`._*`）やエディタの swap ファイル（`*.swp`）がプロジェクトに残っていると、EAS が作成する `project.tar.gz` に混入する。tar 展開時にメタデータファイルと本体ファイルが衝突してエラーになる。
+
+例:
+```
+app/(tabs)/._layout.tsx.swp   ← これが混入
+app/(tabs)/_layout.tsx         ← 本体と衝突
+```
+
+### 確認方法
+```bash
+# プロジェクト内の不要ファイルを検索
+find . -name '._*' -o -name '*.swp' -o -name '*.swo' | head -20
+```
+
+### 対策
+1. 不要ファイルを削除:
+```bash
+find . -name '._*' -delete
+find . -name '*.swp' -delete
+find . -name '*.swo' -delete
+```
+
+2. ルートの `.easignore` と `.gitignore` の両方に除外ルールを追加:
+```
+**/._*
+**/*.swp
+**/*.swo
+```
 
 ---
 
