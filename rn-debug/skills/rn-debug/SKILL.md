@@ -138,15 +138,26 @@ rg '"extra"' .tmp_eas_preview_build_*.log
 ### 対策 1: .easignore で .env を同梱する
 `.easignore` は `.gitignore` と同じ書式だが、EAS ビルド専用のファイル除外設定。`.gitignore` で `.env` を除外していても、`.easignore` に `.env` を書かなければ EAS ビルドには含まれる。
 
+**重要: `.easignore` はリポジトリルートに置く。** EAS はアップロード tarball をリポジトリルートから作成する（`project/mobile/...` の形で梱包）。`mobile/.easignore` に置いても無視される。
+
 ```
-# .easignore の例（.env は書かない = 同梱される）
+# リポジトリルート/.easignore の例
+node_modules/
+.git/
+.claude/
+tmp/
 ios/
 android/
-tmp/
-node_modules/
+functions/lib/
+
+# .env を明示的に含める（最後に書く）
+!mobile/.env
 ```
 
-**注意**: `.easignore` が存在しない場合は `.gitignore` がそのまま使われるため、`.env` が除外される。`.easignore` を明示的に作成すること。
+**注意**:
+- `.easignore` が存在しない場合は `.gitignore` がそのまま使われるため、`.env` が除外される
+- `.easignore` を明示的に作成すること
+- モノレポ構成（ルートに mobile/ がある場合）では `!mobile/.env` のようにルートからの相対パスで指定する
 
 ### 対策 2: ビルドスクリプトで環境変数を export する
 `.easignore` が使えない場合や確実性を上げたい場合:
