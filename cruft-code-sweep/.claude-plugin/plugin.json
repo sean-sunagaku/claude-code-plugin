@@ -1,0 +1,14 @@
+{
+  "name": "cruft-code-sweep",
+  "version": "1.0.0",
+  "description": " コードベースの不要なフォールバック・互換性コード・デッドコードを 3つの専門エージェント（scanner + historian + verifier）が協調して検出・安全性検証する監査スキル。 scanner が自律探索で候補を発見し、historian が git 履歴から時間軸の文脈を付与し、",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "cruft",
+    "code",
+    "sweep"
+  ]
+}
