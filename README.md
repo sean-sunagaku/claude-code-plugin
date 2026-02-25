@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-26-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-28-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -53,6 +53,8 @@ Or use the slash command inside Claude Code:
 | **team-plan** | `/team-plan` | 5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する。調査エージェントはExploreサブエージェントを無制限に並列起動可能 | `agent-team, plan-mode, investigation, consensus, implementation, code-analysis` |
 | **subagent-best-practices** | `/subagent-best-practices` |  Claude Code の SubAgent（agents/*.md）を正しく定義するためのベストプラクティスガイド。 YAML frontmatter、ツール選択、3-Phase 構造、コンテキスト受け渡し、アンチパターンを網羅。 Use when: agents/*.md を書く、SubAgent 定義を改善する、エージェントの動作が想定外、 コンテキストが渡らない、ツール選択に迷う。 Triggers: "subagent", "agent definition", "agents/*.md", "エージェント定義", "サブエージェント", "3-Phase", "context passing", "コンテキスト渡し", "tool selection", "ツール選択", "subagent_type", "bypassPermissions" | `subagent, best, practices` |
 | **team-implement** | `/team-implement` |  承認済みの実装計画（Plan）を Agent Team で並列に実装するスキル。 Plan をタスクに分割 → 依存関係を設定 → Wave ごとに並列エージェントを起動 → 完了を待って次の Wave → 最後にビルド＆テスト検証。 team-plan スキル（調査→計画）の後に使う「実装実行フェーズ」。 | `team, implement` |
+| **rn-debug** | `/rn-debug` |  React Native (Expo) アプリの総合デバッグスキル。 再レンダリング調査、白い画面、ネイティブモジュールエラー、Firebase接続問題、 API通信エラーなどのトラブルシューティングを体系的に行う。 Use when: 「白い画面」「画面が表示されない」「エラーが出る」「動かない」 「接続できない」「400エラー」「タイムアウト」「再レンダリング」「重い」 「カクつく」などの不具合報告やデバッグ依頼があったとき。 Also use when: 「デバッグして」「原因調べて」「なぜ動かない」 「エミュレータで確認して」「デバッグログを仕込んで」などの依頼があったとき。 ├─ 1. Metro ログを確認（import エラー? ネイティブモジュール?） ├─ 2. 初期 loading 状態が解消されるか確認（Auth 等） ├─ 3. ネイティブモジュールの問題か確認（Expo Go vs dev-client） └─ 4. Provider のクラッシュを切り分け | `rn, debug` |
+| **cruft-code-sweep** | `/cruft-code-sweep` |  コードベースの不要なフォールバック・互換性コード・デッドコードを 3つの専門エージェント（scanner + historian + verifier）が協調して検出・安全性検証する監査スキル。 scanner が自律探索で候補を発見し、historian が git 履歴から時間軸の文脈を付与し、 | `cruft, code, sweep` |
 
 ## Skill Details
 
@@ -204,6 +206,26 @@ Claude Code の `agents/*.md` ファイルで SubAgent を正しく定義する�
 
 ```
 /team-implement
+```
+
+### rn-debug
+
+ React Native (Expo) アプリの総合デバッグスキル。 再レンダリング調査、白い画面、ネイティブモジュールエラー、Firebase接続問題、 API通信エラーなどのトラブルシューティングを体系的に行う。 Use when: 「白い画面」「画面が表示されない」「エラーが出る」「動かない」 「接続できない」「400エラー」「タイムアウト」「再レンダリング」「重い」 「カクつく」などの不具合報告やデバッグ依頼があったとき。 Also use when: 「デバッグして」「原因調べて」「なぜ動かない」 「エミュレータで確認して」「デバッグログを仕込んで」などの依頼があったとき。 ├─ 1. Metro ログを確認（import エラー? ネイティブモジュール?） ├─ 2. 初期 loading 状態が解消されるか確認（Auth 等） ├─ 3. ネイティブモジュールの問題か確認（Expo Go vs dev-client） └─ 4. Provider のクラッシュを切り分け
+
+---
+
+```
+/rn-debug
+```
+
+### cruft-code-sweep
+
+ コードベースの不要なフォールバック・互換性コード・デッドコードを 3つの専門エージェント（scanner + historian + verifier）が協調して検出・安全性検証する監査スキル。 scanner が自律探索で候補を発見し、historian が git 履歴から時間軸の文脈を付与し、
+
+3つの専門エージェントが協調して、不要コードの **発見** → **履歴調査** → **安全性検証** を行う。
+
+```
+/cruft-code-sweep
 ```
 
 ## Beta Skills
@@ -367,16 +389,18 @@ TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook�
 **Optional** (skill-specific)
 
 - **Codex CLI** — multi-ai-review / plan-review
-- **Docker** — ci-check
-- **EAS CLI** — eas-deploy
+- **curl** — rn-debug
+- **EAS CLI (eas)** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
+- **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
+- **Node.js** — svg-to-png
 - **npm** — ci-check / frame-inspect / svg-to-png
-- **npx** — frame-inspect
+- **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
