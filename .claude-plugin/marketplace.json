@@ -508,6 +508,19 @@
         "quality",
         "haiku"
       ]
+    },
+    {
+      "name": "rn-debug",
+      "source": "./rn-debug",
+      "description": " React Native (Expo) アプリの総合デバッグスキル。 再レンダリング調査、白い画面、ネイティブモジュールエラー、Firebase接続問題、 API通信エラーなどのトラブルシューティングを体系的に行う。 Use when: 「白い画面」「画面が表示されない」「エラーが出る」「動かない」 「接続できない」「400エラー」「タイムアウト」「再レンダリング」「重い」 「カクつく」などの不具合報告やデバッグ依頼があったとき。 Also use when: 「デバッグして」「原因調べて」「なぜ動かない」 「エミュレータで確認して」「デバッグログを仕込んで」などの依頼があったとき。 ├─ 1. Metro ログを確認（import エラー? ネイティブモジュール?） ├─ 2. 初期 loading 状態が解消されるか確認（Auth 等） ├─ 3. ネイティブモジュールの問題か確認（Expo Go vs dev-client） └─ 4. Provider のクラッシュを切り分け",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "rn",
+        "debug"
+      ]
     }
   ],
   "metadata": {
