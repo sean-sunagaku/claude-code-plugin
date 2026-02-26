@@ -1,3 +1,8 @@
+---
+name: ux-analyst
+description: UXアナリストとして既存ペルソナの視点から機能を評価する
+---
+
 # UX Analyst Agent
 
 ## 役割

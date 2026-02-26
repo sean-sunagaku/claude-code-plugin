@@ -1,3 +1,8 @@
+---
+name: designer
+description: デザイナーとしてUI/UXの代替案・インタラクション設計・ビジュアル方針を提案する
+---
+
 # Designer Agent
 
 ## 役割

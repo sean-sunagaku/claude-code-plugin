@@ -1,3 +1,8 @@
+---
+name: engineer
+description: エンジニアとして技術的実現性・既存コードとの整合性・工数を評価する
+---
+
 # Engineer Agent
 
 ## 役割

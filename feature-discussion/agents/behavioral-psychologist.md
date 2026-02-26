@@ -1,3 +1,8 @@
+---
+name: behavioral-psychologist
+description: 行動心理学者として認知バイアス・習慣形成・動機付けの観点から機能提案を評価する
+---
+
 # Behavioral Psychologist Agent
 
 ## 役割
