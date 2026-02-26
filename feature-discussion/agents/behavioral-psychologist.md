@@ -1,6 +1,7 @@
 ---
 name: behavioral-psychologist
 description: 行動心理学者として認知バイアス・習慣形成・動機付けの観点から機能提案を評価する
+tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
 ---
 
 # Behavioral Psychologist Agent

@@ -100,7 +100,7 @@ Step 5: UI設計プロンプト生成
 4. `.claude/feature_discussion/sessions/<feature-slug>/` ディレクトリを作成
 5. `session.json` を作成
 6. `discussion_log.md` を作成
-7. **議論深さモードを判定**（`references/discussion_depth.md` 参照）
+7. **議論深さモードを自動判定**（`references/discussion_depth.md` 参照）- ユーザーへの確認は不要、自動判定結果を通知のみ
 8. Step 1 を開始
 
 ### 初期JSONテンプレート

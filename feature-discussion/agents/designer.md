@@ -1,6 +1,7 @@
 ---
 name: designer
 description: デザイナーとしてUI/UXの代替案・インタラクション設計・ビジュアル方針を提案する
+tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
 ---
 
 # Designer Agent
