@@ -90,10 +90,24 @@ fi
 if [ ! -f "$PLUGIN_ROOT/.claude-plugin/plugin.json" ]; then
   mkdir -p "$PLUGIN_ROOT/.claude-plugin"
 
-  # SKILL.md から description を抽出
+  # SKILL.md から description を抽出し短縮
   AUTO_DESC=$(sed -n '/^description:/,/^[a-z]/{ /^description:/{ s/^description: *>* *//; p; d; }; /^  /{ s/^  *//; p; }; /^[a-z]/q; }' "$SOURCE_PATH/SKILL.md" | tr '\n' ' ' | sed 's/  */ /g; s/ *$//')
-  AUTO_DESC=$(echo "$AUTO_DESC" | sed 's/[[:space:]]*Use when:.*//; s/[[:space:]]*Triggers:.*//; s/ *$//')
+  AUTO_DESC=$(echo "$AUTO_DESC" | sed 's/[[:space:]]*Use when:.*//; s/[[:space:]]*Triggers:.*//; s/[[:space:]]*Also use when:.*//; s/ *$//')
   [ -z "$AUTO_DESC" ] && AUTO_DESC="$SKILL_NAME skill plugin"
+  # 長い場合は Claude で要約
+  if [ ${#AUTO_DESC} -gt $MAX_DESC_LEN ]; then
+    SUMMARY_TMP=$(mktemp)
+    env -u CLAUDECODE claude -p --model haiku "以下のスキル説明文を${MAX_DESC_LEN}文字以内に要約してください。元の言語を維持し、説明文のみを出力してください。
+
+${AUTO_DESC}" > "$SUMMARY_TMP" 2>/dev/null
+    SHORT=$(cat "$SUMMARY_TMP")
+    rm -f "$SUMMARY_TMP"
+    if [ -n "$SHORT" ] && [ ${#SHORT} -le $MAX_DESC_LEN ] && [ ${#SHORT} -gt 10 ]; then
+      AUTO_DESC="$SHORT"
+    else
+      AUTO_DESC="${AUTO_DESC:0:$((MAX_DESC_LEN - 1))}…"
+    fi
+  fi
 
   # keywords を生成
   AUTO_KEYWORDS=$(echo "$SKILL_NAME" | tr '-' '\n' | jq -R . | jq -s '.')
@@ -139,10 +153,45 @@ echo ""
 # SKILL.md から description を抽出（YAML frontmatter の description フィールド）
 FULL_DESCRIPTION=$(sed -n '/^description:/,/^[a-z]/{ /^description:/{ s/^description: *>* *//; p; d; }; /^  /{ s/^  *//; p; }; /^[a-z]/q; }' "$SOURCE_PATH/SKILL.md" | tr '\n' ' ' | sed 's/  */ /g; s/ *$//')
 
-# marketplace.json 用に要約: "Use when:" / "Triggers:" 以降をカット
-DESCRIPTION=$(echo "$FULL_DESCRIPTION" | sed 's/[[:space:]]*Use when:.*//; s/[[:space:]]*Triggers:.*//; s/ *$//')
+# marketplace.json 用に要約: 不要な部分をカットし、150文字以内に短縮
+MAX_DESC_LEN=150
+
+# Step 1: "Use when:" / "Triggers:" / "Also use when:" 以降をカット
+DESCRIPTION=$(echo "$FULL_DESCRIPTION" | sed 's/[[:space:]]*Use when:.*//; s/[[:space:]]*Triggers:.*//; s/[[:space:]]*Also use when:.*//; s/ *$//')
 # 空になった場合はフルを使う
 [ -z "$DESCRIPTION" ] && DESCRIPTION="$FULL_DESCRIPTION"
+
+# Step 2: まだ長い場合、Claude に要約させる
+if [ ${#DESCRIPTION} -gt $MAX_DESC_LEN ]; then
+  echo "INFO: description が ${#DESCRIPTION} 文字です（上限: ${MAX_DESC_LEN}）。Claude で要約中..."
+  SUMMARY_TMP=$(mktemp)
+  env -u CLAUDECODE claude -p --model haiku "以下のスキル説明文を${MAX_DESC_LEN}文字以内に要約してください。
+ルール:
+- 元の言語（日本語/英語）を維持
+- スキルの核心的な機能だけを残す
+- 「Use when」「Triggers」は含めない
+- 説明文のみを出力（前置きや補足なし）
+
+元の説明文:
+${DESCRIPTION}" > "$SUMMARY_TMP" 2>/dev/null
+  SUMMARIZED=$(cat "$SUMMARY_TMP")
+  rm -f "$SUMMARY_TMP"
+
+  # Claude の出力が有効なら採用
+  if [ -n "$SUMMARIZED" ] && [ ${#SUMMARIZED} -le $MAX_DESC_LEN ] && [ ${#SUMMARIZED} -gt 10 ]; then
+    DESCRIPTION="$SUMMARIZED"
+    echo "OK: Claude が ${#DESCRIPTION} 文字に要約しました"
+  else
+    # フォールバック: 句点で切る → それでもダメなら切り詰め
+    FIRST_SENTENCE=$(echo "$DESCRIPTION" | sed 's/。.*/。/')
+    if [ ${#FIRST_SENTENCE} -le $MAX_DESC_LEN ] && [ ${#FIRST_SENTENCE} -gt 10 ]; then
+      DESCRIPTION="$FIRST_SENTENCE"
+    else
+      DESCRIPTION="${DESCRIPTION:0:$((MAX_DESC_LEN - 1))}…"
+    fi
+    echo "WARN: Claude 要約失敗。フォールバックで ${#DESCRIPTION} 文字に短縮しました"
+  fi
+fi
 
 # SKILL.md から name を抽出
 SKILL_YAML_NAME=$(grep "^name:" "$SOURCE_PATH/SKILL.md" | head -1 | sed 's/^name: *//')

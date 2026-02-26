@@ -535,6 +535,26 @@
         "code",
         "sweep"
       ]
+    },
+    {
+      "name": "feature-discussion",
+      "source": "./feature-discussion",
+      "description": "[Beta] 5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が議論・反論し合いながら新機能を検討するスキル。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載",
+      "version": "0.1.0-beta",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "feature",
+        "discussion",
+        "brainstorm",
+        "requirements",
+        "agent-team",
+        "scoring",
+        "devils-advocate",
+        "persona",
+        "ui-design"
+      ]
     }
   ],
   "metadata": {
