@@ -245,7 +245,7 @@ Claude Code の `agents/*.md` ファイルで SubAgent を正しく定義する�
 | **app-store-preview-movie** | `/app-store-preview-movie` | 5つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー・フレームインスペクター）がチームで App Store プレビュー動画を Remotion (React) で生成・検証するスキル | `app-store, preview, video, remotion, agent-team, animation` |
 | **frame-inspect** | `/frame-inspect` | 動画・画像のフレーム抽出、Remotion レンダリング、仕様チェック、目視検証を行う汎用ビデオツールキット。統一シェルスクリプト (video-tool.sh) で操作 | `video, frame, ffmpeg, ffprobe, remotion, render, inspection, quality, spec-check` |
 | **domain-expertise-extractor** | `/domain-expertise-extractor` | 4つの専門エージェント（ドメインリサーチャー・パターンアナリスト・ナレッジライター・品質チェッカー）がチームでデジタルプロダクト系ドメインの暗黙知を抽出・言語化・構造化し、他のSkillで使えるエージェント定義と評価基準を生成するスキル | `domain, expertise, extractor` |
-| **feature-discussion** | `/feature-discussion` | 5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が議論・反論し合いながら新機能を検討するスキル。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載 | `feature, discussion, brainstorm, requirements, agent-team, scoring, devils-advocate, persona, ui-design` |
+| **feature-discussion** | `/feature-discussion` | 6つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者・User Liaison）が議論・反論し合いながら新機能を検討するスキル。User Liaisonがユーザーへの質問を一元管理し、議論中に適切なタイミングでユーザー入力を取得。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載 | `feature, discussion, brainstorm, requirements, agent-team, scoring, devils-advocate, persona, ui-design` |
 
 ### ui-review
 
@@ -355,9 +355,9 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 
 ### feature-discussion
 
-5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が議論・反論し合いながら新機能を検討するスキル。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載
+6つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者・User Liaison）が議論・反論し合いながら新機能を検討するスキル。User Liaisonがユーザーへの質問を一元管理し、議論中に適切なタイミングでユーザー入力を取得。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載
 
-5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が**議論・反論し合いながら**新機能を検討するスキル。
+6つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者・User Liaison）が**議論・反論し合いながら**新機能を検討するスキル。
 
 ```
 /feature-discussion
@@ -401,8 +401,7 @@ TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook�
 
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
-- **Docker** — ci-check
-- **EAS CLI** — eas-deploy
+- **eas-cli** — eas-deploy
 - **ffmpeg** — frame-inspect
 - **ffprobe** — frame-inspect
 - **gem** — eas-deploy
