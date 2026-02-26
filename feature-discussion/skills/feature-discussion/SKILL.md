@@ -6,8 +6,8 @@ allowed-tools: "Read, Write, Edit, Glob, Grep, Task, TeamCreate, TeamDelete, Web
 
 # Feature Discussion - Agent Team 機能検討スキル
 
-5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が**議論・反論し合いながら**新機能を検討するスキル。
-Facilitator（このSKILL.md自身）がオーケストレーションし、ユーザーとの対話を管理する。
+6つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者・User Liaison）が**議論・反論し合いながら**新機能を検討するスキル。
+Facilitator（このSKILL.md自身）がオーケストレーションし、User Liaisonがユーザーへの質問を一元管理する。
 
 ## 前提条件（CRITICAL）
 
@@ -28,7 +28,8 @@ Facilitator（このSKILL.md自身）がオーケストレーションし、ユ�
 
 | ロール | ファイル | 専門領域 |
 |--------|---------|---------|
-| **Facilitator** | この SKILL.md | 議論進行・合意形成・ユーザー対話 |
+| **Facilitator** | この SKILL.md | 議論進行・合意形成・記録 |
+| **User Liaison** | `agents/user-liaison.md` | ユーザーへの質問一元管理・タイミング判定・回答ルーティング |
 | **Product Manager** | `agents/product-manager.md` | 課題構造化・優先度・スコープ・ビジネス価値 |
 | **UX Analyst** | `agents/ux-analyst.md` | ペルソナ視点評価・ユーザーストーリー・行動分析 |
 | **Engineer** | `agents/engineer.md` | コードベース調査・技術的実現性・工数評価 |
@@ -188,9 +189,18 @@ Step 5: UI設計プロンプト生成
 1. **傾聴する** - まずユーザーの話を聞く
 2. **議論を促す** - エージェント間の意見対立を恐れない
 3. **整理する** - 合意点と対立点を構造化して返す
-4. **判断を求める** - 対立が解決しない場合はユーザーに判断を委ねる
-5. **理由を記録する** - ユーザーの判断理由を必ず確認し記録する（`references/discussion_protocol.md`）
-6. **記録する** - 全ての議論を議事録に残す
+4. **理由を記録する** - ユーザーの判断理由を必ず確認し記録する（`references/discussion_protocol.md`）
+5. **記録する** - 全ての議論を議事録に残す
+
+**注**: ユーザーへの質問は Facilitator ではなく **User Liaison** が担当する。Facilitator は議論の進行と記録に集中する。
+
+### User Liaisonの役割
+
+1. **質問のゲートキーパー** - 各エージェントからの質問リクエストを受け取り、ユーザーに聞くべきか判定する
+2. **質問の統合** - 重複する質問をまとめ、ユーザーの認知負荷を下げる
+3. **適切なタイミング** - 議論がブロックされた時に即座に、関連質問はバッチで質問する
+4. **回答のルーティング** - ユーザーの回答を関連エージェントに共有する
+5. **能動的モニタリング** - 議論の膠着状態や不確実な前提を検出し、ユーザーに確認する
 
 ## セッション完了条件
 
@@ -224,7 +234,9 @@ Step 5: UI設計プロンプト生成
 
 | ファイル | 内容 |
 |---------|------|
-| `references/discussion_protocol.md` | 議論プロトコル R1-R5、エージェント起動パターン、ASK_USER 処理、ユーザー判断追跡 |
+| `references/discussion_protocol.md` | 議論プロトコル R1-R4、チームライフサイクル、収束条件、ユーザー判断追跡 |
+| `references/user_question_protocol.md` | ユーザーへの質問の共通プロトコル（全エージェント共通）、User Liaison 経由のフォーマット |
+| `references/agent_spawn_templates.md` | Step 1-5 のエージェント起動テンプレート、Devil's Advocate 起動パターン |
 | `references/step_details.md` | Step 1-5 の詳細フロー（担当・目的・フロー・完了条件） |
 | `references/quality_control.md` | Quality Gate（共通・固有基準）、ステップ間整合性チェック |
 | `references/discussion_depth.md` | 議論深さモード（Light/Standard/Deep）、自動判定ルール |

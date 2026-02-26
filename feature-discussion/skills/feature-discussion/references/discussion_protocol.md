@@ -23,12 +23,9 @@ TeamCreate(
 )
 ```
 
-### 各ステップ: エージェント起動時
+### 各ステップ: エージェント起動
 
-Task の呼び出しには以下の **3つのパラメータが必須**:
-- `team_name`: `"feature-discussion"` — チーム名（TeamCreate で作成したもの）
-- `name`: エージェント名（例: `"product-manager"`）— SendMessage のルーティングに使用
-- `subagent_type`: `"feature-discussion:<agent-name>"` — エージェント定義の指定
+Task の必須パラメータと各ステップの起動テンプレートは `references/agent_spawn_templates.md` を参照。
 
 ### セッション終了時: チーム削除
 
@@ -52,16 +49,15 @@ TeamDelete()
 - ラウンド数が減り、トークン・時間を節約
 - LLMエージェントはプロンプトで役割が強く定義されているため、アンカリングリスクは低い
 
-**起動方法**: 担当エージェントを Agent Teams（SendMessage 対応）として並列起動する。
-各エージェントのプロンプトに「他のエージェントと SendMessage でやり取りし、
-合意点・対立点・スコアリングをまとめてください」と指示する。
+**起動方法**: `references/agent_spawn_templates.md` のステップ別テンプレートに従い、担当エージェントを並列起動する。
 
 **議論の進め方**:
 1. 各エージェントが自分の視点から初期分析を SendMessage で共有
 2. 他のエージェントの分析に対して反論・補足・質問を SendMessage で返す
 3. 対立点が残る場合は議論を継続し、収束を目指す
-4. ユーザーに確認が必要な場合は `AskUserQuestion` ツールで直接質問する
-5. 合意点・対立点をまとめて議論を終了
+4. ユーザーに確認が必要な場合は user-liaison に質問リクエストを送る（`references/user_question_protocol.md` 参照）
+5. user-liaison がユーザーに質問し、回答を関連エージェントにルーティングする
+6. 合意点・対立点をまとめて議論を終了
 
 **収束条件（往復数制限なし）**: 以下のいずれかを満たした時に自然に終了
 - 全エージェントが合意に達した（新たな反論が出なくなった）
@@ -69,47 +65,10 @@ TeamDelete()
 - 議論が同じ論点の繰り返しになった（収束のシグナル）
 
 **ユーザーへの質問（CRITICAL）**:
-議論中にユーザーの判断や追加情報が必要になった場合、エージェントは
-テキストで `ASK_USER:` と書くのではなく、**`AskUserQuestion` ツールを使って直接ユーザーに質問する**。
-これにより、議論を中断せずにリアルタイムでユーザーの回答を得て、議論に反映できる。
+議論中にユーザーの判断や追加情報が必要になった場合のプロトコルは `references/user_question_protocol.md` を参照。
+エージェントは user-liaison に SendMessage で質問リクエストを送り、直接 `AskUserQuestion` は使わない。
 
-```
-# 前提: TeamCreate(team_name="feature-discussion") が実行済みであること
-
-# 例: Step 1 では PM + UX Analyst + Behavioral Psychologist を起動
-# 全エージェントを並列に起動する（1つのメッセージで複数 Task を呼ぶ）
-
-Task(
-  name="product-manager",                              # SendMessage のルーティング用
-  team_name="feature-discussion",                      # TeamCreate で作成したチーム名
-  subagent_type="feature-discussion:product-manager",
-  prompt=`
-    コンテキスト:
-    - ペルソナ: [ペルソナ情報]
-    - ドメインドキュメント: [docs/domain/ の関連内容]
-    - 機能概要: [ユーザーの要望]
-    - 前ステップの結果: [あれば]
-    - チームメンバー: ux-analyst, behavioral-psychologist
-
-    あなたの視点から分析し、SendMessage で他のエージェントと議論してください。
-    他のエージェントの意見に対して遠慮なく反論してください。
-    ユーザーに確認が必要な場合は AskUserQuestion ツールで直接質問してください。
-    議論が収束したら、合意点・対立点・スコアリングをまとめてください。
-  `
-)
-Task(
-  name="ux-analyst",
-  team_name="feature-discussion",
-  subagent_type="feature-discussion:ux-analyst",
-  prompt=`同上（ペルソナ視点から分析）`
-)
-Task(
-  name="behavioral-psychologist",
-  team_name="feature-discussion",
-  subagent_type="feature-discussion:behavioral-psychologist",
-  prompt=`同上（行動心理学の観点から分析）`
-)
-```
+**起動テンプレート**: `references/agent_spawn_templates.md` を参照。
 
 ## ラウンド 2: スコアリング評価（チーム議論内で実施）
 
@@ -180,7 +139,7 @@ Facilitator（SKILL.md）が：
 4. Devil's Advocate で発見された懸念を提示する
 5. 未解決の対立点についてユーザーに判断を求める
 
-**注**: ユーザーへの質問は議論中に `AskUserQuestion` で随時行われるため、
+**注**: ユーザーへの質問は議論中に User Liaison 経由で随時行われるため、
 統合ラウンドでは未回答の質問や未解決の対立点のみ提示する。
 
 **ユーザーへの提示フォーマット**:
@@ -212,110 +171,14 @@ Facilitator（SKILL.md）が：
 
 ## エージェント起動パターン
 
-### チーム議論起動（ラウンド1: 提案+議論+スコアリング）
-
-```python
-# 前提: TeamCreate(team_name="feature-discussion") が実行済み
-# 全エージェントを1つのメッセージで並列起動する
-
-# Step 1の例: PM + UX Analyst + Behavioral Psychologist
-Task(
-  name="product-manager",
-  team_name="feature-discussion",
-  description="PM: analyze and discuss",
-  subagent_type="feature-discussion:product-manager",
-  prompt=`
-    コンテキスト: [ペルソナ、機能概要、前ステップ結果]
-    チームメンバー: ux-analyst, behavioral-psychologist
-
-    あなたの視点から分析し、SendMessage で他のエージェントと議論してください。
-    反論・補足・質問を交わし、合意点・対立点・スコアリング・ASK_USER をまとめてください。
-  `
-)
-Task(
-  name="ux-analyst",
-  team_name="feature-discussion",
-  description="UX: analyze and discuss",
-  subagent_type="feature-discussion:ux-analyst",
-  prompt=`
-    コンテキスト: [ペルソナ、機能概要、前ステップ結果]
-    チームメンバー: product-manager, behavioral-psychologist
-
-    ペルソナの視点から分析し、SendMessage で他のエージェントと議論してください。
-  `
-)
-Task(
-  name="behavioral-psychologist",
-  team_name="feature-discussion",
-  description="BP: analyze and discuss",
-  subagent_type="feature-discussion:behavioral-psychologist",
-  prompt=`
-    コンテキスト: [ペルソナ、機能概要、前ステップ結果]
-    チームメンバー: product-manager, ux-analyst
-
-    行動心理学の観点から分析し、SendMessage で他のエージェントと議論してください。
-  `
-)
-
-# Step 2の例（全員参加）: 上記 + engineer + designer
-Task(
-  name="engineer",
-  team_name="feature-discussion",
-  description="Engineer: technical analysis",
-  subagent_type="feature-discussion:engineer",
-  prompt=`...`
-)
-Task(
-  name="designer",
-  team_name="feature-discussion",
-  description="Designer: UI analysis",
-  subagent_type="feature-discussion:designer",
-  prompt=`...`
-)
-```
-
-### Devil's Advocate 起動（ラウンド3）
-
-```python
-# 前提: TeamCreate 済みのチームを再利用（同一セッション内）
-# 全エージェントを Devil's Advocate モードで並列起動
-Task(
-  name="product-manager",
-  team_name="feature-discussion",
-  description="PM: devil's advocate",
-  subagent_type="feature-discussion:product-manager",
-  prompt="=== Devil's Advocate モード ===\n現時点の合意案:\n[...]\nスコアリング:\n[...]\n\nこの案の致命的な欠陥を全力で見つけてください。他のエージェントと SendMessage で議論し、指摘の重大度を合意してください。"
-)
-Task(
-  name="ux-analyst",
-  team_name="feature-discussion",
-  description="UX: devil's advocate",
-  subagent_type="feature-discussion:ux-analyst",
-  prompt="同上（ペルソナ視点から致命的欠陥を指摘）"
-)
-# ... engineer, designer, behavioral-psychologist も同様に並列起動
-```
+ステップ別の起動テンプレート（ラウンド1、Devil's Advocate 含む）は `references/agent_spawn_templates.md` を参照。
 
 ---
 
-## ユーザーへの質問（AskUserQuestion）
+## ユーザーへの質問（User Liaison 経由）
 
-議論中にユーザーの判断や追加情報が必要になった場合、**`AskUserQuestion` ツールを使って直接ユーザーに質問する**。
-
-**旧方式（廃止）**: テキストに `ASK_USER:` と記載し、Facilitator が後から収集・提示する方式
-**新方式**: エージェントが議論中に `AskUserQuestion` ツールを呼び出し、リアルタイムで回答を得る
-
-**利点**:
-- 議論を中断せず、ユーザーの回答を即座に議論に反映できる
-- Facilitator による質問の仲介が不要になり、効率的
-- ユーザーが質問の文脈を把握しやすい（議論の流れの中で質問される）
-
-**使い方**:
-各エージェントのプロンプトに以下を指示する：
-```
-ユーザーに確認が必要な場合は、AskUserQuestion ツールを使って直接質問してください。
-質問には背景（なぜこの情報が必要か）を含めてください。
-```
+詳細は `references/user_question_protocol.md` を参照。
+User Liaison の行動ルールは `agents/user-liaison.md` を参照。
 
 ---
 
