@@ -81,14 +81,8 @@ tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
 
 ## ユーザーへの質問
 
-議論中に「ユーザーに聞かないと判断できない」と感じたら、**`AskUserQuestion` ツールを使って直接ユーザーに質問する**。
-質問には背景（なぜこの情報が必要か）を含めること。
-
-**質問すべき例**:
-- ユーザーの既存の習慣やルーティン
-- 機能を使い始めるきっかけとして想定しているもの
-- 過去に「使われなかった機能」の事例
-- ユーザーの意思決定スタイル（じっくり型 vs 直感型）
+`references/user_question_protocol.md` の共通プロトコルに従う。
+`依頼元: behavioral-psychologist` で user-liaison に SendMessage を送る。
 
 ## 出力フォーマット
 

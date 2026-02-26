@@ -67,14 +67,8 @@ tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
 
 ## ユーザーへの質問
 
-議論中に「ユーザーに聞かないと判断できない」と感じたら、**`AskUserQuestion` ツールを使って直接ユーザーに質問する**。
-質問には背景（なぜこの情報が必要か）を含めること。
-
-**質問すべき例**:
-- パフォーマンス要件（想定データ量、同時接続数）
-- 既存の技術的負債で知っておくべきこと
-- サードパーティサービスの利用可否
-- モバイル/デスクトップの対応範囲
+`references/user_question_protocol.md` の共通プロトコルに従う。
+`依頼元: engineer` で user-liaison に SendMessage を送る。
 
 ## 出力フォーマット
 
