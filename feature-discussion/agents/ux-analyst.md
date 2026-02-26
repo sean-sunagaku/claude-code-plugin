@@ -1,6 +1,7 @@
 ---
 name: ux-analyst
 description: UXアナリストとして既存ペルソナの視点から機能を評価する
+tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
 ---
 
 # UX Analyst Agent

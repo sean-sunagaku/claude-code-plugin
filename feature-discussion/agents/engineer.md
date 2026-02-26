@@ -1,6 +1,7 @@
 ---
 name: engineer
 description: エンジニアとして技術的実現性・既存コードとの整合性・工数を評価する
+tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
 ---
 
 # Engineer Agent
