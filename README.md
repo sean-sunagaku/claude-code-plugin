@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-28-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-29-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -245,6 +245,7 @@ Claude Code の `agents/*.md` ファイルで SubAgent を正しく定義する�
 | **app-store-preview-movie** | `/app-store-preview-movie` | 5つの専門エージェント（ビデオディレクター・モーションデザイナー・スクリプトライター・プレビューレビュアー・フレームインスペクター）がチームで App Store プレビュー動画を Remotion (React) で生成・検証するスキル | `app-store, preview, video, remotion, agent-team, animation` |
 | **frame-inspect** | `/frame-inspect` | 動画・画像のフレーム抽出、Remotion レンダリング、仕様チェック、目視検証を行う汎用ビデオツールキット。統一シェルスクリプト (video-tool.sh) で操作 | `video, frame, ffmpeg, ffprobe, remotion, render, inspection, quality, spec-check` |
 | **domain-expertise-extractor** | `/domain-expertise-extractor` | 4つの専門エージェント（ドメインリサーチャー・パターンアナリスト・ナレッジライター・品質チェッカー）がチームでデジタルプロダクト系ドメインの暗黙知を抽出・言語化・構造化し、他のSkillで使えるエージェント定義と評価基準を生成するスキル | `domain, expertise, extractor` |
+| **feature-discussion** | `/feature-discussion` | 5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が議論・反論し合いながら新機能を検討するスキル。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載 | `feature, discussion, brainstorm, requirements, agent-team, scoring, devils-advocate, persona, ui-design` |
 
 ### ui-review
 
@@ -352,6 +353,16 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 /domain-expertise-extractor
 ```
 
+### feature-discussion
+
+5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が議論・反論し合いながら新機能を検討するスキル。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載
+
+5つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者）が**議論・反論し合いながら**新機能を検討するスキル。
+
+```
+/feature-discussion
+```
+
 ## Hooks
 
 > PostToolUse / PreToolUse 等のフックプラグイン。インストールすると自動的に有効化されます。
@@ -390,15 +401,15 @@ TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook�
 
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
-- **EAS CLI (eas)** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect
-- **ffprobe** — app-store-preview-movie / frame-inspect
+- **Docker** — ci-check
+- **EAS CLI** — eas-deploy
+- **ffmpeg** — frame-inspect
+- **ffprobe** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
-- **Node.js** — svg-to-png
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
