@@ -5,6 +5,40 @@
 
 ---
 
+## チームライフサイクル（CRITICAL）
+
+Agent Teams で SendMessage を使うには、**事前に TeamCreate でチームを作成**する必要がある。
+チームが存在しない状態で `team_name` を指定して Task を起動するとエラーになる。
+
+### セッション開始時: チーム作成
+
+```python
+# 1. 既存チームがあれば削除（前セッションの残りを掃除）
+TeamDelete()  # エラーが出ても無視（チームが無い場合）
+
+# 2. 新しいチームを作成
+TeamCreate(
+  team_name="feature-discussion",
+  description="<機能名>の議論チーム"
+)
+```
+
+### 各ステップ: エージェント起動時
+
+Task の呼び出しには以下の **3つのパラメータが必須**:
+- `team_name`: `"feature-discussion"` — チーム名（TeamCreate で作成したもの）
+- `name`: エージェント名（例: `"product-manager"`）— SendMessage のルーティングに使用
+- `subagent_type`: `"feature-discussion:<agent-name>"` — エージェント定義の指定
+
+### セッション終了時: チーム削除
+
+```python
+# 全ステップ完了後にチームを削除
+TeamDelete()
+```
+
+---
+
 ## ラウンド 1: チーム議論（SendMessage による相互議論）
 
 ステップに関係するエージェントを**Agent Teams として起動**し、
@@ -40,11 +74,14 @@
 これにより、議論を中断せずにリアルタイムでユーザーの回答を得て、議論に反映できる。
 
 ```
+# 前提: TeamCreate(team_name="feature-discussion") が実行済みであること
+
 # 例: Step 1 では PM + UX Analyst + Behavioral Psychologist を起動
-# 各エージェントは feature-discussion:xxx の subagent_type で起動し、
-# SendMessage で相互にやり取りする
+# 全エージェントを並列に起動する（1つのメッセージで複数 Task を呼ぶ）
 
 Task(
+  name="product-manager",                              # SendMessage のルーティング用
+  team_name="feature-discussion",                      # TeamCreate で作成したチーム名
   subagent_type="feature-discussion:product-manager",
   prompt=`
     コンテキスト:
@@ -52,7 +89,7 @@ Task(
     - ドメインドキュメント: [docs/domain/ の関連内容]
     - 機能概要: [ユーザーの要望]
     - 前ステップの結果: [あれば]
-    - チームメンバー: UX Analyst, Behavioral Psychologist
+    - チームメンバー: ux-analyst, behavioral-psychologist
 
     あなたの視点から分析し、SendMessage で他のエージェントと議論してください。
     他のエージェントの意見に対して遠慮なく反論してください。
@@ -60,7 +97,18 @@ Task(
     議論が収束したら、合意点・対立点・スコアリングをまとめてください。
   `
 )
-# UX Analyst, Behavioral Psychologist も同様に並列起動
+Task(
+  name="ux-analyst",
+  team_name="feature-discussion",
+  subagent_type="feature-discussion:ux-analyst",
+  prompt=`同上（ペルソナ視点から分析）`
+)
+Task(
+  name="behavioral-psychologist",
+  team_name="feature-discussion",
+  subagent_type="feature-discussion:behavioral-psychologist",
+  prompt=`同上（行動心理学の観点から分析）`
+)
 ```
 
 ## ラウンド 2: スコアリング評価（チーム議論内で実施）
@@ -167,52 +215,85 @@ Facilitator（SKILL.md）が：
 ### チーム議論起動（ラウンド1: 提案+議論+スコアリング）
 
 ```python
-# Step 1の例: PM + UX Analyst + Behavioral Psychologist を Agent Teams で起動
-# 各エージェントは SendMessage で相互にやり取りする
+# 前提: TeamCreate(team_name="feature-discussion") が実行済み
+# 全エージェントを1つのメッセージで並列起動する
+
+# Step 1の例: PM + UX Analyst + Behavioral Psychologist
 Task(
+  name="product-manager",
+  team_name="feature-discussion",
   description="PM: analyze and discuss",
   subagent_type="feature-discussion:product-manager",
   prompt=`
     コンテキスト: [ペルソナ、機能概要、前ステップ結果]
-    チームメンバー: UX Analyst, Behavioral Psychologist
+    チームメンバー: ux-analyst, behavioral-psychologist
 
     あなたの視点から分析し、SendMessage で他のエージェントと議論してください。
     反論・補足・質問を交わし、合意点・対立点・スコアリング・ASK_USER をまとめてください。
   `
 )
 Task(
+  name="ux-analyst",
+  team_name="feature-discussion",
   description="UX: analyze and discuss",
   subagent_type="feature-discussion:ux-analyst",
   prompt=`
     コンテキスト: [ペルソナ、機能概要、前ステップ結果]
-    チームメンバー: PM, Behavioral Psychologist
+    チームメンバー: product-manager, behavioral-psychologist
 
     ペルソナの視点から分析し、SendMessage で他のエージェントと議論してください。
   `
 )
 Task(
+  name="behavioral-psychologist",
+  team_name="feature-discussion",
   description="BP: analyze and discuss",
   subagent_type="feature-discussion:behavioral-psychologist",
   prompt=`
     コンテキスト: [ペルソナ、機能概要、前ステップ結果]
-    チームメンバー: PM, UX Analyst
+    チームメンバー: product-manager, ux-analyst
 
     行動心理学の観点から分析し、SendMessage で他のエージェントと議論してください。
   `
+)
+
+# Step 2の例（全員参加）: 上記 + engineer + designer
+Task(
+  name="engineer",
+  team_name="feature-discussion",
+  description="Engineer: technical analysis",
+  subagent_type="feature-discussion:engineer",
+  prompt=`...`
+)
+Task(
+  name="designer",
+  team_name="feature-discussion",
+  description="Designer: UI analysis",
+  subagent_type="feature-discussion:designer",
+  prompt=`...`
 )
 ```
 
 ### Devil's Advocate 起動（ラウンド3）
 
 ```python
-# 全エージェントを Agent Teams で Devil's Advocate モードで起動
-# SendMessage で互いの指摘にも反論し合う
+# 前提: TeamCreate 済みのチームを再利用（同一セッション内）
+# 全エージェントを Devil's Advocate モードで並列起動
 Task(
+  name="product-manager",
+  team_name="feature-discussion",
   description="PM: devil's advocate",
   subagent_type="feature-discussion:product-manager",
   prompt="=== Devil's Advocate モード ===\n現時点の合意案:\n[...]\nスコアリング:\n[...]\n\nこの案の致命的な欠陥を全力で見つけてください。他のエージェントと SendMessage で議論し、指摘の重大度を合意してください。"
 )
-# ... 全エージェント同様に並列起動
+Task(
+  name="ux-analyst",
+  team_name="feature-discussion",
+  description="UX: devil's advocate",
+  subagent_type="feature-discussion:ux-analyst",
+  prompt="同上（ペルソナ視点から致命的欠陥を指摘）"
+)
+# ... engineer, designer, behavioral-psychologist も同様に並列起動
 ```
 
 ---
