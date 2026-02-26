@@ -1,7 +1,7 @@
 ---
 name: feature-discussion
 description: 既存アプリへの新機能追加を壁打ちで検討するスキル。「この機能どうしよう」「新機能を考えたい」「要件を整理したい」「壁打ちしたい」などと言及した時に使用。課題の深掘りから要件定義、UI設計プロンプト生成まで段階的に進行。
-allowed-tools: "Read, Write, Edit, Glob, Grep, Task, WebSearch"
+allowed-tools: "Read, Write, Edit, Glob, Grep, Task, WebSearch, AskUserQuestion"
 ---
 
 # Feature Discussion - Agent Team 機能検討スキル
@@ -81,12 +81,10 @@ Step 5: UI設計プロンプト生成
 **各ステップで以下の順序を実行する**。詳細は `references/discussion_protocol.md` を参照。
 
 1. **整合性チェック**: 前ステップの成果物との矛盾を検出（`references/quality_control.md`）
-2. **R1 初期提案**: 担当エージェントを並列起動、各自の視点から提案
-3. **R2 クロスレビュー**: 他エージェントの提案を批判・反論（対立が残れば最大2回繰り返し）
-4. **R3 スコアリング**: 5軸×5段階で定量評価
-5. **R4 Devil's Advocate**: 全員が合意案を破壊しにかかる
-6. **R5 統合**: 合意・対立・懸念・質問をまとめてユーザーに提示
-7. **Quality Gate**: 品質基準を満たしているかチェック（`references/quality_control.md`）
+2. **R1 チーム議論**: 担当エージェントを Agent Teams で起動、SendMessage で最初から相互に議論・反論・スコアリングまで実施
+3. **R2 Devil's Advocate**: 全員が合意案を破壊しにかかる
+4. **R3 統合**: 合意・対立・懸念・質問をまとめてユーザーに提示
+5. **Quality Gate**: 品質基準を満たしているかチェック（`references/quality_control.md`）
 
 議論深さモード（Light/Standard/Deep）でラウンド回数を調整。詳細は `references/discussion_depth.md` を参照。
 

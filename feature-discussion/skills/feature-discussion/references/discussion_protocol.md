@@ -1,54 +1,73 @@
 # 議論プロトコル
 
 各ステップで実行する「議論ラウンド」の詳細。
-ラウンド1〜3は必須、ラウンド4（Devil's Advocate）はステップに応じて実行。
-対立が解決しない場合はラウンド2〜3を最大2回繰り返す（マルチラウンド）。
+ラウンド1〜4は必須、ラウンド3（Devil's Advocate）はステップに応じて実行。
 
 ---
 
-## ラウンド 1: 初期提案（並列）
+## ラウンド 1: チーム議論（SendMessage による相互議論）
 
-ステップに関係するエージェントを**並列で**起動し、それぞれの視点から提案を出す。
-**Behavioral Psychologist も並列で参加**し、行動心理学の観点から初期評価を行う。
+ステップに関係するエージェントを**Agent Teams として起動**し、
+**最初から SendMessage で相互にやり取りしながら**提案・反論・合意形成を行う。
+
+独立した提案フェーズは設けない。各エージェントが自分の視点から発言し、
+他のエージェントの発言を受けてリアルタイムに反論・修正・合意を進める。
+
+**設計意図**: 独立提案→クロスレビューの2段階方式と比べて：
+- 議論が最初から噛み合い、効率的
+- ラウンド数が減り、トークン・時間を節約
+- LLMエージェントはプロンプトで役割が強く定義されているため、アンカリングリスクは低い
+
+**起動方法**: 担当エージェントを Agent Teams（SendMessage 対応）として並列起動する。
+各エージェントのプロンプトに「他のエージェントと SendMessage でやり取りし、
+合意点・対立点・スコアリングをまとめてください」と指示する。
+
+**議論の進め方**:
+1. 各エージェントが自分の視点から初期分析を SendMessage で共有
+2. 他のエージェントの分析に対して反論・補足・質問を SendMessage で返す
+3. 対立点が残る場合は議論を継続し、収束を目指す
+4. ユーザーに確認が必要な場合は `AskUserQuestion` ツールで直接質問する
+5. 合意点・対立点をまとめて議論を終了
+
+**収束条件（往復数制限なし）**: 以下のいずれかを満たした時に自然に終了
+- 全エージェントが合意に達した（新たな反論が出なくなった）
+- 対立点が明確に整理され、エージェント間では解消不可能と判断された（ユーザー判断に委ねる）
+- 議論が同じ論点の繰り返しになった（収束のシグナル）
+
+**ユーザーへの質問（CRITICAL）**:
+議論中にユーザーの判断や追加情報が必要になった場合、エージェントは
+テキストで `ASK_USER:` と書くのではなく、**`AskUserQuestion` ツールを使って直接ユーザーに質問する**。
+これにより、議論を中断せずにリアルタイムでユーザーの回答を得て、議論に反映できる。
 
 ```
-# 例: Step 1 では PM + UX Analyst + Behavioral Psychologist を並列起動
-Task(subagent_type="general-purpose", prompt=`
-  [agents/product-manager.md の内容]
+# 例: Step 1 では PM + UX Analyst + Behavioral Psychologist を起動
+# 各エージェントは feature-discussion:xxx の subagent_type で起動し、
+# SendMessage で相互にやり取りする
 
-  コンテキスト:
-  - ペルソナ: [ペルソナ情報]
-  - ドメインドキュメント: [docs/domain/ の関連内容]
-  - 機能概要: [ユーザーの要望]
-  - 前ステップの結果: [あれば]
+Task(
+  subagent_type="feature-discussion:product-manager",
+  prompt=`
+    コンテキスト:
+    - ペルソナ: [ペルソナ情報]
+    - ドメインドキュメント: [docs/domain/ の関連内容]
+    - 機能概要: [ユーザーの要望]
+    - 前ステップの結果: [あれば]
+    - チームメンバー: UX Analyst, Behavioral Psychologist
 
-  あなたの視点から提案してください。
-  出力の最後にスコアリング評価を含めてください。
-`)
+    あなたの視点から分析し、SendMessage で他のエージェントと議論してください。
+    他のエージェントの意見に対して遠慮なく反論してください。
+    ユーザーに確認が必要な場合は AskUserQuestion ツールで直接質問してください。
+    議論が収束したら、合意点・対立点・スコアリングをまとめてください。
+  `
+)
+# UX Analyst, Behavioral Psychologist も同様に並列起動
 ```
 
-## ラウンド 2: クロスレビュー・反論（並列）
+## ラウンド 2: スコアリング評価（チーム議論内で実施）
 
-各エージェントに**他のエージェントの提案を渡し、批判・反論**させる。
-
-```
-Task(subagent_type="general-purpose", prompt=`
-  [agents/engineer.md の内容]
-
-  以下は他のエージェントの提案です。
-  あなたの視点から、問題点・リスク・見落としを指摘してください。
-  遠慮なく反論してください。
-
-  PM提案: [ラウンド1の結果]
-  Designer提案: [ラウンド1の結果]
-  Behavioral Psychologist分析: [ラウンド1の結果]
-`)
-```
-
-**マルチラウンド**: 対立が2件以上残っている場合、反論結果を再び全エージェントに渡して
-ラウンド2を繰り返す（最大2回まで）。各ラウンドで対立が減っていくことを確認する。
-
-## ラウンド 3: スコアリング評価（並列）
+**注**: Standard/Deep モードでは、ラウンド1のチーム議論の中でスコアリングも実施する。
+議論の終盤で各エージェントが評価を出し合い、SendMessage で合意する。
+Light モードでは簡易スコアのみ。
 
 全エージェントが各提案/案を**5段階で定量評価**する。
 
@@ -73,9 +92,9 @@ Task(subagent_type="general-purpose", prompt=`
 **重要**: スコアが低い項目には必ず理由を付記する。
 特に**行動実現性が3以下の場合**は、Behavioral Psychologistの指摘を重点的に検討する。
 
-## ラウンド 4: Devil's Advocate（全員）
+## ラウンド 3: Devil's Advocate（全員）
 
-**各ステップの最終ラウンドとして実行**。
+**チーム議論の後、最終ラウンドとして実行**。
 全エージェントが「全力で反論モード」に切り替わり、現時点の合意案を破壊しにかかる。
 
 ```
@@ -104,15 +123,17 @@ Task(subagent_type="general-purpose", prompt=`
 2. 重要だが対処可能な指摘 → リスクとして記録、対策を追記
 3. 過剰な指摘（他のエージェントが反論できた）→ 却下理由を記録
 
-## ラウンド 5: 統合・ユーザー提示
+## ラウンド 4: 統合・ユーザー提示
 
 Facilitator（SKILL.md）が：
 1. 合意点をまとめる
 2. 対立点を明示する
 3. スコアリング結果を提示する
 4. Devil's Advocate で発見された懸念を提示する
-5. ASK_USER の質問をまとめて提示する
-6. ユーザーに判断を求める
+5. 未解決の対立点についてユーザーに判断を求める
+
+**注**: ユーザーへの質問は議論中に `AskUserQuestion` で随時行われるため、
+統合ラウンドでは未回答の質問や未解決の対立点のみ提示する。
 
 **ユーザーへの提示フォーマット**:
 ```
@@ -127,7 +148,7 @@ Facilitator（SKILL.md）が：
 ✅ 合意:
   - [全員が同意した点]
 
-⚡ 対立:
+⚡ 対立（ユーザー判断が必要）:
   1. [論点A]
      - PM: 「〇〇すべき」（理由: ...）
      - Engineer: 「△△のリスクがある」（理由: ...）
@@ -136,89 +157,83 @@ Facilitator（SKILL.md）が：
 ⚠️ Devil's Advocate 懸念:
   - [致命的ではないが注意すべき点]
 
-❓ チームからの質問:
-  - [ASK_USER の質問]
-
-どちらの方向で進めますか？
+どう判断しますか？
 ```
 
 ---
 
 ## エージェント起動パターン
 
-### 並列起動（ラウンド1: 初期提案）
+### チーム議論起動（ラウンド1: 提案+議論+スコアリング）
 
 ```python
-# Step 1の例: PM + UX Analyst + Behavioral Psychologist を並列起動
+# Step 1の例: PM + UX Analyst + Behavioral Psychologist を Agent Teams で起動
+# 各エージェントは SendMessage で相互にやり取りする
 Task(
-  description="PM: analyze problem",
-  subagent_type="general-purpose",
-  prompt="[agents/product-manager.md の内容]\n\nコンテキスト:\n- ペルソナ: [...]\n- ドメインドキュメント: [...]\n\n提案してください。スコアリング評価を含めてください。"
+  description="PM: analyze and discuss",
+  subagent_type="feature-discussion:product-manager",
+  prompt=`
+    コンテキスト: [ペルソナ、機能概要、前ステップ結果]
+    チームメンバー: UX Analyst, Behavioral Psychologist
+
+    あなたの視点から分析し、SendMessage で他のエージェントと議論してください。
+    反論・補足・質問を交わし、合意点・対立点・スコアリング・ASK_USER をまとめてください。
+  `
 )
 Task(
-  description="UX: evaluate from persona",
-  subagent_type="general-purpose",
-  prompt="[agents/ux-analyst.md の内容]\n\nコンテキスト:\n...\n\n提案してください。スコアリング評価を含めてください。"
+  description="UX: analyze and discuss",
+  subagent_type="feature-discussion:ux-analyst",
+  prompt=`
+    コンテキスト: [ペルソナ、機能概要、前ステップ結果]
+    チームメンバー: PM, Behavioral Psychologist
+
+    ペルソナの視点から分析し、SendMessage で他のエージェントと議論してください。
+  `
 )
 Task(
-  description="BP: behavioral analysis",
-  subagent_type="general-purpose",
-  prompt="[agents/behavioral-psychologist.md の内容]\n\nコンテキスト:\n...\n\nフォッグ行動モデルで評価してください。スコアリング評価を含めてください。"
+  description="BP: analyze and discuss",
+  subagent_type="feature-discussion:behavioral-psychologist",
+  prompt=`
+    コンテキスト: [ペルソナ、機能概要、前ステップ結果]
+    チームメンバー: PM, UX Analyst
+
+    行動心理学の観点から分析し、SendMessage で他のエージェントと議論してください。
+  `
 )
 ```
 
-### クロスレビュー起動（ラウンド2: 反論）
+### Devil's Advocate 起動（ラウンド3）
 
 ```python
-# 全エージェントに他の提案を渡して反論させる（並列）
-Task(
-  description="Engineer: challenge proposals",
-  subagent_type="general-purpose",
-  prompt="[agents/engineer.md の内容]\n\n他の提案:\nPM: [...]\nDesigner: [...]\nBP: [...]\n\n遠慮なく反論してください。"
-)
-Task(
-  description="BP: challenge proposals",
-  subagent_type="general-purpose",
-  prompt="[agents/behavioral-psychologist.md の内容]\n\n他の提案:\nPM: [...]\nEngineer: [...]\nDesigner: [...]\n\n行動心理学の観点から問題点を指摘してください。"
-)
-# ... 他のエージェントも同様
-```
-
-### Devil's Advocate 起動（ラウンド4）
-
-```python
-# 全エージェントを並列でDevil's Advocateモードで起動
+# 全エージェントを Agent Teams で Devil's Advocate モードで起動
+# SendMessage で互いの指摘にも反論し合う
 Task(
   description="PM: devil's advocate",
-  subagent_type="general-purpose",
-  prompt="[agents/product-manager.md の内容]\n\n=== Devil's Advocate モード ===\n現時点の合意案:\n[...]\nスコアリング:\n[...]\n\nこの案の致命的な欠陥を全力で見つけてください。"
+  subagent_type="feature-discussion:product-manager",
+  prompt="=== Devil's Advocate モード ===\n現時点の合意案:\n[...]\nスコアリング:\n[...]\n\nこの案の致命的な欠陥を全力で見つけてください。他のエージェントと SendMessage で議論し、指摘の重大度を合意してください。"
 )
 # ... 全エージェント同様に並列起動
 ```
 
 ---
 
-## ASK_USER 処理
+## ユーザーへの質問（AskUserQuestion）
 
-各エージェントは出力に `ASK_USER:` セクションを含めることができる。
-Facilitatorは以下のように処理する：
+議論中にユーザーの判断や追加情報が必要になった場合、**`AskUserQuestion` ツールを使って直接ユーザーに質問する**。
 
-1. 全エージェントの出力から `ASK_USER:` を収集
-2. 重複する質問をマージ
-3. 優先度順に並べ替え（議論がブロックされている質問を優先）
-4. ユーザーに質問をまとめて提示
+**旧方式（廃止）**: テキストに `ASK_USER:` と記載し、Facilitator が後から収集・提示する方式
+**新方式**: エージェントが議論中に `AskUserQuestion` ツールを呼び出し、リアルタイムで回答を得る
 
-**提示フォーマット**:
+**利点**:
+- 議論を中断せず、ユーザーの回答を即座に議論に反映できる
+- Facilitator による質問の仲介が不要になり、効率的
+- ユーザーが質問の文脈を把握しやすい（議論の流れの中で質問される）
+
+**使い方**:
+各エージェントのプロンプトに以下を指示する：
 ```
-━━━━ チームからの質問 ━━━━
-
-以下の点について、判断をお願いします：
-
-1. [質問]（PM・Engineerが回答を必要としています）
-   → 背景: [なぜこの情報が必要か]
-
-2. [質問]（Behavioral Psychologistが回答を必要としています）
-   → 背景: [なぜこの情報が必要か]
+ユーザーに確認が必要な場合は、AskUserQuestion ツールを使って直接質問してください。
+質問には背景（なぜこの情報が必要か）を含めてください。
 ```
 
 ---
