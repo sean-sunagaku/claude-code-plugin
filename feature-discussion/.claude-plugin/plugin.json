@@ -1,0 +1,13 @@
+{
+  "name": "feature-discussion",
+  "version": "0.1.0-beta",
+  "description": "既存アプリへの新機能追加を壁打ちで検討するスキル。「この機能どうしよう」「新機能を考えたい」「要件を整理したい」「壁打ちしたい」などと言及した時に使用。課題の深掘りから要件定義、UI設計プロンプト生成まで段階的に進行。",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "feature",
+    "discussion"
+  ]
+}

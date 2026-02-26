@@ -34,7 +34,17 @@ else
   echo "OK: description field found"
 fi
 
-# 4. references/ 内のファイルが SKILL.md から参照されているか
+# 4. description の長さチェック（150文字推奨）
+DESC_RAW=$(sed -n '/^description:/,/^[a-z]/{ /^description:/{ s/^description: *>* *//; p; d; }; /^  /{ s/^  *//; p; }; /^[a-z]/q; }' "$SKILL_PATH/SKILL.md" | tr '\n' ' ' | sed 's/  */ /g; s/ *$//')
+DESC_LEN=${#DESC_RAW}
+MAX_DESC_LEN=150
+if [ "$DESC_LEN" -gt "$MAX_DESC_LEN" ]; then
+  echo "WARN: description が ${DESC_LEN} 文字です（推奨: ${MAX_DESC_LEN}文字以内）。publish 時に自動短縮されます"
+elif [ "$DESC_LEN" -gt 0 ]; then
+  echo "OK: description length ${DESC_LEN} chars"
+fi
+
+# 5. references/ 内のファイルが SKILL.md から参照されているか
 if [ -d "$SKILL_PATH/references" ]; then
   for ref in "$SKILL_PATH/references/"*; do
     basename_ref=$(basename "$ref")
