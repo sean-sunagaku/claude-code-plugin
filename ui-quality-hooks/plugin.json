@@ -1,0 +1,38 @@
+{
+  "name": "ui-quality-hooks",
+  "version": "1.0.0",
+  "description": "UI品質チェック Hook セット。静的パターン検出（createPortal漏れ、z-index競合）+ AI分析（DOM構造、コンソールエラー）の3つのPostToolUseフックをまとめて提供。",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/plugins/cache/sunagaku-marketplace/ui-quality-hooks/1.0.0/hooks/check-ui-patterns/hook.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__chrome-devtools__take_snapshot",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/plugins/cache/sunagaku-marketplace/ui-quality-hooks/1.0.0/hooks/check-dom-ai/hook.sh\"",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__chrome-devtools__list_console_messages",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/plugins/cache/sunagaku-marketplace/ui-quality-hooks/1.0.0/hooks/check-console-ai/hook.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
