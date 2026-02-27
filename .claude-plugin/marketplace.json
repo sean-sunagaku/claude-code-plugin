@@ -555,6 +555,23 @@
         "persona",
         "ui-design"
       ]
+    },
+    {
+      "name": "design-discussion",
+      "source": "./design-discussion",
+      "description": "5人の専門エージェントチーム（solution-architect・engineer・product-manager・user-liaison・devil's-advocate）で技術設計を壁打ちするスキル。実装アプローチの比較・技術設計の選択・アーキテクチャの意思決定に特化。ADR形式で決定を記録",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "design",
+        "discussion",
+        "architecture",
+        "adr",
+        "agent-team",
+        "trade-off"
+      ]
     }
   ],
   "metadata": {
