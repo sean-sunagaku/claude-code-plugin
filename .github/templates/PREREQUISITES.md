@@ -7,9 +7,8 @@
 
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
-- **eas-cli** — eas-deploy
-- **ffmpeg** — frame-inspect
-- **ffprobe** — frame-inspect
+- **ffmpeg** — app-store-preview-movie / frame-inspect
+- **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
