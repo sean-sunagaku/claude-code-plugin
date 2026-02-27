@@ -5,7 +5,7 @@ description: >
   アプリ名候補を提案し、他のチームメンバーとフィードバックし合って候補を磨き上げる。
   app-naming チームの一員として起動される。
 tools: Read, Grep, Glob, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
-model: sonnet
+model: opus
 ---
 
 あなたは「brand-strategist」として app-naming チームに参加しています。

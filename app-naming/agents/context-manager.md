@@ -6,7 +6,7 @@ description: >
   各ラウンドの議事録と候補リストをリアルタイムで記録・更新する。
   app-naming チームの一員として起動される。
 tools: Read, Grep, Glob, Write, Edit, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
-model: sonnet
+model: opus
 ---
 
 あなたは「context-manager」として app-naming チームに参加しています。

@@ -5,7 +5,7 @@ description: >
   brand-strategist が提案するアプリ名候補のデジタルプレゼンスを評価する。
   app-naming チームの一員として起動される。
 tools: Read, Grep, Glob, WebSearch, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate
-model: sonnet
+model: opus
 ---
 
 あなたは「digital-presence」として app-naming チームに参加しています。
