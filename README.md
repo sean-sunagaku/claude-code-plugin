@@ -382,6 +382,7 @@ CI 失敗の検出 → ログ取得 → 修正 → push → 再検証のルー�
 |------|-------------|-------|----------|
 | **agent-teams-log** | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `PostToolUse` | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
 | **task-granularity** | TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する | `PreToolUse` | `task, granularity, hook, PreToolUse, TaskCreate, quality, haiku` |
+| **ui-quality-hooks** | UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パターン検出（createPortal漏れ、z-index競合）+ take_snapshot後のAI DOM分析 + list_console_messages後のAIコンソールエラー分類。claude -p (Haiku) で分析し additionalContext でフィードバック | `PostToolUse` | `ui, quality, hook, PostToolUse, createPortal, DOM, console, accessibility, claude-p, haiku` |
 
 ### agent-teams-log
 
@@ -390,6 +391,10 @@ Agent Teams の SendMessage を自動ログする PostToolUse hook。エージ�
 ### task-granularity
 
 TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する
+
+### ui-quality-hooks
+
+UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パターン検出（createPortal漏れ、z-index競合）+ take_snapshot後のAI DOM分析 + list_console_messages後のAIコンソールエラー分類。claude -p (Haiku) で分析し additionalContext でフィードバック
 
 ## Internal Skills
 
@@ -412,6 +417,8 @@ TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook�
 
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
+- **Docker** — ci-check
+- **eas** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
@@ -422,8 +429,11 @@ TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook�
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
+- **pod** — eas-deploy
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
+- **sips** — screenshot-creator
+- **xcode-select** — eas-deploy
 - **yarn** — ci-check
 
 ## FAQ

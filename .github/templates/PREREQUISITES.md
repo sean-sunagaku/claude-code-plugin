@@ -7,6 +7,8 @@
 
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
+- **Docker** — ci-check
+- **eas** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
@@ -17,6 +19,9 @@
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
+- **pod** — eas-deploy
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
+- **sips** — screenshot-creator
+- **xcode-select** — eas-deploy
 - **yarn** — ci-check
