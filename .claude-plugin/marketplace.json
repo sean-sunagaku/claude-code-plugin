@@ -572,6 +572,27 @@
         "agent-team",
         "trade-off"
       ]
+    },
+    {
+      "name": "ui-quality-hooks",
+      "source": "./ui-quality-hooks",
+      "description": "UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パターン検出（createPortal漏れ、z-index競合）+ take_snapshot後のAI DOM分析 + list_console_messages後のAIコンソールエラー分類。claude -p (Haiku) で分析し additionalContext でフィードバック",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "ui",
+        "quality",
+        "hook",
+        "PostToolUse",
+        "createPortal",
+        "DOM",
+        "console",
+        "accessibility",
+        "claude-p",
+        "haiku"
+      ]
     }
   ],
   "metadata": {
