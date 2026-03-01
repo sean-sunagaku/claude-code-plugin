@@ -413,9 +413,27 @@ progress.md を読めば現在地がわかる。以下の手順で再開:
 以下は実際の構築で判明した制限。詳細は `references/css-mapping.md` のセクション 12 を参照。
 
 - **linear-gradient()**: CSS 構文を `fill` にそのまま渡すと透明になる → Pencil 構造化構文 `{type: "gradient", gradientType: "linear", rotation: N, colors: [{color, position}]}` を使う
-- **layout プロパティ**: `U()` Update で後付けすると反映されない場合がある → `I()` Insert 時に必ず指定
+- **layout プロパティが Insert 時に消える**: `I()` で `layout: "horizontal"` を指定しても**サイレントに除外される**。`justifyContent`、`alignItems` も同様。**必ず `I()` の後に `U()` で再設定し、`batch_get` で保存を確認する**
+- **icon_font の width/height がデフォルト 0**: `I()` で指定しても 0 になる場合がある → `U()` で明示的に再設定
+- **textDecoration 非対応**: `"line-through"` 等は Pencil 非対応（サイレント除外）→ 完了状態はグレーテキスト色 + 緑チェックアイコンで代替表現
+- **HTML エンティティがそのまま表示される**: `&quot;` `&amp;` がリテラル表示される → テキスト content にはシングルクォートや実文字を使う（`"Do Now"` → `'Do Now'`）
+- **absolute positioning 不可**: `position: "absolute"`, `right`, `bottom` は動作しない。x/y は flexbox layout 内では無視される → FAB 等のフローティング要素は「親を `layout: "vertical"` + `alignItems: "center"` にして最後の子要素にする」パターンで対応
+- **fill_container が alignItems: "center" を override しない**: 親が `alignItems: "center"` の場合、子の `width: "fill_container"` だけでは横幅が伸びない → `alignSelf: "stretch"` を併用する
 - **flexWrap**: 動作が不安定 → 明示的に Row 1, Row 2 に分割する
 - **batch_get の結果**: 大量データの場合ファイルに保存される → 必要な部分だけ抽出して使う
+
+### テキスト内容の取得ルール
+
+**Chrome の表示テキストを推測で書かない。必ず以下のいずれかから取得する:**
+
+1. **Chrome 実画面**（最優先）: DevTools や Claude in Chrome でテキストを直接コピー
+2. **i18n ファイル**（Chrome 非接続時）: アプリの `messages/ja.json` 等のローカライゼーションファイルから正確なキーと値を取得
+3. **ソースコード**（上記が不可能な場合）: コンポーネントの `t("key")` 呼び出しから i18n キーを特定し、翻訳ファイルと照合
+
+**よくある失敗パターン**:
+- 英語テキストを使ったが実際のアプリは日本語だった（"In Progress" → 正しくは "実行中"）
+- ステータス名を推測で書いたが DB に保存された実際の名前と異なっていた
+- プレースホルダーテキストを創作したが i18n に定義された正式なテキストがあった
 
 ---
 

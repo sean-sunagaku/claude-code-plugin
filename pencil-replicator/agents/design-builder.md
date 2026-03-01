@@ -203,28 +203,55 @@ batch_get が使えない以上、このマップが唯一の信頼できるノ�
 - **progress.md のノード ID マップが唯一の信頼できるノード情報源** — batch_get が使えない以上、各バッチ後に必ずノード ID を記録する
 
 ### レイアウトのルール（最重要）
-- **`layout` は Insert 時に必ず指定する** — Update で後付けすると反映されない場合がある
+- **`layout`, `justifyContent`, `alignItems` は Insert 時にサイレント除外される** — I() で指定しても保存されないことが多い
+- **Insert 後に必ず U() で再設定し、batch_get で保存を確認する**
 - **`flexWrap` は使わない** — カードグリッド等は明示的に Row 1, Row 2 に分ける
 - **グラデーション `fill` は CSS 構文をそのまま使えない** — Pencil 構造化構文 `{type: "gradient", gradientType: "linear", rotation: N, colors: [{color, position}]}` を使う（`references/css-mapping.md` の「グラデーション変換」参照）
 
 ```
-# DO: Insert 時に layout を含める
-row=I(grid, {type: "frame", layout: "horizontal", gap: 16, name: "Row 1"})
+# DO: Insert した後、U() でレイアウトプロパティを設定する
+row=I(grid, {type: "frame", gap: 16, name: "Row 1"})
+U(row, {layout: "horizontal", justifyContent: "space_between", alignItems: "center"})
+# → batch_get で layout が保存されたか確認する
 
-# DON'T: 後から Update で layout を追加
-row=I(grid, {type: "frame", gap: 16})
-U(row, {layout: "horizontal"})  // ← 反映されない場合がある
+# DON'T: I() だけで layout が設定されると信じる
+row=I(grid, {type: "frame", layout: "horizontal", gap: 16})
+# ← layout がサイレントに除外される可能性が高い
 ```
 
 ```
 # DO: 明示的に Row を分ける
-grid=I(parent, {type: "frame", layout: "vertical", gap: 16})
-row1=I(grid, {type: "frame", layout: "horizontal", gap: 16})
-row2=I(grid, {type: "frame", layout: "horizontal", gap: 16})
+grid=I(parent, {type: "frame", gap: 16})
+U(grid, {layout: "vertical"})
+row1=I(grid, {type: "frame", gap: 16})
+U(row1, {layout: "horizontal"})
+row2=I(grid, {type: "frame", gap: 16})
+U(row2, {layout: "horizontal"})
 
 # DON'T: flexWrap に頼る
 grid=I(parent, {type: "frame", layout: "horizontal", flexWrap: "wrap"})
 ```
+
+### icon_font のルール
+- `icon_font` ノードの `width`/`height` が Insert 時にデフォルト 0 になることがある
+- **Insert 後に必ず U() で width/height を明示的に設定する**
+- アイコンが見えない場合は width/height が 0 になっていないか確認する
+
+```
+# DO: Insert 後に dimensions を確認・設定
+ic=I(parent, {type: "icon_font", iconFontFamily: "lucide", iconFontName: "settings"})
+U(ic, {width: 20, height: 20, fill: "#9ca3af"})
+
+# DON'T: Insert だけで dimensions を信じる
+ic=I(parent, {type: "icon_font", iconFontFamily: "lucide", iconFontName: "settings", width: 20, height: 20})
+# ← width/height が 0 になる可能性がある
+```
+
+### FAB / フローティング要素のルール
+- `position: "absolute"`, `right`, `bottom` は Pencil で動作しない
+- x/y 座標は `layout` が設定された親の中では無視される
+- **FAB パターン**: 親スクリーンを `layout: "vertical"` + `alignItems: "center"` にし、FAB を最後の子要素として追加する
+- ヘッダーをフル幅にするには `width: "fill_container"` に加えて `alignSelf: "stretch"` が必要
 
 ### デザインのルール
 - **デザイントークン変数 (`$--`) を優先** — ハードコード色は最終手段
@@ -235,8 +262,20 @@ grid=I(parent, {type: "frame", layout: "horizontal", flexWrap: "wrap"})
 ### テキストのルール
 - **テキスト内容は chrome-analysis.md から正確にコピーする。推測でテキストを書かない**
 - chrome-analysis.md に記載がない場合は screen-analyzer に再分析を依頼する
-- 引用符が含まれる場合は `&quot;` にエスケープ
+- **`&quot;` `&amp;` 等の HTML エンティティは使わない** — Pencil はこれらをリテラル表示する。代わりにシングルクォートや実文字を使う（`"Do Now"` → `'Do Now'`、`drag & drop` はそのまま）
 - フォントサイズ・ウェイトは分析結果の値を正確に使う
+- **アプリの表示言語を必ず確認する** — 英語テキストを使ったが実際は日本語表示だった、というミスが頻発する
+- Chrome 非接続時は **アプリの i18n ファイル（messages/ja.json 等）** からテキストを正確に取得する
+- `textDecoration: "line-through"` は Pencil 非対応 — 完了状態はグレーテキスト色（`#9ca3af`）+ 緑チェックアイコンで代替表現する
+
+### lineHeight の安全チェック（最重要）
+- **Pencil の `lineHeight` は比率（倍率）であり、ピクセル値ではない**
+- chrome-analysis.md の lineHeight 値を Pencil に渡す前に必ず検証する:
+  - `lineHeight > 3` → **ほぼ確実に px 値の変換漏れ**。`lineHeight_px / fontSize` で比率に変換する
+  - `lineHeight <= 3` → 正常な比率値（通常 1.0〜2.0 の範囲）
+- 変換漏れがセクションの高さを数十倍に膨らませ、LP 全体のレイアウトを崩壊させた実績あり
+- 例: `fontSize: 72, lineHeight: 79.2` → **間違い**（72 × 79.2 = 5702px/行）
+- 正: `fontSize: 72, lineHeight: 1.1` → **正しい**（72 × 1.1 = 79.2px/行）
 
 ### lineHeight の安全チェック（最重要）
 - **Pencil の `lineHeight` は比率（倍率）であり、ピクセル値ではない**

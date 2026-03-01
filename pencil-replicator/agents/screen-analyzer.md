@@ -166,13 +166,29 @@ JSON.stringify((() => {
 ### テキスト一覧（セクション: {セクション名}）
 | 要素 | テキスト内容（原文ママ） |
 |------|-------------------------|
-| Title | "Problem Discovery" |
-| Description | "Validate problem significance with AI-powered analysis" |
-| Button | "Get Started" |
+| Title | "進捗ボード" |
+| Description | "「今やる」タスクの進捗をドラッグ&ドロップで管理" |
+| Button | "ステータス設定" |
 ```
 
 テキスト内容が chrome-analysis.md に記載されていない場合、design-builder は推測で書いてしまう。
 これにより修正バッチが余計にかかるため、**全てのテキスト要素を原文ママで収録する**。
+
+#### アプリの表示言語に注意（重要）
+
+**アプリが日本語表示の場合、英語テキストを書くと design-builder がそのまま使ってしまう。**
+- Chrome の DOM から取得したテキストが日本語であれば、そのまま日本語で記録する
+- ステータス名（"In Progress" / "Completed" 等）は DB に保存された値ではなく、**画面に表示されている値** を使う
+- Chrome に接続できない場合は、アプリの **i18n ファイル（messages/ja.json 等）** から正確なテキストを取得する:
+  1. ソースコードで `t("key")` 呼び出しを検索 → i18n キーを特定
+  2. 翻訳ファイルでキーに対応する日本語テキストを取得
+  3. chrome-analysis.md にはその日本語テキストを記載する
+
+```
+# 例: Progress Board の場合
+# ソースコード: t("progress.title") → messages/ja.json: "進捗ボード"
+# chrome-analysis.md に記載: content="進捗ボード"（"Progress Board" ではない）
+```
 
 ### Phase 4.2: アイコン名の変換
 
