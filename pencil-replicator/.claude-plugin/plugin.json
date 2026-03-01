@@ -1,0 +1,13 @@
+{
+  "name": "pencil-replicator",
+  "version": "1.0.0",
+  "description": " Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。 3つの専門エージェント（screen-analyzer, design-builder, quality-reviewer）が 分析→構築→品質検証のサイクルを回し、忠実な画面再現を実現する。 Use when: Pencil で再現して、画面を Pencil に写して、Chrome を Pencil にコピー、 pencil-replicate、デザインをキャプチャ、UI を Pencil に",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "pencil",
+    "replicator"
+  ]
+}
