@@ -25,9 +25,11 @@ description: >
 ├── V2チーム: v2-designer + v2-reviewer + v2-copywriter
 ├── V3チーム: v3-designer + v3-reviewer + v3-copywriter
 ├── V4チーム: v4-designer + v4-reviewer + v4-copywriter
-└── V5チーム: v5-designer + v5-reviewer + v5-copywriter
+├── V5チーム: v5-designer + v5-reviewer + v5-copywriter
+└── affordance-tester（全バリエーション横断で検証）
 
 各 designer が直接 Pencil に書き込む（MCP ツールはサブエージェントでも使用可能）
+affordance-tester は全5バリエーション完成後に初見視点で検証
 リーダーは見守り + 最終比較レポート
 ```
 
@@ -102,18 +104,29 @@ TaskCreate で以下を作成:
 - `V{N} コピー作成` - copy-writer 担当（デザイン構築に blockedBy）
 
 **全体:**
-- `スクリーンショット取得 + 比較` - リーダー担当（全15タスクに blockedBy）
+- `V{N} アフォーダンス検証` x5 - affordance-tester 担当（各デザイン構築に blockedBy）
+- `スクリーンショット取得 + 比較` - リーダー担当（全タスクに blockedBy）
 
 ### エージェント起動
 
-**1つのメッセージで15エージェントを並列起動する。**
+**1つのメッセージで16エージェントを並列起動する。**
 
-各バリエーションにつき3エージェント:
+各バリエーションにつき3エージェント + 全体1エージェント:
 
 ```
 subagent_type: "general-purpose"
 team_name: "ui-variations"
 name: "v{N}-designer" (or v{N}-reviewer, v{N}-copywriter)
+model: "opus"
+mode: "bypassPermissions"
+run_in_background: true
+```
+
+**affordance-tester（1体、全バリエーション横断）:**
+```
+subagent_type: "general-purpose"
+team_name: "ui-variations"
+name: "affordance-tester"
 model: "opus"
 mode: "bypassPermissions"
 run_in_background: true
@@ -148,6 +161,14 @@ run_in_background: true
 - ターゲットユーザー情報
 - 画面の機能要件
 - チーム内メンバー名: `v{N}-designer`, `v{N}-reviewer`
+
+**affordance-tester へ:**
+- agents/affordance-tester.md の全内容
+- .pen ファイルパス
+- 全5フレームのノードID一覧
+- 画面の機能要件
+- ターゲットユーザー情報
+- 全チームメンバー名: `v1-designer` 〜 `v5-designer`, `v1-copywriter` 〜 `v5-copywriter`
 
 ## Step 5: 進行管理
 
@@ -192,7 +213,8 @@ run_in_background: true
 | アクセシビリティ | /10 | /10 | /10 | /10 | /10 |
 | プラットフォーム準拠 | /10 | /10 | /10 | /10 | /10 |
 | コピー品質 | /10 | /10 | /10 | /10 | /10 |
-| **総合** | /50 | /50 | /50 | /50 | /50 |
+| 初見理解度（アフォーダンス） | /10 | /10 | /10 | /10 | /10 |
+| **総合** | /60 | /60 | /60 | /60 | /60 |
 
 ## Step 7: クリーンアップ
 

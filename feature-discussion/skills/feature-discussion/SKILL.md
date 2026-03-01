@@ -35,6 +35,7 @@ Facilitator（このSKILL.md自身）がオーケストレーションし、User
 | **Engineer** | `agents/engineer.md` | コードベース調査・技術的実現性・工数評価 |
 | **Designer** | `agents/designer.md` | UI/UX案・インタラクション設計・代替UI |
 | **Behavioral Psychologist** | `agents/behavioral-psychologist.md` | 認知バイアス・習慣形成・動機付け・意思決定 |
+| **Affordance Tester** | `agents/affordance-tester.md` | 初見理解度・アフォーダンス・ラベル自明性・認知的ウォークスルー |
 
 ## コア原則
 
@@ -58,6 +59,7 @@ Step 1: 課題・目的の深掘り
 Step 2: 代替案・既存機能の検討
   担当: 全員参加
   BP: 各案の「行動実現性」を評価、習慣ループの有無をチェック
+  AT: 各案の「初見理解度」を評価、ラベル・操作の自明性をチェック
 
     ↓
 Step 3: スコープ決定
@@ -66,13 +68,15 @@ Step 3: スコープ決定
 
     ↓
 Step 4: 要件定義
-  担当: UX Analyst + PM + Engineer + Behavioral Psychologist
+  担当: UX Analyst + PM + Engineer + Behavioral Psychologist + Affordance Tester
   BP: ユーザーストーリーの動機が内発的かチェック
+  AT: 操作フローの各ステップで初見ユーザーが迷わないかチェック
 
     ↓
 Step 5: UI設計プロンプト生成
-  担当: Designer + UX Analyst + Behavioral Psychologist + 全員レビュー
+  担当: Designer + UX Analyst + Behavioral Psychologist + Affordance Tester + 全員レビュー
   BP: 認知負荷、選択麻痺、デフォルト設計をチェック
+  AT: 認知的ウォークスルーを実施、各UI要素の初見理解度をスコアリング
 ```
 
 各ステップの詳細は `references/step_details.md` を参照。
