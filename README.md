@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-30-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-31-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -56,6 +56,7 @@ Or use the slash command inside Claude Code:
 | **rn-debug** | `/rn-debug` |  React Native (Expo) アプリの総合デバッグスキル。 再レンダリング調査、白い画面、ネイティブモジュールエラー、Firebase接続問題、 API通信エラーなどのトラブルシューティングを体系的に行う。 Use when: 「白い画面」「画面が表示されない」「エラーが出る」「動かない」 「接続できない」「400エラー」「タイムアウト」「再レンダリング」「重い」 「カクつく」などの不具合報告やデバッグ依頼があったとき。 Also use when: 「デバッグして」「原因調べて」「なぜ動かない」 「エミュレータで確認して」「デバッグログを仕込んで」などの依頼があったとき。 ├─ 1. Metro ログを確認（import エラー? ネイティブモジュール?） ├─ 2. 初期 loading 状態が解消されるか確認（Auth 等） ├─ 3. ネイティブモジュールの問題か確認（Expo Go vs dev-client） └─ 4. Provider のクラッシュを切り分け | `rn, debug` |
 | **cruft-code-sweep** | `/cruft-code-sweep` |  コードベースの不要なフォールバック・互換性コード・デッドコードを 3つの専門エージェント（scanner + historian + verifier）が協調して検出・安全性検証する監査スキル。 scanner が自律探索で候補を発見し、historian が git 履歴から時間軸の文脈を付与し、 | `cruft, code, sweep` |
 | **design-discussion** | `/design-discussion` | 5人の専門エージェントチーム（solution-architect・engineer・product-manager・user-liaison・devil's-advocate）で技術設計を壁打ちするスキル。実装アプローチの比較・技術設計の選択・アーキテクチャの意思決定に特化。ADR形式で決定を記録 | `design, discussion, architecture, adr, agent-team, trade-off` |
+| **pencil-replicator** | `/pencil-replicator` |  Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。 3つの専門エージェント（screen-analyzer, design-builder, quality-reviewer）が 分析→構築→品質検証のサイクルを回し、忠実な画面再現を実現する。 Use when: Pencil で再現して、画面を Pencil に写して、Chrome を Pencil にコピー、 pencil-replicate、デザインをキャプチャ、UI を Pencil に | `pencil, replicator` |
 
 ## Skill Details
 
@@ -239,6 +240,16 @@ Claude Code の `agents/*.md` ファイルで SubAgent を正しく定義する�
 /design-discussion
 ```
 
+### pencil-replicator
+
+ Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。 3つの専門エージェント（screen-analyzer, design-builder, quality-reviewer）が 分析→構築→品質検証のサイクルを回し、忠実な画面再現を実現する。 Use when: Pencil で再現して、画面を Pencil に写して、Chrome を Pencil にコピー、 pencil-replicate、デザインをキャプチャ、UI を Pencil に
+
+Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。
+
+```
+/pencil-replicator
+```
+
 ## Beta Skills
 
 > 以下のスキルは現在開発中です。動作やインターフェースが変更される可能性があります。
@@ -418,7 +429,6 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **eas** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
@@ -429,11 +439,8 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
-- **pod** — eas-deploy
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
-- **sips** — screenshot-creator
-- **xcode-select** — eas-deploy
 - **yarn** — ci-check
 
 ## FAQ
