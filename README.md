@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-31-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-32-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -57,6 +57,7 @@ Or use the slash command inside Claude Code:
 | **cruft-code-sweep** | `/cruft-code-sweep` |  コードベースの不要なフォールバック・互換性コード・デッドコードを 3つの専門エージェント（scanner + historian + verifier）が協調して検出・安全性検証する監査スキル。 scanner が自律探索で候補を発見し、historian が git 履歴から時間軸の文脈を付与し、 | `cruft, code, sweep` |
 | **design-discussion** | `/design-discussion` | 5人の専門エージェントチーム（solution-architect・engineer・product-manager・user-liaison・devil's-advocate）で技術設計を壁打ちするスキル。実装アプローチの比較・技術設計の選択・アーキテクチャの意思決定に特化。ADR形式で決定を記録 | `design, discussion, architecture, adr, agent-team, trade-off` |
 | **pencil-replicator** | `/pencil-replicator` |  Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。 3つの専門エージェント（screen-analyzer, design-builder, quality-reviewer）が 分析→構築→品質検証のサイクルを回し、忠実な画面再現を実現する。 Use when: Pencil で再現して、画面を Pencil に写して、Chrome を Pencil にコピー、 pencil-replicate、デザインをキャプチャ、UI を Pencil に | `pencil, replicator` |
+| **user-story-visualizer** | `/user-story-visualizer` | ユーザーストーリーを可視化する専門スキル。6つの専門エージェントチームで、ジャーニーマップの分析から Pencil (.pen) ビジュアル出力まで一気通貫で実行する。5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化し、Markdownドキュメントと Pencil ビジュアルジャーニーマップを出力する | `user-story, journey-map, visualizer, pencil, agent-team, ux` |
 
 ## Skill Details
 
@@ -250,6 +251,16 @@ Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で�
 /pencil-replicator
 ```
 
+### user-story-visualizer
+
+ユーザーストーリーを可視化する専門スキル。6つの専門エージェントチームで、ジャーニーマップの分析から Pencil (.pen) ビジュアル出力まで一気通貫で実行する。5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化し、Markdownドキュメントと Pencil ビジュアルジャーニーマップを出力する
+
+6つの専門エージェントがチームで議論し、ユーザージャーニーマップを作成・可視化する。
+
+```
+/user-story-visualizer
+```
+
 ## Beta Skills
 
 > 以下のスキルは現在開発中です。動作やインターフェースが変更される可能性があります。
@@ -429,6 +440,7 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
+- **EAS CLI** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
