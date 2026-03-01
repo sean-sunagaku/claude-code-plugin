@@ -148,11 +148,21 @@ agents/screen-analyzer.md と agents/design-builder.md の手順を参照しな�
 
 ```
 1. ToolSearch で Chrome DevTools + Pencil MCP をロード
-2. chrome-devtools で画面分析 → chrome-analysis.md に書き出し
-3. Pencil で構築（5-10 ops ずつ + スクショ確認）
-4. progress.md を随時更新
-5. 完成後にスクショ比較で自己レビュー
+2. Chrome DevTools で画面のスクリーンショットを取得（参照画像として保持）
+3. chrome-devtools で画面分析 → chrome-analysis.md に書き出し
+4. UI要素インベントリ: スクリーンショットを見ながら全要素が分析に含まれているか確認
+5. Pencil で構築（5-10 ops ずつ + Pencil スクショ確認）
+6. 【必須】各セクション完成後に Chrome スクショ vs Pencil スクショの直接比較
+   - 要素の過不足チェック（Chrome にあって Pencil にない要素はないか）
+   - テキスト内容の一致チェック（原文をそのまま使っているか）
+   - レイアウト・色・サイズの目視比較
+7. 差異があれば即座に修正してから次のセクションへ
+8. progress.md を随時更新
+9. 全セクション完成後に全体スクショ比較で最終レビュー
 ```
+
+**重要**: chrome-analysis.md はあくまで数値参考。Chrome 実画面との目視比較が最終的な品質保証。
+分析ファイルだけを見て構築すると、分析漏れがそのまま再現漏れになる。
 
 ### フルチームモード（複雑な画面）
 
@@ -320,19 +330,41 @@ SendMessage(type: "message", recipient: "{エージェント名}", content: "{�
 
 ---
 
-## Step 6: 最終確認
+## Step 6: 最終確認（Chrome 実画面 vs Pencil 直接比較）
 
-quality-reviewer から PASS 報告を受けたら、リーダーも自分で確認する:
+quality-reviewer から PASS 報告を受けたら（またはフルチームモードを使わない場合も）、
+**必ず Chrome の実画面と Pencil のスクリーンショットを並べて目視確認する**。
 
 ```
-# Pencil のスクリーンショット確認
-mcp__pencil__get_screenshot(nodeId: "{スクリーンのルートノードID}")
+# 1. Chrome で対象ページを表示
+mcp__chrome-devtools__list_pages()
+mcp__chrome-devtools__take_screenshot()  → Chrome 実画面
 
-# Chrome のスクリーンショット確認（ToolSearch で Chrome DevTools をロードしてから）
-mcp__chrome-devtools__take_screenshot()
+# 2. Pencil のスクリーンショットを取得
+mcp__pencil__get_screenshot(nodeId: "{スクリーンのルートノードID}")  → Pencil 再現結果
+
+# 3. 以下の7観点で比較
 ```
 
-2つの画像を見比べて問題なければ完了。
+### 比較チェックリスト
+
+| # | チェック項目 | 確認内容 |
+|---|------------|---------|
+| 1 | 要素の過不足 | Chrome にある全ての UI 要素が Pencil にも存在するか（逆も確認） |
+| 2 | テキスト一致 | テキストが Chrome の原文と完全一致するか（言語・内容） |
+| 3 | レイアウト | 要素の配置順序・方向・間隔が一致しているか |
+| 4 | 色 | 背景色・テキスト色・ボーダー色が視覚的に同一か |
+| 5 | タイポグラフィ | フォントサイズ・ウェイトが一致しているか |
+| 6 | アイコン・装飾 | アイコンの種類・位置、角丸・シャドウが一致しているか |
+| 7 | 全体印象 | ぱっと見で同じ画面に見えるか |
+
+**差異が見つかった場合**:
+1. 差異を特定（何が、どう違うか）
+2. batch_design で修正
+3. 再度スクリーンショット比較
+4. 差異がなくなるまで繰り返す
+
+2つの画像を見比べて **要素の過不足がなく、テキストが一致し、レイアウトが同等** であれば完了。
 
 ---
 
@@ -381,9 +413,27 @@ progress.md を読めば現在地がわかる。以下の手順で再開:
 以下は実際の構築で判明した制限。詳細は `references/css-mapping.md` のセクション 12 を参照。
 
 - **linear-gradient()**: CSS 構文を `fill` にそのまま渡すと透明になる → Pencil 構造化構文 `{type: "gradient", gradientType: "linear", rotation: N, colors: [{color, position}]}` を使う
-- **layout プロパティ**: `U()` Update で後付けすると反映されない場合がある → `I()` Insert 時に必ず指定
+- **layout プロパティが Insert 時に消える**: `I()` で `layout: "horizontal"` を指定しても**サイレントに除外される**。`justifyContent`、`alignItems` も同様。**必ず `I()` の後に `U()` で再設定し、`batch_get` で保存を確認する**
+- **icon_font の width/height がデフォルト 0**: `I()` で指定しても 0 になる場合がある → `U()` で明示的に再設定
+- **textDecoration 非対応**: `"line-through"` 等は Pencil 非対応（サイレント除外）→ 完了状態はグレーテキスト色 + 緑チェックアイコンで代替表現
+- **HTML エンティティがそのまま表示される**: `&quot;` `&amp;` がリテラル表示される → テキスト content にはシングルクォートや実文字を使う（`"Do Now"` → `'Do Now'`）
+- **absolute positioning 不可**: `position: "absolute"`, `right`, `bottom` は動作しない。x/y は flexbox layout 内では無視される → FAB 等のフローティング要素は「親を `layout: "vertical"` + `alignItems: "center"` にして最後の子要素にする」パターンで対応
+- **fill_container が alignItems: "center" を override しない**: 親が `alignItems: "center"` の場合、子の `width: "fill_container"` だけでは横幅が伸びない → `alignSelf: "stretch"` を併用する
 - **flexWrap**: 動作が不安定 → 明示的に Row 1, Row 2 に分割する
 - **batch_get の結果**: 大量データの場合ファイルに保存される → 必要な部分だけ抽出して使う
+
+### テキスト内容の取得ルール
+
+**Chrome の表示テキストを推測で書かない。必ず以下のいずれかから取得する:**
+
+1. **Chrome 実画面**（最優先）: DevTools や Claude in Chrome でテキストを直接コピー
+2. **i18n ファイル**（Chrome 非接続時）: アプリの `messages/ja.json` 等のローカライゼーションファイルから正確なキーと値を取得
+3. **ソースコード**（上記が不可能な場合）: コンポーネントの `t("key")` 呼び出しから i18n キーを特定し、翻訳ファイルと照合
+
+**よくある失敗パターン**:
+- 英語テキストを使ったが実際のアプリは日本語だった（"In Progress" → 正しくは "実行中"）
+- ステータス名を推測で書いたが DB に保存された実際の名前と異なっていた
+- プレースホルダーテキストを創作したが i18n に定義された正式なテキストがあった
 
 ---
 

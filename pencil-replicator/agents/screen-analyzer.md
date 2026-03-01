@@ -80,7 +80,48 @@ JSON.stringify((() => {
 })(), null, 2)
 ```
 
-7. 特定セクション（ヘッダー、サイドバー等）をより深く分析する追加の evaluate_script を実行
+7. **領域別の深掘り分析（必須）**: 以下の UI 領域は depth 4 では足りない。**個別に depth 8 で再分析する**:
+
+```javascript
+// ヘッダー / ナビゲーション（アイコンボタン群、バッジ等が深くネストされている）
+JSON.stringify((() => {
+  const header = document.querySelector('header, nav, [role="banner"]');
+  if (!header) return [];
+  const result = [];
+  const walk = (el, depth = 0) => {
+    if (depth > 8) return;
+    const s = getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      result.push({
+        tag: el.tagName,
+        role: el.getAttribute('role'),
+        ariaLabel: el.getAttribute('aria-label'),
+        classes: el.className?.toString?.()?.slice(0, 120),
+        text: el.childNodes.length <= 1 ? el.textContent?.trim()?.slice(0, 80) : undefined,
+        href: el.href,
+        depth,
+        rect: { x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) },
+        style: {
+          display: s.display, flexDirection: s.flexDirection, gap: s.gap,
+          padding: s.padding, fontSize: s.fontSize, fontWeight: s.fontWeight,
+          color: s.color, bg: s.backgroundColor, borderRadius: s.borderRadius,
+          border: s.border !== 'none' ? s.border : undefined
+        }
+      });
+    }
+    Array.from(el.children).forEach(child => walk(child, depth + 1));
+  };
+  walk(header);
+  return result;
+})(), null, 2)
+```
+
+同様に、以下の領域も個別に深掘りする:
+- **タイトル行**（バッジ、ボタン、サブタイトルが含まれやすい）
+- **入力フィールド**（内部のアイコン、プレースホルダー）
+- **カラムヘッダー**（ステータスインジケーター、タスク数カウント）
+- **フローティング要素**（FAB、サイドパネル、通知）
 
 ### Phase 4: 分析結果の構造化
 
@@ -125,13 +166,29 @@ JSON.stringify((() => {
 ### テキスト一覧（セクション: {セクション名}）
 | 要素 | テキスト内容（原文ママ） |
 |------|-------------------------|
-| Title | "Problem Discovery" |
-| Description | "Validate problem significance with AI-powered analysis" |
-| Button | "Get Started" |
+| Title | "進捗ボード" |
+| Description | "「今やる」タスクの進捗をドラッグ&ドロップで管理" |
+| Button | "ステータス設定" |
 ```
 
 テキスト内容が chrome-analysis.md に記載されていない場合、design-builder は推測で書いてしまう。
 これにより修正バッチが余計にかかるため、**全てのテキスト要素を原文ママで収録する**。
+
+#### アプリの表示言語に注意（重要）
+
+**アプリが日本語表示の場合、英語テキストを書くと design-builder がそのまま使ってしまう。**
+- Chrome の DOM から取得したテキストが日本語であれば、そのまま日本語で記録する
+- ステータス名（"In Progress" / "Completed" 等）は DB に保存された値ではなく、**画面に表示されている値** を使う
+- Chrome に接続できない場合は、アプリの **i18n ファイル（messages/ja.json 等）** から正確なテキストを取得する:
+  1. ソースコードで `t("key")` 呼び出しを検索 → i18n キーを特定
+  2. 翻訳ファイルでキーに対応する日本語テキストを取得
+  3. chrome-analysis.md にはその日本語テキストを記載する
+
+```
+# 例: Progress Board の場合
+# ソースコード: t("progress.title") → messages/ja.json: "進捗ボード"
+# chrome-analysis.md に記載: content="進捗ボード"（"Progress Board" ではない）
+```
 
 ### Phase 4.2: アイコン名の変換
 
@@ -149,6 +206,44 @@ lucide-react のコンポーネント名と Pencil の `iconFontName` は形式�
 - アイコン: iconFontFamily="lucide", iconFontName="layout-grid"
   (Chrome 原値: LayoutGrid コンポーネント)
 ```
+
+### Phase 4.3: UI要素インベントリ（完全性チェック — 必須）
+
+**chrome-analysis.md に書き出した後、全ての目に見える要素が漏れなく記録されているか検証する。**
+分析漏れは design-builder の再現漏れに直結するため、このステップは省略禁止。
+
+```markdown
+## UI要素インベントリ
+
+スクリーンショットと DOM ツリーを照合し、全ての視覚要素を列挙する。
+chrome-analysis.md に記載漏れがあれば追記する。
+
+### チェックリスト
+- [ ] ヘッダー: ロゴ、ナビリンク、アイコンボタン群、ユーザーアバター
+- [ ] タイトル行: メインタイトル、サブタイトル/説明文、バッジ、アクションボタン
+- [ ] 入力フィールド: プレースホルダーテキスト、内部アイコン、ボーダースタイル
+- [ ] リスト/グリッド: カラムヘッダー（左ボーダー色、タスク数）、各アイテムの構造
+- [ ] カード: チェックボックス、ステータスラベル、カテゴリラベル、日付
+- [ ] フローティング要素: FAB ボタン、サイドパネル、トースト通知
+- [ ] 空状態: 「No tasks」等のプレースホルダー
+- [ ] フッター: リンク、コピーライト
+
+### 見落としやすい要素（過去の実績から）
+| 要素 | よくある見落としパターン |
+|------|------------------------|
+| ヘッダーのアイコンボタン群 | ナビ切替（カンバン/リスト）、設定ギア等がまとめて省略される |
+| タイトル横のバッジ | 「0 tasks」「Beta」等の小さなバッジが無視される |
+| サブタイトル/説明テキスト | タイトル直下の灰色テキストが省略される |
+| ボタン内のアイコン | テキストのみ記録し、左側のアイコンが漏れる |
+| カラムヘッダーの装飾 | 左端の色付きボーダー（ステータス色）が漏れる |
+| 入力フィールド内アイコン | 左端のアイコンが漏れる |
+| "+ Add Task" ボタン | カラム下部の追加ボタンが漏れる |
+```
+
+**検証手順**:
+1. スクリーンショットを見ながら、目に見える要素を全て数える
+2. chrome-analysis.md の子要素リストと照合
+3. 不一致があれば chrome-analysis.md に追記
 
 ### Phase 4.5: Pencil 互換性チェック（書き出し前に必ず実施）
 
@@ -170,6 +265,24 @@ chrome-analysis.md に書き出す前に、以下の値を検証して互換性�
   - **レイアウト方式**: Row 分割（flexWrap 非推奨）
   - **Row 1**: カード 1, 2, 3（各 213px）
   - **Row 2**: カード 4, 5, 6（各 213px）
+  ```
+
+#### lineHeight（最重要 — レイアウト崩壊の原因になる）
+- Chrome CSS の `line-height` はピクセル値（例: `79.2px`）
+- Pencil の `lineHeight` は **比率（倍率）** として解釈される
+- **必ず比率に変換してから chrome-analysis.md に記載する**:
+  ```
+  lineHeight比率 = lineHeight_px / fontSize_px
+
+  例: fontSize=72px, lineHeight=79.2px → lineHeight: 1.1 (79.2 / 72)
+  例: fontSize=24px, lineHeight=39px   → lineHeight: 1.625 (39 / 24)
+  例: fontSize=36px, lineHeight=58.5px → lineHeight: 1.625 (58.5 / 36)
+  ```
+- **変換漏れチェック**: lineHeight の値が 3 を超えている場合、px値の変換漏れの可能性が高い
+- chrome-analysis.md への記載形式:
+  ```markdown
+  - fontSize=72, lineHeight=1.1
+    (CSS 原値: line-height: 79.2px)
   ```
 
 #### フォント
