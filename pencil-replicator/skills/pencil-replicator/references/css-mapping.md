@@ -150,7 +150,7 @@ chrome-analysis.md にグラデーション値を書く際は Pencil 構文に�
 | `font-size: Npx` | `fontSize: N` | |
 | `font-weight: N` | `fontWeight: "N"` | **文字列で指定** |
 | `font-family: "..."` | `fontFamily: "..."` or `fontFamily: "$--font-primary"` | |
-| `line-height: N` | `lineHeight: N` | |
+| `line-height: Npx` | `lineHeight: N/fontSize` | **px→比率に変換必須**。例: fontSize=72, lineHeight=79.2px → `lineHeight: 1.1`（79.2/72）。比率 > 3 は変換漏れの可能性大 |
 | `letter-spacing: Npx` | `letterSpacing: N` | |
 | `text-align: left` | `textAlign: "left"` | |
 | `text-align: center` | `textAlign: "center"` | |
@@ -248,6 +248,7 @@ chrome-analysis.md にグラデーション値を書く際は Pencil 構文に�
 | `"normal"` / `"400"` | `"400"` | fontWeight は文字列 |
 | `"flex"` + `"column"` | `layout: "vertical"` | 組み合わせ判定 |
 | `"100%"` or `"flex: 1"` | `"fill_container"` | レイアウト内の 100% |
+| `line-height: "79.2px"` (fontSize=72) | `lineHeight: 1.1` | **px値 / fontSize で比率に変換**。Pencil は lineHeight を倍率として解釈するため、px値をそのまま渡すとレイアウトが数十倍に膨らむ |
 
 ---
 
