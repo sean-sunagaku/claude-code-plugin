@@ -606,6 +606,23 @@
         "pencil",
         "replicator"
       ]
+    },
+    {
+      "name": "user-story-visualizer",
+      "source": "./user-story-visualizer",
+      "description": "ユーザーストーリーを可視化する専門スキル。6つの専門エージェントチームで、ジャーニーマップの分析から Pencil (.pen) ビジュアル出力まで一気通貫で実行する。5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化し、Markdownドキュメントと Pencil ビジュアルジャーニーマップを出力する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "user-story",
+        "journey-map",
+        "visualizer",
+        "pencil",
+        "agent-team",
+        "ux"
+      ]
     }
   ],
   "metadata": {
