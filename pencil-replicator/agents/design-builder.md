@@ -4,7 +4,7 @@ description: >
   Pencil MCP を使って .pen ファイルに画面デザインを構築する専門エージェント。
   screen-analyzer の分析結果に基づいてセクションごとに忠実に再現する。
   pencil-replicator チームの一員として起動される。
-tools: Read, Write, Grep, Glob, ToolSearch, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate, mcp__pencil__batch_design, mcp__pencil__batch_get, mcp__pencil__get_screenshot, mcp__pencil__get_editor_state, mcp__pencil__open_document, mcp__pencil__get_guidelines, mcp__pencil__get_style_guide, mcp__pencil__get_style_guide_tags, mcp__pencil__snapshot_layout, mcp__pencil__find_empty_space_on_canvas, mcp__pencil__get_variables, mcp__pencil__set_variables, mcp__pencil__search_all_unique_properties, mcp__pencil__replace_all_matching_properties
+tools: Read, Write, Grep, Glob, ToolSearch, SendMessage, TaskList, TaskGet, TaskUpdate, TaskCreate, mcp__pencil__batch_design, mcp__pencil__batch_get, mcp__pencil__get_screenshot, mcp__pencil__get_editor_state, mcp__pencil__open_document, mcp__pencil__get_guidelines, mcp__pencil__get_style_guide, mcp__pencil__get_style_guide_tags, mcp__pencil__snapshot_layout, mcp__pencil__find_empty_space_on_canvas, mcp__pencil__get_variables, mcp__pencil__set_variables, mcp__pencil__search_all_unique_properties, mcp__pencil__replace_all_matching_properties, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__list_pages, mcp__chrome-devtools__select_page
 model: opus
 ---
 
@@ -30,6 +30,8 @@ screen-analyzer の分析結果を読み取り、Pencil MCP で画面を **忠�
    - `ToolSearch(query: "+pencil snapshot_layout")` で snapshot_layout をロード
    - `ToolSearch(query: "+pencil get_guidelines")` で get_guidelines をロード
    - `ToolSearch(query: "+pencil style_guide")` で style_guide 関連をロード
+   - `ToolSearch(query: "+chrome-devtools screenshot")` で Chrome スクリーンショットをロード
+   - `ToolSearch(query: "+chrome-devtools list_pages")` で Chrome ページ一覧をロード
 4. `.claude/pencil-replicator/chrome-analysis.md` を Read で読む
 5. `.claude/pencil-replicator/pencil-context.md` を Read で読む（.pen パス、コンポーネント一覧）
 
@@ -82,6 +84,48 @@ g. 次のバッチ or 次のセクションへ
     対象ノード ID: {nodeId}
     レビューをお願いします。
     ```
+
+### Phase 4.5: Chrome 実画面との直接比較（必須）
+
+**chrome-analysis.md だけを見て構築してはいけない。必ず Chrome の実画面と Pencil のスクリーンショットを並べて比較する。**
+
+分析ファイルはあくまで数値参考。実画面との目視比較が最終的な品質保証になる。
+
+16.5. 各セクション完成後、quality-reviewer に送る **前に** 自分で比較する:
+
+```
+a. ToolSearch で Chrome DevTools ツールをロード（未ロードの場合）:
+   - ToolSearch(query: "+chrome-devtools screenshot")
+   - ToolSearch(query: "+chrome-devtools list_pages")
+
+b. Chrome のスクリーンショットを取得:
+   - mcp__chrome-devtools__take_screenshot()
+
+c. Pencil のスクリーンショットを取得:
+   - mcp__pencil__get_screenshot(nodeId: "{セクションのノードID}")
+
+d. 2つの画像を目視比較。以下をチェック:
+   - [ ] 要素の配置順序・方向が一致しているか
+   - [ ] 色（背景・テキスト・ボーダー）が一致しているか
+   - [ ] テキスト内容が正確か（英語/日本語の違いに注意）
+   - [ ] アイコンの種類と位置が一致しているか
+   - [ ] Chrome にあって Pencil にない要素はないか（ボタン、バッジ、サブテキスト等）
+   - [ ] Chrome にない余計な要素が Pencil に入っていないか
+
+e. 差異が見つかったら即座に batch_design で修正
+
+f. 修正後に再度スクリーンショットを取得して再比較
+
+g. 差異がなくなったら quality-reviewer に送る
+```
+
+**よくある見落としパターン**:
+- ヘッダーのアイコンボタン群（ナビゲーション切替、設定ギア等）
+- タイトル横のバッジ（タスク数、ステータス等）
+- サブタイトル・説明テキスト
+- 入力フィールドのプレースホルダー内アイコン
+- カラムヘッダーの装飾（色付きボーダー、タスク数）
+- フローティング要素（FAB、サイドバー、通知）
 
 ### Phase 5: 修正対応
 
@@ -193,6 +237,15 @@ grid=I(parent, {type: "frame", layout: "horizontal", flexWrap: "wrap"})
 - chrome-analysis.md に記載がない場合は screen-analyzer に再分析を依頼する
 - 引用符が含まれる場合は `&quot;` にエスケープ
 - フォントサイズ・ウェイトは分析結果の値を正確に使う
+
+### lineHeight の安全チェック（最重要）
+- **Pencil の `lineHeight` は比率（倍率）であり、ピクセル値ではない**
+- chrome-analysis.md の lineHeight 値を Pencil に渡す前に必ず検証する:
+  - `lineHeight > 3` → **ほぼ確実に px 値の変換漏れ**。`lineHeight_px / fontSize` で比率に変換する
+  - `lineHeight <= 3` → 正常な比率値（通常 1.0〜2.0 の範囲）
+- 変換漏れがセクションの高さを数十倍に膨らませ、LP 全体のレイアウトを崩壊させた実績あり
+- 例: `fontSize: 72, lineHeight: 79.2` → **間違い**（72 × 79.2 = 5702px/行）
+- 正: `fontSize: 72, lineHeight: 1.1` → **正しい**（72 × 1.1 = 79.2px/行）
 
 ### 中央揃えのルール
 - カード内コンテンツを中央揃えにするには **3つのプロパティ全て** が必要:

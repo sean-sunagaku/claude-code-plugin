@@ -148,11 +148,21 @@ agents/screen-analyzer.md と agents/design-builder.md の手順を参照しな�
 
 ```
 1. ToolSearch で Chrome DevTools + Pencil MCP をロード
-2. chrome-devtools で画面分析 → chrome-analysis.md に書き出し
-3. Pencil で構築（5-10 ops ずつ + スクショ確認）
-4. progress.md を随時更新
-5. 完成後にスクショ比較で自己レビュー
+2. Chrome DevTools で画面のスクリーンショットを取得（参照画像として保持）
+3. chrome-devtools で画面分析 → chrome-analysis.md に書き出し
+4. UI要素インベントリ: スクリーンショットを見ながら全要素が分析に含まれているか確認
+5. Pencil で構築（5-10 ops ずつ + Pencil スクショ確認）
+6. 【必須】各セクション完成後に Chrome スクショ vs Pencil スクショの直接比較
+   - 要素の過不足チェック（Chrome にあって Pencil にない要素はないか）
+   - テキスト内容の一致チェック（原文をそのまま使っているか）
+   - レイアウト・色・サイズの目視比較
+7. 差異があれば即座に修正してから次のセクションへ
+8. progress.md を随時更新
+9. 全セクション完成後に全体スクショ比較で最終レビュー
 ```
+
+**重要**: chrome-analysis.md はあくまで数値参考。Chrome 実画面との目視比較が最終的な品質保証。
+分析ファイルだけを見て構築すると、分析漏れがそのまま再現漏れになる。
 
 ### フルチームモード（複雑な画面）
 
@@ -320,19 +330,41 @@ SendMessage(type: "message", recipient: "{エージェント名}", content: "{�
 
 ---
 
-## Step 6: 最終確認
+## Step 6: 最終確認（Chrome 実画面 vs Pencil 直接比較）
 
-quality-reviewer から PASS 報告を受けたら、リーダーも自分で確認する:
+quality-reviewer から PASS 報告を受けたら（またはフルチームモードを使わない場合も）、
+**必ず Chrome の実画面と Pencil のスクリーンショットを並べて目視確認する**。
 
 ```
-# Pencil のスクリーンショット確認
-mcp__pencil__get_screenshot(nodeId: "{スクリーンのルートノードID}")
+# 1. Chrome で対象ページを表示
+mcp__chrome-devtools__list_pages()
+mcp__chrome-devtools__take_screenshot()  → Chrome 実画面
 
-# Chrome のスクリーンショット確認（ToolSearch で Chrome DevTools をロードしてから）
-mcp__chrome-devtools__take_screenshot()
+# 2. Pencil のスクリーンショットを取得
+mcp__pencil__get_screenshot(nodeId: "{スクリーンのルートノードID}")  → Pencil 再現結果
+
+# 3. 以下の7観点で比較
 ```
 
-2つの画像を見比べて問題なければ完了。
+### 比較チェックリスト
+
+| # | チェック項目 | 確認内容 |
+|---|------------|---------|
+| 1 | 要素の過不足 | Chrome にある全ての UI 要素が Pencil にも存在するか（逆も確認） |
+| 2 | テキスト一致 | テキストが Chrome の原文と完全一致するか（言語・内容） |
+| 3 | レイアウト | 要素の配置順序・方向・間隔が一致しているか |
+| 4 | 色 | 背景色・テキスト色・ボーダー色が視覚的に同一か |
+| 5 | タイポグラフィ | フォントサイズ・ウェイトが一致しているか |
+| 6 | アイコン・装飾 | アイコンの種類・位置、角丸・シャドウが一致しているか |
+| 7 | 全体印象 | ぱっと見で同じ画面に見えるか |
+
+**差異が見つかった場合**:
+1. 差異を特定（何が、どう違うか）
+2. batch_design で修正
+3. 再度スクリーンショット比較
+4. 差異がなくなるまで繰り返す
+
+2つの画像を見比べて **要素の過不足がなく、テキストが一致し、レイアウトが同等** であれば完了。
 
 ---
 
