@@ -220,6 +220,11 @@ user-story-visualizer/{date}_{project}/
 
 ---
 
+## リファレンスファイル
+
+- [references/journey-template.md](references/journey-template.md) - ジャーニーマップのテンプレート（8行×5フェーズ + 離脱トリガー分析）
+- [references/pencil-layout-guide.md](references/pencil-layout-guide.md) - Pencil ビジュアルマップのレイアウトガイド
+
 ## Shell Scripts リファレンス
 
 ### init.sh - プロジェクト初期化
