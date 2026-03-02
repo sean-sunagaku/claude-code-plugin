@@ -623,6 +623,22 @@
         "agent-team",
         "ux"
       ]
+    },
+    {
+      "name": "product-discovery",
+      "source": "./product-discovery",
+      "description": "プロダクトの基盤情報（課題仮説・ソリューション・市場スコープ・原体験・ビジネスモデル・競合・差別化）をユーザーとの対話で掘り下げ、構造化されたドキュメント（product-context.md）として整理するスキル",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "product",
+        "discovery",
+        "context",
+        "persona",
+        "hearing"
+      ]
     }
   ],
   "metadata": {
