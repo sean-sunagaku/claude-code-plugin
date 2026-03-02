@@ -370,7 +370,7 @@
     {
       "name": "user-journey",
       "source": "./user-journey",
-      "description": "ユーザージャーニーマップを5つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownで出力する",
+      "description": "ユーザージャーニーマップを6つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownとPencil(.pen)ビジュアルで出力する",
       "version": "1.0.0",
       "author": {
         "name": "sunagaku"
