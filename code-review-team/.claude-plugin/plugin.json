@@ -1,0 +1,14 @@
+{
+  "name": "code-review-team",
+  "version": "1.0.0",
+  "description": " 5つの専門エージェント（backend-reviewer, frontend-reviewer, test-reviewer, security-reviewer, ux-reviewer）がチームでコードレビューするスキル。",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "code",
+    "review",
+    "team"
+  ]
+}
