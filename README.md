@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-33-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-34-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -58,6 +58,7 @@ Or use the slash command inside Claude Code:
 | **design-discussion** | `/design-discussion` | 5人の専門エージェントチーム（solution-architect・engineer・product-manager・user-liaison・devil's-advocate）で技術設計を壁打ちするスキル。実装アプローチの比較・技術設計の選択・アーキテクチャの意思決定に特化。ADR形式で決定を記録 | `design, discussion, architecture, adr, agent-team, trade-off` |
 | **pencil-replicator** | `/pencil-replicator` |  Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。 3つの専門エージェント（screen-analyzer, design-builder, quality-reviewer）が 分析→構築→品質検証のサイクルを回し、忠実な画面再現を実現する。 Use when: Pencil で再現して、画面を Pencil に写して、Chrome を Pencil にコピー、 pencil-replicate、デザインをキャプチャ、UI を Pencil に | `pencil, replicator` |
 | **user-story-visualizer** | `/user-story-visualizer` | ユーザーストーリーを可視化する専門スキル。6つの専門エージェントチームで、ジャーニーマップの分析から Pencil (.pen) ビジュアル出力まで一気通貫で実行する。5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化し、Markdownドキュメントと Pencil ビジュアルジャーニーマップを出力する | `user-story, journey-map, visualizer, pencil, agent-team, ux` |
+| **code-review-team** | `/code-review-team` | 5つの専門エージェント（backend-reviewer, frontend-reviewer, test-reviewer, security-reviewer, ux-reviewer）がチームでコードレビューし、統合レポートを出力するスキル。git diff ベースで変更ファイルを検出し並列レビュー | `code-review, agent-team, backend, frontend, security, test, ux, parallel` |
 | **product-discovery** | `/product-discovery` | プロダクトの基盤情報（課題仮説・ソリューション・市場スコープ・原体験・ビジネスモデル・競合・差別化）をユーザーとの対話で掘り下げ、構造化されたドキュメント（product-context.md）として整理するスキル | `product, discovery, context, persona, hearing` |
 
 ## Skill Details
@@ -262,6 +263,16 @@ Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で�
 /user-story-visualizer
 ```
 
+### code-review-team
+
+5つの専門エージェント（backend-reviewer, frontend-reviewer, test-reviewer, security-reviewer, ux-reviewer）がチームでコードレビューし、統合レポートを出力するスキル。git diff ベースで変更ファイルを検出し並列レビュー
+
+5つの専門エージェントが並列でコードレビューし、統合レポートを生成する。
+
+```
+/code-review-team
+```
+
 ### product-discovery
 
 プロダクトの基盤情報（課題仮説・ソリューション・市場スコープ・原体験・ビジネスモデル・競合・差別化）をユーザーとの対話で掘り下げ、構造化されたドキュメント（product-context.md）として整理するスキル
@@ -448,11 +459,13 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 
 **Optional** (skill-specific)
 
+- **CocoaPods** — eas-deploy
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
-- **eas** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect
-- **ffprobe** — app-store-preview-movie / frame-inspect
+- **Docker** — ci-check
+- **EAS CLI** — eas-deploy
+- **ffmpeg** — frame-inspect
+- **ffprobe** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
