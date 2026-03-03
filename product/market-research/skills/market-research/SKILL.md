@@ -28,6 +28,11 @@ description: >
 各主張に「なぜそう言えるのか」の根拠（出典・算出ロジック・交差検証結果）を必ず添える。
 ユーザーが判断材料にできるレベルの詳細さを常に維持する。
 
+**重要原則: 全ての成果物は日本語で作成する。**
+レポートファイル（MARKET_REPORT.md, 各分析ファイル）、エージェント間のディスカッション、
+ユーザーへの中間報告・最終報告、全て日本語で記述する。
+出典URLや固有名詞（企業名・サービス名）は原語のままで良い。
+
 ## ワークフロー概要
 
 ```
@@ -43,7 +48,7 @@ Step 7: クリーンアップ
 ## コンテキストファイル構成
 
 ```
-.claude/market-research/{YYYY-MM-DD}_{project}/
+docs/market-research/{YYYY-MM-DD}_{project}/
 ├── MARKET_REPORT.md         <- 統合レポート（後続スキルがまず読むファイル）
 ├── context.md               <- プロジェクト情報・セッション引き継ぎ用
 ├── market-size.md           <- TAM/SAM/SOM 詳細計算（ディスカッション反映版）
@@ -134,8 +139,9 @@ run_in_background: true
 プロンプトに含める情報（全エージェント共通）:
 - カテゴリ、ターゲット、地域、その他ヒアリング情報
 - **ベースディレクトリの絶対パス**（⚠️必須）: `init.sh` が出力する絶対パスをそのまま使う
-  - 例: `/Users/babashunsuke/.claude/market-research/2026-03-03_my-app/`
+  - 例: `/Users/babashunsuke/Desktop/my-project/docs/market-research/2026-03-03_my-app/`
   - ⚠️ Write ツールは絶対パスのみ受け付ける
+  - レポートはリポジトリの `docs/market-research/` 配下に保存される
 - 「全ファイルは Write ツールで絶対パスに書き込むこと」を明記
 - ユーザーが選んだ調査設定（中間確認あり/なし）
 - **ディスカッションプロトコルの確認**: 各エージェント定義に埋め込み済みだが、「他エージェントと積極的に対話すること」を再度明記
@@ -560,7 +566,7 @@ data-critic が以下のいずれかを判定した場合、再調査を実施:
 全エージェントのタスクが completed になった後、最終レポート作成の前に以下を検証する:
 
 ```bash
-.claude/market-research/{date}_{project}/
+docs/market-research/{date}_{project}/
 ├── market-size.md           <- market-size-analyst が書き込み
 ├── trends.md                <- trend-researcher が書き込み
 ├── competitors.md           <- competitor-intelligence-analyst が書き込み
@@ -722,7 +728,7 @@ bash scripts/init.sh <project-name>
 
 # 例
 bash scripts/init.sh my-fitness-app
-# -> .claude/market-research/2026-03-03_my-fitness-app/ を作成
+# -> docs/market-research/2026-03-03_my-fitness-app/ を作成
 ```
 
 ### new-round.sh - 再調査ラウンド
@@ -731,6 +737,6 @@ bash scripts/init.sh my-fitness-app
 bash scripts/new-round.sh <project-dir>
 
 # 例
-bash scripts/new-round.sh ~/.claude/market-research/2026-03-03_my-fitness-app
+bash scripts/new-round.sh docs/market-research/2026-03-03_my-fitness-app
 # -> 既存ファイルを .bak にリネームし、再調査用に準備
 ```
