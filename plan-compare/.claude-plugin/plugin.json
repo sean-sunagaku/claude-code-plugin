@@ -1,0 +1,15 @@
+{
+  "name": "plan-compare",
+  "version": "1.0.0",
+  "description": "複数の実装アプローチを並列チームで設計・議論し、比較して最適な計画を選ぶスキル。各アプローチに専門グループ（architect, critic, risk-analyst）が付き、グループ内で議論して計画を洗練する。",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "plan",
+    "compare",
+    "architecture",
+    "team"
+  ]
+}
