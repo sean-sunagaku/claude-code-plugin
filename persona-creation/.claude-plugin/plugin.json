@@ -1,0 +1,13 @@
+{
+  "name": "persona-creation",
+  "version": "1.0.0",
+  "description": " UX/マーケティング向けのユーザーペルソナを、5つの専門エージェントチームで作成するスキル。 ペルソナ設計、ユーザーリサーチ、ナラティブ執筆、バイアスレビュー、データ検証の 5観点からペルソナをディスカッション型で議論・作成し、Markdownドキュメントとして出力する。 data-critic がライブモデレーターとして矛盾を検出・収束を判定する。",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "persona",
+    "creation"
+  ]
+}
