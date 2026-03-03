@@ -36,13 +36,7 @@ Or use the slash command inside Claude Code:
 
 ## Skills
 
-{{SKILLS_TABLE}}
-
-## Skill Details
-
-{{SKILL_DETAILS}}
-
-{{BETA_SECTION}}
+{{CATEGORY_TABLE}}
 
 {{HOOKS_SECTION}}
 

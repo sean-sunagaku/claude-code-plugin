@@ -1,10 +1,11 @@
 #!/bin/bash
 # publish-skill.sh - スキルを claude-code-plugin の正しい構造にコピーし、marketplace.json に登録する
 #
-# Usage: publish-skill.sh <source-path> [skill-name] [--internal]
+# Usage: publish-skill.sh <source-path> [skill-name] [--internal] [--category CATEGORY]
 #   source-path:  SKILL.md があるディレクトリ
 #   skill-name:   省略時は source-path のディレクトリ名
 #   --internal:   .internal/ 配下に配置（自分のリポジトリ用）
+#   --category:   カテゴリ名（product, planning, design, development, review, marketing, agent-toolkit）
 
 set -euo pipefail
 
@@ -12,18 +13,20 @@ PLUGIN_REPO="/Users/babashunsuke/Desktop/claude-code-plugin"
 MARKETPLACE="$PLUGIN_REPO/.claude-plugin/marketplace.json"
 INTERNAL=false
 BETA=false
+CATEGORY=""
 
 # 引数パース
 POSITIONAL=()
-for arg in "$@"; do
-  case $arg in
-    --internal) INTERNAL=true ;;
-    --beta) BETA=true ;;
-    *) POSITIONAL+=("$arg") ;;
+while [ $# -gt 0 ]; do
+  case $1 in
+    --internal) INTERNAL=true; shift ;;
+    --beta) BETA=true; shift ;;
+    --category) CATEGORY="$2"; shift 2 ;;
+    *) POSITIONAL+=("$1"); shift ;;
   esac
 done
 
-SOURCE_PATH="${POSITIONAL[0]:?Usage: publish-skill.sh <source-path> [skill-name] [--internal]}"
+SOURCE_PATH="${POSITIONAL[0]:?Usage: publish-skill.sh <source-path> [skill-name] [--internal] [--category CATEGORY]}"
 SKILL_NAME="${POSITIONAL[1]:-$(basename "$SOURCE_PATH")}"
 
 # 検証
@@ -32,13 +35,24 @@ if [ ! -f "$SOURCE_PATH/SKILL.md" ]; then
   exit 1
 fi
 
+# カテゴリ未指定の場合はユーザーに確認を促す
+if [ -z "$CATEGORY" ] && [ "$INTERNAL" = false ]; then
+  echo "WARNING: --category が指定されていません"
+  echo "利用可能なカテゴリ: product, planning, design, development, review, marketing, agent-toolkit"
+  read -p "カテゴリを入力してください: " CATEGORY
+  if [ -z "$CATEGORY" ]; then
+    echo "ERROR: カテゴリは必須です"
+    exit 1
+  fi
+fi
+
 # 配置先の決定
 if [ "$INTERNAL" = true ]; then
   TARGET_DIR="$PLUGIN_REPO/.internal/$SKILL_NAME/skills/$SKILL_NAME"
   SOURCE_REF="./.internal/$SKILL_NAME"
 else
-  TARGET_DIR="$PLUGIN_REPO/$SKILL_NAME/skills/$SKILL_NAME"
-  SOURCE_REF="./$SKILL_NAME"
+  TARGET_DIR="$PLUGIN_REPO/$CATEGORY/$SKILL_NAME/skills/$SKILL_NAME"
+  SOURCE_REF="./$CATEGORY/$SKILL_NAME"
 fi
 
 # 重複チェック

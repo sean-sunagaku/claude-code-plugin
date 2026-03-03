@@ -1,6 +1,6 @@
 #!/bin/bash
 # generate-readme.sh
-# テンプレート + marketplace.json + 各 SKILL.md から README.md を生成する
+# テンプレート + marketplace.json + 各 SKILL.md からトップ README.md + カテゴリ別 README.md を生成する
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -8,12 +8,40 @@ MARKETPLACE="$REPO_ROOT/.claude-plugin/marketplace.json"
 TEMPLATE="$REPO_ROOT/.github/templates/README.template.md"
 PREREQUISITES="$REPO_ROOT/.github/templates/PREREQUISITES.md"
 README="$REPO_ROOT/README.md"
-TMP_TABLE=$(mktemp)
-TMP_DETAILS=$(mktemp)
-TMP_BETA=$(mktemp)
+TMP_CATEGORY_TABLE=$(mktemp)
 TMP_INTERNAL=$(mktemp)
 TMP_HOOKS=$(mktemp)
-trap 'rm -f "$TMP_TABLE" "$TMP_DETAILS" "$TMP_BETA" "$TMP_INTERNAL" "$TMP_HOOKS"' EXIT
+trap 'rm -f "$TMP_CATEGORY_TABLE" "$TMP_INTERNAL" "$TMP_HOOKS"' EXIT
+
+# --- カテゴリ定義（順序と日本語名） ---
+# bash 3.x 互換のため associative array を使わず関数で定義
+CATEGORY_ORDER=(product planning design development review marketing agent-toolkit)
+
+category_label() {
+  case "$1" in
+    product)       echo "Product" ;;
+    planning)      echo "Planning" ;;
+    design)        echo "Design" ;;
+    development)   echo "Development" ;;
+    review)        echo "Review" ;;
+    marketing)     echo "Marketing" ;;
+    agent-toolkit) echo "Agent Toolkit" ;;
+    *)             echo "$1" ;;
+  esac
+}
+
+category_desc() {
+  case "$1" in
+    product)       echo "プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成" ;;
+    planning)      echo "機能検討・技術設計の議論・実装計画の策定" ;;
+    design)        echo "UI/UXデザイン・ロゴ作成・デザインバリエーション生成" ;;
+    development)   echo "CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ" ;;
+    review)        echo "コードレビュー・プランレビュー・UI検証・品質チェック" ;;
+    marketing)     echo "アプリ名決定・ASO最適化・スクリーンショット作成・プレビュー動画生成" ;;
+    agent-toolkit) echo "エージェントチームの構築・運用・ベストプラクティス" ;;
+    *)             echo "" ;;
+  esac
+}
 
 # --- Hook プラグインを検出（hooks/ ディレクトリが存在するもの） ---
 HOOK_NAMES=()
@@ -28,20 +56,22 @@ while IFS= read -r plugin; do
 done <<< "$ALL_PLUGINS"
 
 # Hook 名を jq フィルタ用に変換
-HOOK_FILTER=$(printf '"%s",' "${HOOK_NAMES[@]}" | sed 's/,$//')
+if [ ${#HOOK_NAMES[@]} -gt 0 ]; then
+  HOOK_FILTER=$(printf '"%s",' "${HOOK_NAMES[@]}" | sed 's/,$//')
+else
+  HOOK_FILTER=""
+fi
 HOOK_JQ_FILTER="[${HOOK_FILTER}]"
 
-# --- 公開(stable) / 公開(beta) / 内部 / Hook に分離 ---
+# --- 公開 / 内部 / Hook に分離 ---
 HOOK_PLUGINS=$(jq -c --argjson hooks "$HOOK_JQ_FILTER" '[.plugins[] | select(.name as $n | $hooks | index($n) != null)]' "$MARKETPLACE")
-STABLE_PLUGINS=$(jq -c --argjson hooks "$HOOK_JQ_FILTER" '[.plugins[] | select((.source | startswith("./.internal") | not) and (.description | startswith("[Beta]") | not) and (.name as $n | $hooks | index($n) == null))]' "$MARKETPLACE")
-BETA_PLUGINS=$(jq -c --argjson hooks "$HOOK_JQ_FILTER" '[.plugins[] | select((.source | startswith("./.internal") | not) and (.description | startswith("[Beta]")) and (.name as $n | $hooks | index($n) == null))]' "$MARKETPLACE")
 INTERNAL_PLUGINS=$(jq -c --argjson hooks "$HOOK_JQ_FILTER" '[.plugins[] | select((.source | startswith("./.internal")) and (.name as $n | $hooks | index($n) == null))]' "$MARKETPLACE")
+# 公開スキル = 非internal かつ 非hook
+PUBLIC_PLUGINS=$(jq -c --argjson hooks "$HOOK_JQ_FILTER" '[.plugins[] | select((.source | startswith("./.internal") | not) and (.name as $n | $hooks | index($n) == null))]' "$MARKETPLACE")
 
-STABLE_COUNT=$(echo "$STABLE_PLUGINS" | jq 'length')
-BETA_COUNT=$(echo "$BETA_PLUGINS" | jq 'length')
+PUBLIC_COUNT=$(echo "$PUBLIC_PLUGINS" | jq 'length')
 INTERNAL_COUNT=$(echo "$INTERNAL_PLUGINS" | jq 'length')
 HOOK_COUNT=$(echo "$HOOK_PLUGINS" | jq 'length')
-PUBLIC_COUNT=$((STABLE_COUNT + BETA_COUNT))
 
 # --- バッジを生成 ---
 BADGES="![Skills](https://img.shields.io/badge/skills-${PUBLIC_COUNT}-blue) ![License](https://img.shields.io/badge/license-MIT-green)"
@@ -65,80 +95,110 @@ strip_prefix() {
   echo "$1" | sed 's/^\[Beta\] //'
 }
 
-# --- Skills テーブル (stable) ---
-{
-  echo "| Skill | Command | Description | Keywords |"
-  echo "|-------|---------|-------------|----------|"
-  for i in $(seq 0 $((STABLE_COUNT - 1))); do
-    NAME=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].name")
-    DESC=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].description")
-    KEYWORDS=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].keywords // [] | join(\", \")")
-    echo "| **$NAME** | \`/$NAME\` | $DESC | \`$KEYWORDS\` |"
-  done
-} > "$TMP_TABLE"
+# --- カテゴリ別にスキルを取得するヘルパー ---
+# source パスからカテゴリを導出: "./review/multi-ai-review" → "review"
+get_category_plugins() {
+  local cat="$1"
+  echo "$PUBLIC_PLUGINS" | jq -c --arg cat "$cat" '[.[] | select(.source | ltrimstr("./") | split("/")[0] == $cat)]'
+}
 
-# --- Skill Details (stable) ---
+# --- カテゴリ概要テーブル（トップ README 用） ---
 {
-  for i in $(seq 0 $((STABLE_COUNT - 1))); do
-    NAME=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].name")
-    SOURCE=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].source")
-    DESC=$(echo "$STABLE_PLUGINS" | jq -r ".[$i].description")
-    SKILL_MD="$REPO_ROOT/${SOURCE#./}/skills/$NAME/SKILL.md"
-    OVERVIEW=$(extract_overview "$SKILL_MD" 2>/dev/null || echo "")
-
-    echo "### $NAME"
-    echo ""
-    echo "$DESC"
-    if [ -n "$OVERVIEW" ]; then
-      echo ""
-      echo "$OVERVIEW"
+  echo "| Category | Skills | Description |"
+  echo "|----------|--------|-------------|"
+  for cat in "${CATEGORY_ORDER[@]}"; do
+    cat_plugins=$(get_category_plugins "$cat")
+    count=$(echo "$cat_plugins" | jq 'length')
+    if [ "$count" -eq 0 ]; then
+      continue
     fi
-    echo ""
-    echo '```'
-    echo "/$NAME"
-    echo '```'
-    echo ""
+    label="$(category_label "$cat")"
+    desc="$(category_desc "$cat")"
+    echo "| [${label}](./${cat}/) | ${count} skills | ${desc} |"
   done
-} > "$TMP_DETAILS"
+} > "$TMP_CATEGORY_TABLE"
 
-# --- Beta セクション ---
-{
-  if [ "$BETA_COUNT" -gt 0 ]; then
-    echo "## Beta Skills"
+# --- カテゴリ別 README を生成 ---
+for cat in "${CATEGORY_ORDER[@]}"; do
+  cat_plugins=$(get_category_plugins "$cat")
+  count=$(echo "$cat_plugins" | jq 'length')
+  if [ "$count" -eq 0 ]; then
+    continue
+  fi
+
+  label="$(category_label "$cat")"
+  desc="$(category_desc "$cat")"
+  cat_dir="$REPO_ROOT/$cat"
+  cat_readme="$cat_dir/README.md"
+
+  # カテゴリディレクトリが存在しなければスキップ（ディレクトリ自体がないカテゴリは生成しない）
+  if [ ! -d "$cat_dir" ]; then
+    continue
+  fi
+
+  {
+    echo "# ${label}"
     echo ""
-    echo "> 以下のスキルは現在開発中です。動作やインターフェースが変更される可能性があります。"
+    echo "${desc}"
     echo ""
-    echo "| Skill | Command | Description | Keywords |"
-    echo "|-------|---------|-------------|----------|"
-    for i in $(seq 0 $((BETA_COUNT - 1))); do
-      NAME=$(echo "$BETA_PLUGINS" | jq -r ".[$i].name")
-      DESC=$(strip_prefix "$(echo "$BETA_PLUGINS" | jq -r ".[$i].description")")
-      KEYWORDS=$(echo "$BETA_PLUGINS" | jq -r ".[$i].keywords // [] | join(\", \")")
-      echo "| **$NAME** | \`/$NAME\` | $DESC | \`$KEYWORDS\` |"
+    echo "## Skills"
+    echo ""
+    echo "| Skill | Command | Description |"
+    echo "|-------|---------|-------------|"
+
+    for i in $(seq 0 $((count - 1))); do
+      name=$(echo "$cat_plugins" | jq -r ".[$i].name")
+      raw_desc=$(echo "$cat_plugins" | jq -r ".[$i].description")
+      is_beta=false
+      if echo "$raw_desc" | grep -q '^\[Beta\]'; then
+        is_beta=true
+      fi
+      clean_desc=$(strip_prefix "$raw_desc")
+      if [ "$is_beta" = true ]; then
+        echo "| **${name}** [Beta] | \`/${name}\` | ${clean_desc} |"
+      else
+        echo "| **${name}** | \`/${name}\` | ${clean_desc} |"
+      fi
     done
-    echo ""
-    for i in $(seq 0 $((BETA_COUNT - 1))); do
-      NAME=$(echo "$BETA_PLUGINS" | jq -r ".[$i].name")
-      SOURCE=$(echo "$BETA_PLUGINS" | jq -r ".[$i].source")
-      DESC=$(strip_prefix "$(echo "$BETA_PLUGINS" | jq -r ".[$i].description")")
-      SKILL_MD="$REPO_ROOT/${SOURCE#./}/skills/$NAME/SKILL.md"
-      OVERVIEW=$(extract_overview "$SKILL_MD" 2>/dev/null || echo "")
 
-      echo "### $NAME"
+    echo ""
+
+    # スキル詳細
+    for i in $(seq 0 $((count - 1))); do
+      name=$(echo "$cat_plugins" | jq -r ".[$i].name")
+      source=$(echo "$cat_plugins" | jq -r ".[$i].source")
+      raw_desc=$(echo "$cat_plugins" | jq -r ".[$i].description")
+      is_beta=false
+      if echo "$raw_desc" | grep -q '^\[Beta\]'; then
+        is_beta=true
+      fi
+      clean_desc=$(strip_prefix "$raw_desc")
+      skill_md="$REPO_ROOT/${source#./}/skills/$name/SKILL.md"
+      overview=$(extract_overview "$skill_md" 2>/dev/null || echo "")
+
+      if [ "$is_beta" = true ]; then
+        echo "### ${name} [Beta]"
+      else
+        echo "### ${name}"
+      fi
       echo ""
-      echo "$DESC"
-      if [ -n "$OVERVIEW" ]; then
+      echo "${clean_desc}"
+      if [ -n "$overview" ]; then
         echo ""
-        echo "$OVERVIEW"
+        echo "$overview"
       fi
       echo ""
       echo '```'
-      echo "/$NAME"
+      echo "/${name}"
       echo '```'
       echo ""
     done
-  fi
-} > "$TMP_BETA"
+
+    echo "---"
+    echo ""
+    echo "[< Back to top](../README.md)"
+  } > "$cat_readme"
+done
 
 # --- Hooks セクション ---
 {
@@ -196,18 +256,14 @@ strip_prefix() {
 # --- テンプレートにプレースホルダーを埋め込み ---
 python3 -c "
 template = open('$TEMPLATE').read()
-table = open('$TMP_TABLE').read().strip()
-details = open('$TMP_DETAILS').read().strip()
-beta = open('$TMP_BETA').read().strip()
+category_table = open('$TMP_CATEGORY_TABLE').read().strip()
 internal = open('$TMP_INTERNAL').read().strip()
 hooks = open('$TMP_HOOKS').read().strip()
 prereqs = open('$PREREQUISITES').read().strip() if __import__('os').path.exists('$PREREQUISITES') else '- **Claude Code** CLI'
 badges = '$BADGES'
 
 result = template.replace('{{BADGES}}', badges)
-result = result.replace('{{SKILLS_TABLE}}', table)
-result = result.replace('{{SKILL_DETAILS}}', details)
-result = result.replace('{{BETA_SECTION}}', beta)
+result = result.replace('{{CATEGORY_TABLE}}', category_table)
 result = result.replace('{{HOOKS_SECTION}}', hooks)
 result = result.replace('{{INTERNAL_SECTION}}', internal)
 result = result.replace('{{PREREQUISITES}}', prereqs)
@@ -215,4 +271,5 @@ result = result.replace('{{PREREQUISITES}}', prereqs)
 open('$README', 'w').write(result)
 "
 
-echo "README.md generated ($STABLE_COUNT stable, $BETA_COUNT beta, $HOOK_COUNT hooks, $INTERNAL_COUNT internal skills)"
+echo "README.md generated ($PUBLIC_COUNT public, $HOOK_COUNT hooks, $INTERNAL_COUNT internal skills)"
+echo "Category READMEs generated for: ${CATEGORY_ORDER[*]}"

@@ -2,7 +2,7 @@
 name: skill-publisher
 description: >
   ~/.claude/skills/ や任意のパスにあるスキルを claude-code-plugin リポジトリの
-  正しいディレクトリ構造 (<name>/skills/<name>/SKILL.md) にコピー・配置するスキル。
+  正しいディレクトリ構造 (<category>/<name>/skills/<name>/SKILL.md) にコピー・配置するスキル。
   スキルの構造検証、既存スキルとの重複チェック、配置後の確認も行う。
   Use when: スキルをプラグインリポジトリに公開したい、スキルを移動したい、
   スキルをパッケージ化したい、スキルを整理したい。
@@ -24,16 +24,17 @@ PLUGIN_REPO=/Users/babashunsuke/Desktop/claude-code-plugin
 
 ```
 claude-code-plugin/
-├── <skill-name>/              # 公開用
-│   ├── .claude-plugin/
-│   │   └── plugin.json        # プラグインメタデータ（CI 必須）
-│   ├── agents/                # サブエージェント定義（あれば）
-│   │   └── <agent-name>.md
-│   └── skills/<skill-name>/
-│       ├── SKILL.md
-│       ├── references/  (あれば)
-│       ├── scripts/     (あれば)
-│       └── assets/      (あれば)
+├── <category>/                # カテゴリ別ディレクトリ
+│   └── <skill-name>/         # 公開用
+│       ├── .claude-plugin/
+│       │   └── plugin.json   # プラグインメタデータ（CI 必須）
+│       ├── agents/            # サブエージェント定義（あれば）
+│       │   └── <agent-name>.md
+│       └── skills/<skill-name>/
+│           ├── SKILL.md
+│           ├── references/  (あれば)
+│           ├── scripts/     (あれば)
+│           └── assets/      (あれば)
 ├── .internal/                 # 内部用（自分のリポジトリ向け）
 │   └── <skill-name>/
 │       ├── .claude-plugin/
@@ -42,6 +43,18 @@ claude-code-plugin/
 └── .claude-plugin/
     └── marketplace.json       # スキル登録設定（公開・内部どちらも登録が必要）
 ```
+
+### カテゴリ一覧
+
+| カテゴリ | 内容 |
+|---------|------|
+| `product` | プロダクト企画・ユーザーリサーチ |
+| `planning` | 機能検討・技術設計・実装計画 |
+| `design` | UI/UXデザイン・ロゴ作成 |
+| `development` | CI/CD・DB・Git・デバッグ・テスト |
+| `review` | コードレビュー・品質チェック |
+| `marketing` | アプリ名・ASO・スクリーンショット |
+| `agent-toolkit` | エージェントチーム構築・運用 |
 
 ### agents/ について
 
@@ -56,7 +69,8 @@ claude-code-plugin/
 ユーザーに以下を確認:
 - コピー元のスキルパス（例: `~/.claude/skills/app-naming/`）
 - または `~/.claude/skills/` 内のスキル一覧から選択
-- **配置先**: 公開用（ルート直下）か 内部用（`.internal/` 配下）か
+- **カテゴリ**: 公開用の場合、どのカテゴリに配置するか（product, planning, design, development, review, marketing, agent-toolkit）
+- **配置先**: 公開用（カテゴリ配下）か 内部用（`.internal/` 配下）か
 - **ステータス**: `stable`（デフォルト）か `beta` か
 - **agents/**: ソースに `agents/` ディレクトリがあるか確認
 
@@ -80,11 +94,11 @@ PLUGIN_REPO に同名のスキルが既に存在するか確認。
 配置スクリプトを実行:
 
 ```bash
-# 公開用（ルート直下に配置）
-scripts/publish-skill.sh <source-path> [skill-name]
+# 公開用（カテゴリ配下に配置）
+scripts/publish-skill.sh <source-path> [skill-name] --category <category>
 
 # Beta として公開
-scripts/publish-skill.sh <source-path> [skill-name] --beta
+scripts/publish-skill.sh <source-path> [skill-name] --category <category> --beta
 
 # 内部用（.internal/ 配下に配置）
 scripts/publish-skill.sh <source-path> [skill-name] --internal
@@ -92,8 +106,9 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 
 - `source-path`: コピー元（SKILL.md があるディレクトリ）
 - `skill-name`: 省略時は source-path のディレクトリ名を使用
+- `--category`: カテゴリ名（公開用は必須。product, planning, design, development, review, marketing, agent-toolkit）
 - `--beta`: Beta スキルとして配置（description に `[Beta]` プレフィックス付与）
-- `--internal`: 内部用として `.internal/` 配下に配置
+- `--internal`: 内部用として `.internal/` 配下に配置（カテゴリ不要）
 
 スクリプトが行うこと:
 1. 正しいディレクトリ構造を作成しファイルをコピー

@@ -9,6 +9,7 @@
 #
 # Options:
 #   --internal           .internal/ 配下に配置
+#   --category CATEGORY  カテゴリ名（agent-toolkit, review 等）
 #   --marketplace NAME   marketplace 名 (default: sunagaku-marketplace)
 #   --version VER        プラグインバージョン (default: 1.0.0)
 #
@@ -19,6 +20,7 @@ set -euo pipefail
 PLUGIN_REPO="/Users/babashunsuke/Desktop/claude-code-plugin"
 MARKETPLACE_JSON="$PLUGIN_REPO/.claude-plugin/marketplace.json"
 INTERNAL=false
+CATEGORY=""
 MARKETPLACE_NAME="sunagaku-marketplace"
 VERSION="1.0.0"
 
@@ -27,6 +29,7 @@ POSITIONAL=()
 while [ $# -gt 0 ]; do
   case $1 in
     --internal) INTERNAL=true; shift ;;
+    --category) CATEGORY="$2"; shift 2 ;;
     --marketplace) MARKETPLACE_NAME="$2"; shift 2 ;;
     --version) VERSION="$2"; shift 2 ;;
     *) POSITIONAL+=("$1"); shift ;;
@@ -57,13 +60,24 @@ echo "Generated command (portable):"
 echo "  $COMMAND"
 echo ""
 
+# カテゴリ未指定の場合はユーザーに確認を促す
+if [ -z "$CATEGORY" ] && [ "$INTERNAL" = false ]; then
+  echo "WARNING: --category が指定されていません"
+  echo "利用可能なカテゴリ: product, planning, design, development, review, marketing, agent-toolkit"
+  read -p "カテゴリを入力してください: " CATEGORY
+  if [ -z "$CATEGORY" ]; then
+    echo "ERROR: カテゴリは必須です"
+    exit 1
+  fi
+fi
+
 # 配置先の決定
 if [ "$INTERNAL" = true ]; then
   TARGET_ROOT="$PLUGIN_REPO/.internal/$PLUGIN_NAME"
   SOURCE_REF="./.internal/$PLUGIN_NAME"
 else
-  TARGET_ROOT="$PLUGIN_REPO/$PLUGIN_NAME"
-  SOURCE_REF="./$PLUGIN_NAME"
+  TARGET_ROOT="$PLUGIN_REPO/$CATEGORY/$PLUGIN_NAME"
+  SOURCE_REF="./$CATEGORY/$PLUGIN_NAME"
 fi
 
 TARGET_HOOKS="$TARGET_ROOT/hooks/$HOOK_NAME"
