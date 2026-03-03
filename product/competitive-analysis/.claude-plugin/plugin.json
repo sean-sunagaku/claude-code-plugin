@@ -1,7 +1,7 @@
 {
   "name": "competitive-analysis",
-  "version": "1.0.0",
-  "description": "5つの専門エージェント（競合プロファイリング・レビュー分析・機能ベンチマーク・ポジショニング戦略・ブラインド検証）が3ラウンドで競合環境を調査・分析し、差別化戦略とERRCグリッドを導出する",
+  "version": "2.0.0",
+  "description": "5つの専門エージェント（競合プロファイリング・レビュー分析・機能ベンチマーク・ポジショニング戦略・データ検証）がディスカッション型で競合環境を調査・分析し、差別化戦略とERRCグリッドを導出する。CHALLENGE/DEFEND プロトコル、Gate チェックポイント、Devil's Advocate による高品質な合意形成",
   "author": {
     "name": "sunagaku"
   },
@@ -14,6 +14,8 @@
     "ERRC",
     "blue-ocean",
     "agent-team",
-    "blind-review"
+    "discussion",
+    "data-critic",
+    "gate-checkpoint"
   ]
 }
