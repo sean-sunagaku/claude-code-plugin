@@ -89,7 +89,8 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
-- **EAS CLI** — eas-deploy
+- **Docker** — ci-check
+- **eas** — eas-deploy
 - **ffmpeg** — frame-inspect
 - **ffprobe** — frame-inspect
 - **gem** — eas-deploy
@@ -100,6 +101,7 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **npm** — ci-check / frame-inspect / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
+- **pod** — eas-deploy
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
 - **yarn** — ci-check
