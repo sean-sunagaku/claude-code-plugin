@@ -353,8 +353,8 @@
     {
       "name": "market-research",
       "source": "./product/market-research",
-      "description": "5つの専門エージェント（市場規模分析・トレンド調査・ユーザー需要分析・規制調査・データ検証）がチームで市場調査を実施。Gate 1/Gate 2の2段階検証、再調査ループ、ユーザー中間フィードバック付き。トライアンギュレーション検証済みの信頼度付き市場レポートを出力する",
-      "version": "0.2.0-beta",
+      "description": "8つの専門エージェント（市場規模分析・トレンド調査・競合インテリジェンス・投資シグナル・日本市場特化・ユーザー需要分析・規制調査・データ検証）がディスカッション型で市場調査を実施。エージェント同士がCHALLENGE/DEFENDテンプレートで批判・修正し合い、data-criticがライブモデレーターとして矛盾検出・収束判定。Gate 1/Gate 2の全員参加型合意形成とDevil's Advocateラウンドで確証バイアスを排除。信頼度付き市場レポートを出力する",
+      "version": "0.3.0-beta",
       "author": {
         "name": "sunagaku"
       },
@@ -365,7 +365,8 @@
         "SOM",
         "market-analysis",
         "market-sizing",
-        "triangulation",
+        "discussion-based",
+        "devils-advocate",
         "agent-team"
       ]
     },
@@ -695,6 +696,19 @@
         "blue-ocean",
         "agent-team",
         "blind-review"
+      ]
+    },
+    {
+      "name": "plan-compare",
+      "source": "./plan-compare",
+      "description": "| 複数の実装アプローチを並列チームで設計・議論し、比較して最適な計画を選ぶスキル。 各アプローチに専門グループ（architect, critic, risk-analyst）が付き、グループ内で議論して計画を洗練する。 「どのアプローチがいいか比較したい」「複数の実装方法を検討したい」「計画を並べて比べたい」 「実装方針を複数出して」「アプローチを比較」「どっちがいいか調べて」と言われた時に使用。 実装タスクで迷いがある時、設計の選択肢が複数ある時にも積極的に使う。 │ │ TeamCreate(\"plan-compare-{slug}\") │ ├─ Phase 1: Explore agent でコードベース調査（チーム外、先行実行） │ ├─ Phase 2: 全エージェントを一斉に spawn │ Group 1: plan-1-architect ←→ plan-1-critic ←→ plan-1-risk │ Group 2: plan-2-architect ←→ plan-2-critic ←→ plan-2-risk │ Group 3: plan-3-architect ←→ plan-3-critic ←→ plan-3-risk │ ├─ Phase 3: 全グループ完了後、comparison agent で比較 │ └─ Phase 4: ユーザー選択 → 実装 TaskCreate: \"plan-{n}-architect: {approach_name} の初期設計を提案\" → TaskUpdate で owner を \"plan-{n}-architect\" に設定 TaskCreate: \"plan-{n}-critic: 設計をレビュー\" → TaskUpdate で owner を \"plan-{n}-critic\"、addBlockedBy で上記タスクを指定 TaskCreate: \"plan-{n}-risk: リスク分析\" → TaskUpdate で owner を \"plan-{n}-risk\"、addBlockedBy で architect のタスクを指定 TaskCreate: \"plan-{n}-architect: フィードバック反映 → 最終版作成\" → TaskUpdate で owner を \"plan-{n}-architect\"、addBlockedBy で critic と risk のタスクを指定 subagent_type=\"pc-plan-architect\", // or pc-plan-critic, pc-plan-risk",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "plan",
+        "compare"
       ]
     }
   ],
