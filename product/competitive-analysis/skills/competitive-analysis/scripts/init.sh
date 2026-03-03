@@ -9,7 +9,7 @@ set -euo pipefail
 
 PROJECT_NAME="${1:?Usage: bash scripts/init.sh <project-name>}"
 DATE=$(date +%Y-%m-%d)
-BASE_DIR="$HOME/.claude/competitive-analysis/${DATE}_${PROJECT_NAME}"
+BASE_DIR="docs/competitive-analysis/${DATE}_${PROJECT_NAME}"
 
 if [ -d "$BASE_DIR" ]; then
   echo "Warning: $BASE_DIR already exists"
@@ -20,4 +20,4 @@ mkdir -p "$BASE_DIR"
 
 echo "Created: $BASE_DIR"
 echo ""
-echo "Absolute path (pass this to agents): $BASE_DIR"
+echo "Absolute path (pass this to agents): $(pwd)/$BASE_DIR"
