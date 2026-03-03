@@ -5,13 +5,11 @@
 
 **Optional** (skill-specific)
 
-- **CocoaPods** — eas-deploy
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI** — eas-deploy
-- **ffmpeg** — frame-inspect
-- **ffprobe** — frame-inspect
+- **eas-cli** — eas-deploy
+- **ffmpeg** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
