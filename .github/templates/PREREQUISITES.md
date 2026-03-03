@@ -10,7 +10,8 @@
 - **curl** — rn-debug
 - **Docker** — ci-check
 - **EAS CLI** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect
+- **ffmpeg** — frame-inspect
+- **ffprobe** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
