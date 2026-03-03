@@ -351,6 +351,25 @@
       ]
     },
     {
+      "name": "market-research",
+      "source": "./product/market-research",
+      "description": "5つの専門エージェント（市場規模分析・トレンド調査・ユーザー需要分析・規制調査・データ検証）がチームで市場調査を実施。Gate 1/Gate 2の2段階検証、再調査ループ、ユーザー中間フィードバック付き。トライアンギュレーション検証済みの信頼度付き市場レポートを出力する",
+      "version": "0.2.0-beta",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "market-research",
+        "TAM",
+        "SAM",
+        "SOM",
+        "market-analysis",
+        "market-sizing",
+        "triangulation",
+        "agent-team"
+      ]
+    },
+    {
       "name": "agent-team-guide",
       "source": "./agent-toolkit/agent-team-guide",
       "description": "Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集",
@@ -657,6 +676,25 @@
         "context",
         "persona",
         "hearing"
+      ]
+    },
+    {
+      "name": "competitive-analysis",
+      "source": "./product/competitive-analysis",
+      "description": "5つの専門エージェント（競合プロファイリング・レビュー分析・機能ベンチマーク・ポジショニング戦略・ブラインド検証）が3ラウンドで競合環境を調査・分析し、差別化戦略とERRCグリッドを導出する。Round 1で並列情報収集、Round 2でポジショニング戦略統合、Round 3で独立検証しバイアスを排除する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "competitive-analysis",
+        "competitor",
+        "differentiation",
+        "positioning",
+        "ERRC",
+        "blue-ocean",
+        "agent-team",
+        "blind-review"
       ]
     }
   ],
