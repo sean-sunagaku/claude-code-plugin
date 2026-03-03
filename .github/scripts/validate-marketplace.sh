@@ -337,7 +337,7 @@ echo "=== Unregistered Plugin Check ==="
 echo ""
 
 # スキル
-for dir in "$REPO_ROOT"/*/skills/*/SKILL.md "$REPO_ROOT"/.internal/*/skills/*/SKILL.md; do
+for dir in "$REPO_ROOT"/*/skills/*/SKILL.md "$REPO_ROOT"/*/*/skills/*/SKILL.md "$REPO_ROOT"/.internal/*/skills/*/SKILL.md; do
   [ -f "$dir" ] || continue
   SKILL_NAME=$(basename "$(dirname "$dir")")
   if ! jq -r '.plugins[].name' "$MARKETPLACE" | grep -qx "$SKILL_NAME"; then
@@ -347,6 +347,7 @@ done
 
 # Hook
 for dir in "$REPO_ROOT"/*/hooks/*/hook.py "$REPO_ROOT"/*/hooks/*/hook.sh \
+           "$REPO_ROOT"/*/*/hooks/*/hook.py "$REPO_ROOT"/*/*/hooks/*/hook.sh \
            "$REPO_ROOT"/.internal/*/hooks/*/hook.py "$REPO_ROOT"/.internal/*/hooks/*/hook.sh; do
   [ -f "$dir" ] || continue
   # hooks/<hook-name>/hook.py → 親の親がプラグインルート

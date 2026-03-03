@@ -22,12 +22,13 @@ PLUGIN_REPO=/Users/babashunsuke/Desktop/claude-code-plugin
 
 ```
 claude-code-plugin/
-├── <hook-plugin-name>/        # 公開用
-│   ├── hooks/
-│   │   └── <hook-name>/
-│   │       ├── hook.py (or hook.sh)
-│   │       └── test.py (or test.sh)
-│   └── plugin.json            # hook 設定 + メタデータ
+├── <category>/                # カテゴリ別ディレクトリ
+│   └── <hook-plugin-name>/    # 公開用
+│       ├── hooks/
+│       │   └── <hook-name>/
+│       │       ├── hook.py (or hook.sh)
+│       │       └── test.py (or test.sh)
+│       └── plugin.json        # hook 設定 + メタデータ
 ├── .internal/                 # 内部用
 │   └── <hook-plugin-name>/
 │       ├── hooks/...
@@ -35,6 +36,14 @@ claude-code-plugin/
 └── .claude-plugin/
     └── marketplace.json
 ```
+
+### カテゴリ一覧
+
+| カテゴリ | 内容 |
+|---------|------|
+| `agent-toolkit` | エージェントチーム構築・運用 |
+| `review` | コードレビュー・品質チェック |
+| その他 | product, planning, design, development, marketing |
 
 ### plugin.json の構成
 
@@ -93,7 +102,8 @@ python3 .claude/hooks/log-agent-messages/hook.py
 - hook イベント（PostToolUse, PreToolUse, Stop 等）
 - matcher（SendMessage 等。空文字なら全ツール対象）
 - 実行コマンド（`python3 .claude/hooks/<name>/hook.py` 等）
-- **配置先**: 公開用（ルート直下）か 内部用（`.internal/` 配下）か
+- **カテゴリ**: 公開用の場合、どのカテゴリに配置するか（agent-toolkit, review 等）
+- **配置先**: 公開用（カテゴリ配下）か 内部用（`.internal/` 配下）か
 
 ### Step 2: 構造検証
 
@@ -114,19 +124,19 @@ PLUGIN_REPO に同名の hook プラグインが既に存在するか確認。
 配置スクリプトを実行:
 
 ```bash
-# 公開用
-scripts/publish-hook.sh <source-path> <plugin-name> <hook-event> <matcher> <command>
+# 公開用（カテゴリ配下に配置）
+scripts/publish-hook.sh <source-path> <plugin-name> <hook-event> <matcher> --category <category>
 
 # 内部用
-scripts/publish-hook.sh <source-path> <plugin-name> <hook-event> <matcher> <command> --internal
+scripts/publish-hook.sh <source-path> <plugin-name> <hook-event> <matcher> --internal
 ```
 
 - `source-path`: コピー元（hook.py があるディレクトリ）
 - `plugin-name`: プラグイン名（例: agent-teams-log）
 - `hook-event`: PostToolUse, PreToolUse, Stop 等
 - `matcher`: ツール名マッチャー（例: SendMessage）。空文字なら全ツール対象
-- `command`: 実行コマンド（`$HOME` ベースのキャッシュパスを使う。上記「ポータブルな command パスのルール」参照）
-- `--internal`: .internal/ 配下に配置
+- `--category`: カテゴリ名（公開用は必須。agent-toolkit, review 等）
+- `--internal`: .internal/ 配下に配置（カテゴリ不要）
 
 スクリプトが行うこと:
 1. 正しいディレクトリ構造を作成しファイルをコピー

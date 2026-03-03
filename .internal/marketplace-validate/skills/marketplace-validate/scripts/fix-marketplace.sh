@@ -175,7 +175,7 @@ echo ""
 
 # --- 5. unregistered skills ---
 echo "--- Checking unregistered skills ---"
-for dir in "$REPO_ROOT"/*/skills/*/SKILL.md "$REPO_ROOT"/.internal/*/skills/*/SKILL.md; do
+for dir in "$REPO_ROOT"/*/skills/*/SKILL.md "$REPO_ROOT"/*/*/skills/*/SKILL.md "$REPO_ROOT"/.internal/*/skills/*/SKILL.md; do
   [ -f "$dir" ] || continue
   SKILL_NAME=$(basename "$(dirname "$dir")")
   if ! jq -r '.plugins[].name' "$MARKETPLACE" | grep -qx "$SKILL_NAME"; then
