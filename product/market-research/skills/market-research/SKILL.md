@@ -28,11 +28,6 @@ description: >
 各主張に「なぜそう言えるのか」の根拠（出典・算出ロジック・交差検証結果）を必ず添える。
 ユーザーが判断材料にできるレベルの詳細さを常に維持する。
 
-**重要原則: 全ての成果物は日本語で作成する。**
-レポートファイル（MARKET_REPORT.md, 各分析ファイル）、エージェント間のディスカッション、
-ユーザーへの中間報告・最終報告、全て日本語で記述する。
-出典URLや固有名詞（企業名・サービス名）は原語のままで良い。
-
 ## ワークフロー概要
 
 ```
@@ -47,8 +42,11 @@ Step 7: クリーンアップ
 
 ## コンテキストファイル構成
 
+保存先はユーザーが選択可能（Step 1 ヒアリングで確認）:
+
+**A) リポジトリトップ（推奨）** — プロジェクトと一緒にバージョン管理したい場合:
 ```
-docs/market-research/{YYYY-MM-DD}_{project}/
+{repo_root}/market-research/
 ├── MARKET_REPORT.md         <- 統合レポート（後続スキルがまず読むファイル）
 ├── context.md               <- プロジェクト情報・セッション引き継ぎ用
 ├── market-size.md           <- TAM/SAM/SOM 詳細計算（ディスカッション反映版）
@@ -59,6 +57,12 @@ docs/market-research/{YYYY-MM-DD}_{project}/
 ├── demand-insights.md       <- ユーザー需要・課題・ペインポイント（ディスカッション反映版）
 ├── regulatory.md            <- 規制・参入障壁（ディスカッション反映版）
 └── critique.md              <- ディスカッション経緯 + Gate 判定 + Devil's Advocate
+```
+
+**B) ホームディレクトリ** — リポジトリを汚したくない場合:
+```
+~/.claude/market-research/{YYYY-MM-DD}_{project}/
+└── （同上のファイル構成）
 ```
 
 ---
@@ -84,6 +88,10 @@ AskUserQuestion でユーザーから情報を収集する。不明な項目は�
 ### 調査設定（ユーザーに確認）
 
 AskUserQuestion で以下を確認:
+
+**「レポートの保存先を選んでください」**
+- 選択肢1: 「リポジトリトップ（推奨）」→ `{cwd}/market-research/` に保存。`mkdir -p {cwd}/market-research/` で作成
+- 選択肢2: 「ホームディレクトリ」→ `init.sh` で `~/.claude/market-research/{date}_{project}/` に作成
 
 **「調査の進め方を確認させてください」**
 - 選択肢1: 「途中で確認したい（推奨）」→ Gate 1 でユーザーチェックポイントを設ける
@@ -138,10 +146,10 @@ run_in_background: true
 
 プロンプトに含める情報（全エージェント共通）:
 - カテゴリ、ターゲット、地域、その他ヒアリング情報
-- **ベースディレクトリの絶対パス**（⚠️必須）: `init.sh` が出力する絶対パスをそのまま使う
-  - 例: `/Users/babashunsuke/Desktop/my-project/docs/market-research/2026-03-03_my-app/`
+- **ベースディレクトリの絶対パス**（⚠️必須）: ユーザーが選択した保存先の絶対パスをそのまま使う
+  - リポジトリトップの場合: `{cwd}/market-research/`（例: `/Users/user/my-app/market-research/`）
+  - ホームディレクトリの場合: `init.sh` が出力する絶対パス（例: `~/.claude/market-research/2026-03-03_my-app/`）
   - ⚠️ Write ツールは絶対パスのみ受け付ける
-  - レポートはリポジトリの `docs/market-research/` 配下に保存される
 - 「全ファイルは Write ツールで絶対パスに書き込むこと」を明記
 - ユーザーが選んだ調査設定（中間確認あり/なし）
 - **ディスカッションプロトコルの確認**: 各エージェント定義に埋め込み済みだが、「他エージェントと積極的に対話すること」を再度明記
@@ -566,7 +574,7 @@ data-critic が以下のいずれかを判定した場合、再調査を実施:
 全エージェントのタスクが completed になった後、最終レポート作成の前に以下を検証する:
 
 ```bash
-docs/market-research/{date}_{project}/
+.claude/market-research/{date}_{project}/
 ├── market-size.md           <- market-size-analyst が書き込み
 ├── trends.md                <- trend-researcher が書き込み
 ├── competitors.md           <- competitor-intelligence-analyst が書き込み
@@ -728,7 +736,7 @@ bash scripts/init.sh <project-name>
 
 # 例
 bash scripts/init.sh my-fitness-app
-# -> docs/market-research/2026-03-03_my-fitness-app/ を作成
+# -> .claude/market-research/2026-03-03_my-fitness-app/ を作成
 ```
 
 ### new-round.sh - 再調査ラウンド
@@ -737,6 +745,6 @@ bash scripts/init.sh my-fitness-app
 bash scripts/new-round.sh <project-dir>
 
 # 例
-bash scripts/new-round.sh docs/market-research/2026-03-03_my-fitness-app
+bash scripts/new-round.sh ~/.claude/market-research/2026-03-03_my-fitness-app
 # -> 既存ファイルを .bak にリネームし、再調査用に準備
 ```

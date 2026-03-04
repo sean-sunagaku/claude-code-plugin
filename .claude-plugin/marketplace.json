@@ -284,8 +284,8 @@
     {
       "name": "ui-variations",
       "source": "./design/ui-variations",
-      "description": "[Beta] 5つの異なるUIデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。各デザイナーがMCP経由でPencilに直接構築。3人チーム x5の並列実行。",
-      "version": "1.1.0",
+      "description": "[Beta] 5つの異なるUIデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。Mode A: スタイルプリセット / Mode B: ペルソナ駆動（情報設計レベルで差別化）。各デザイナーがMCP経由でPencilに直接構築。3人チーム x5の並列実行。",
+      "version": "1.2.0",
       "author": {
         "name": "sunagaku"
       },
@@ -559,8 +559,8 @@
     {
       "name": "feature-discussion",
       "source": "./planning/feature-discussion",
-      "description": "[Beta] 6つの専門エージェント（PM・UXアナリスト・エンジニア・デザイナー・行動心理学者・User Liaison）が議論・反論し合いながら新機能を検討するスキル。User Liaisonがユーザーへの質問を一元管理し、議論中に適切なタイミングでユーザー入力を取得。課題の深掘りから要件定義、UI設計プロンプト生成まで5ステップで段階的に進行。5軸スコアリング、Devil's Advocate、Quality Gate搭載",
-      "version": "0.2.0-beta",
+      "description": "[Beta] 7つの専門エージェントが議論・反論し合いながら機能を検討するデュアルモードスキル。Mode A: 既存アプリへの個別機能追加（課題深掘り→代替案→スコープ→要件→UI設計）。Mode B: プロダクト全体の機能セット設計（コンテキスト統合→機能発想→優先度→MVP定義→画面構成）。ペルソナ・競合分析等のリサーチ資料を自動統合。5軸スコアリング、Devil's Advocate、Quality Gate搭載",
+      "version": "0.3.0-beta",
       "author": {
         "name": "sunagaku"
       },

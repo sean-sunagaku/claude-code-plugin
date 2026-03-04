@@ -338,3 +338,383 @@ Task(
 1. 致命的な指摘（全員が認めた問題）→ 合意案を修正
 2. 重要だが対処可能な指摘 → リスクとして記録、対策を追記
 3. 過剰な指摘（他のエージェントが反論できた）→ 却下理由を記録
+
+---
+
+# Mode B: プロダクト機能設計
+
+Mode B ではプロダクト全体の機能セットを検討する。
+各ステップのエージェント起動テンプレートは以下の通り。
+
+## 共通コンテキスト（Mode B 追加分）
+
+Mode A の共通コンテキストに加えて、以下を全エージェントに渡す：
+
+```
+Mode B 追加コンテキスト:
+- プロダクトビジョン: [P1で定義、またはproduct-context.mdから]
+- リサーチ資料:
+  - ペルソナ: [ペルソナファイル一覧と要約]
+  - 競合分析: [competitive-analysis の要約]
+  - 市場調査: [market-research の要約（あれば）]
+  - トンマナ: [tone-manner の要約（あれば）]
+  - ユーザージャーニー: [user-journey の要約（あれば）]
+- 前ステップの結果: [あれば前ステップの成果物内容]
+```
+
+---
+
+## Step P1: コンテキスト統合
+
+**参加エージェント**: PM + UX Analyst + Behavioral Psychologist + User Liaison
+
+**このステップでユーザーに確認すべき事項**:
+- プロダクトのビジョン・目指す方向性
+- 最も重要と考えるペルソナ
+- 競合との差別化で重視するポイント
+- ビジネスモデルの方向性
+
+```python
+Task(
+  name="product-manager",
+  team_name="feature-discussion",
+  description="PM: プロダクトビジョンと戦略の統合",
+  subagent_type="feature-discussion:product-manager",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: ux-analyst, behavioral-psychologist, user-liaison
+
+    Step P1: コンテキスト統合
+    - リサーチ資料（ペルソナ、競合分析、市場調査）を統合し、プロダクトビジョンを定義
+    - 競合ギャップ（競合にない自社の価値）を特定
+    - ビジネスモデルの方向性を評価
+    - ビジョンの根拠が不明確な場合は user-liaison に質問を依頼
+  `
+)
+Task(
+  name="ux-analyst",
+  team_name="feature-discussion",
+  description="UX: ペルソナJTBD抽出",
+  subagent_type="feature-discussion:ux-analyst",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, behavioral-psychologist, user-liaison
+
+    Step P1: ペルソナ別JTBDの抽出
+    - 各ペルソナのJobs-to-be-Doneを抽出（When-Want-So構文）
+    - 重要度と満足度を評価し、機会スコアを算出
+    - ペルソナ間の優先順位を提案
+    - ユーザーの実際の利用シーンが不明な場合は user-liaison に質問を依頼
+  `
+)
+Task(
+  name="behavioral-psychologist",
+  team_name="feature-discussion",
+  description="BP: 行動パターン分析とHook Model仮説",
+  subagent_type="feature-discussion:behavioral-psychologist",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, ux-analyst, user-liaison
+
+    Step P1: ターゲットの行動パターン分析
+    - ペルソナの既存行動パターンと置き換え対象を分析
+    - Hook Model の初期仮説（Trigger/Action/Reward/Investment）を構築
+    - 行動変容の難易度を評価
+    - ユーザーの既存習慣が不明な場合は user-liaison に質問を依頼
+  `
+)
+Task(
+  name="user-liaison",
+  team_name="feature-discussion",
+  description="UL: ユーザー質問管理",
+  subagent_type="feature-discussion:user-liaison",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, ux-analyst, behavioral-psychologist
+
+    【このステップで特に確認すべき事項】
+    - プロダクトのビジョン・目指す方向性
+    - 最も重要と考えるペルソナ
+    - 競合との差別化で重視するポイント
+    - ビジネスモデルの方向性
+    エージェントがリサーチ資料の解釈で仮定を置いている場合は、能動的にユーザーに確認してください。
+  `
+)
+```
+
+---
+
+## Step P2: 機能アイデア発想
+
+**参加エージェント**: 全員（PM + UX Analyst + Engineer + Designer + Behavioral Psychologist + Affordance Tester + User Liaison）
+
+**このステップでユーザーに確認すべき事項**:
+- 絶対に入れたい機能、絶対に入れたくない機能
+- 参考にしているアプリ・サービス
+- 技術的な制約や好み
+- アプリの世界観・方向性
+
+```python
+Task(
+  name="product-manager",
+  team_name="feature-discussion",
+  description="PM: コア機能とビジネス機能の提案",
+  subagent_type="feature-discussion:product-manager",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: ux-analyst, engineer, designer, behavioral-psychologist, affordance-tester, user-liaison
+
+    Step P2: 機能アイデア発想
+    - ビジョン直結のコア機能を提案
+    - ビジネスモデルを支える機能を提案
+    - テーブルステークス（基本期待）を網羅
+    - 他エージェントの提案に対してビジネス価値の観点から反論・補強
+  `
+)
+Task(
+  name="ux-analyst",
+  team_name="feature-discussion",
+  description="UX: ペルソナ特化機能の提案",
+  subagent_type="feature-discussion:ux-analyst",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, engineer, designer, behavioral-psychologist, affordance-tester, user-liaison
+
+    Step P2: ペルソナ視点の機能提案
+    - 各ペルソナのJTBDに直結する機能を提案
+    - ペルソナのペインポイントを解消する機能を提案
+    - 他の提案がペルソナの実態と乖離している場合は反論
+  `
+)
+Task(
+  name="engineer",
+  team_name="feature-discussion",
+  description="Engineer: 技術差別化機能の提案",
+  subagent_type="feature-discussion:engineer",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, ux-analyst, designer, behavioral-psychologist, affordance-tester, user-liaison
+
+    Step P2: 技術観点の機能提案
+    - 技術的に差別化できる機能を提案（AI活用、自動化等）
+    - 既存コードベースで実現しやすい機能を特定
+    - 他の提案の技術的実現性を早期に評価
+  `
+)
+Task(
+  name="designer",
+  team_name="feature-discussion",
+  description="Designer: UX差別化機能の提案",
+  subagent_type="feature-discussion:designer",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, ux-analyst, engineer, behavioral-psychologist, affordance-tester, user-liaison
+
+    Step P2: UX/UI観点の機能提案
+    - 体験として差別化できる機能・インタラクションを提案
+    - 競合アプリのUI課題を解決する機能を提案
+    - トンマナに合った独自の体験を提案
+  `
+)
+Task(
+  name="behavioral-psychologist",
+  team_name="feature-discussion",
+  description="BP: 習慣形成機能の提案",
+  subagent_type="feature-discussion:behavioral-psychologist",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, ux-analyst, engineer, designer, affordance-tester, user-liaison
+
+    Step P2: 習慣形成観点の機能提案
+    - Hook Model の4要素（Trigger/Action/Reward/Investment）に対応する機能を提案
+    - ゲーミフィケーション、ソーシャルプルーフ等の習慣形成パターンを活用した機能
+    - 他の提案の「行動実現性」を評価（ユーザーが実際にやるかどうか）
+  `
+)
+Task(
+  name="affordance-tester",
+  team_name="feature-discussion",
+  description="AT: 初見理解度の評価",
+  subagent_type="feature-discussion:affordance-tester",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: product-manager, ux-analyst, engineer, designer, behavioral-psychologist, user-liaison
+
+    Step P2: 初見理解度の評価
+    - 各機能提案が初見ユーザーに伝わるか評価
+    - 機能名・操作方法の自明性をチェック
+    - 認知的ウォークスルーの観点から懸念を指摘
+  `
+)
+Task(
+  name="user-liaison",
+  team_name="feature-discussion",
+  description="UL: ユーザー質問管理",
+  subagent_type="feature-discussion:user-liaison",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: [全エージェント名]
+
+    【このステップで特に確認すべき事項】
+    - 絶対に入れたい機能、絶対に入れたくない機能
+    - 参考にしているアプリ・サービス
+    - 技術的な制約や好み
+    - アプリの世界観・方向性
+    機能アイデアが多数出た段階で、ユーザーの直感的な反応を確認してください。
+  `
+)
+```
+
+---
+
+## Step P3: 機能優先度決定
+
+**参加エージェント**: PM + UX Analyst + Engineer + Behavioral Psychologist + User Liaison
+
+**このステップでユーザーに確認すべき事項**:
+- スコアリングで対立した機能の優先度判断
+- ビジネス上の重み付け（成長 vs 収益 vs リテンション）
+- 技術負債の許容範囲
+- リリーススケジュールの制約
+
+```python
+# PM: ビジネス価値スコアリング
+# UX Analyst: ペルソナ価値スコアリング
+# Engineer: 技術実現性 + 工数 + 依存関係
+# BP: 習慣貢献スコアリング
+# User Liaison: 対立点のユーザー判断取得
+# [各エージェントの起動テンプレートはStep P2と同様の構造]
+```
+
+---
+
+## Step P4: MVP機能セット定義
+
+**参加エージェント**: 全員
+
+**このステップでユーザーに確認すべき事項**:
+- MVP/Phase2/Phase3 の分類が意図通りか
+- 開発リソースの制約（期間、人数）
+- ペルソナジャーニーで不足している部分の許容範囲
+- ローンチ戦略（限定公開 vs 一般公開）
+
+```python
+# PM: MVP/Phase分類の提案
+# UX Analyst: ペルソナジャーニーの検証
+# Engineer: 工数見積と依存関係に基づく分割案
+# BP: 習慣ループの完全性チェック
+# Designer: 画面数の妥当性チェック
+# AT: 初回体験の完全性チェック
+# User Liaison: MVP範囲の確認
+# [各エージェントの起動テンプレートはStep P2と同様の構造]
+```
+
+---
+
+## Step P5: 画面構成 & UI設計プロンプト
+
+**参加エージェント**: Designer（リード） + UX Analyst + Behavioral Psychologist + Affordance Tester + Engineer + User Liaison（全員レビュー）
+
+**このステップでユーザーに確認すべき事項**:
+- ナビゲーション構造の好み（タブ/ドロワー/その他）
+- 画面構成の直感的な印象
+- 主要フローの操作感
+- 既存のデザインで参考にしたいもの
+
+```python
+Task(
+  name="designer",
+  team_name="feature-discussion",
+  description="Designer: 画面マップとナビゲーション設計",
+  subagent_type="feature-discussion:designer",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: ux-analyst, behavioral-psychologist, affordance-tester, engineer, user-liaison
+
+    Step P5: 画面構成 & UI設計プロンプト
+    - MVP全機能を画面に割り当て、画面マップを作成
+    - ナビゲーション構造（タブ/メニュー）を設計
+    - 画面遷移図を作成
+    - 各画面のレイアウトをASCII artで視覚化（PC/スマホ）
+    - 実装プロンプトを各画面に付与
+    - トンマナ資料があれば、その方向性を反映
+  `
+)
+Task(
+  name="ux-analyst",
+  team_name="feature-discussion",
+  description="UX: ペルソナ導線の設計",
+  subagent_type="feature-discussion:ux-analyst",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: designer, behavioral-psychologist, affordance-tester, engineer, user-liaison
+
+    Step P5: ペルソナ別メインフローの設計
+    - 各ペルソナの主要フロー（画面遷移）を定義
+    - オンボーディングフローを設計
+    - 画面遷移がペルソナのメンタルモデルに合っているか評価
+    - Designer の提案に対してペルソナ視点で反論
+  `
+)
+Task(
+  name="behavioral-psychologist",
+  team_name="feature-discussion",
+  description="BP: 認知負荷と習慣設計のチェック",
+  subagent_type="feature-discussion:behavioral-psychologist",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: designer, ux-analyst, affordance-tester, engineer, user-liaison
+
+    Step P5: 認知負荷と習慣設計
+    - 各画面の認知負荷をチェック（情報量、選択肢数）
+    - デフォルト値、フィードバック設計を提案
+    - オンボーディングでの初回報酬タイミングを評価
+    - 習慣ループが画面フローで成立するか最終確認
+  `
+)
+Task(
+  name="affordance-tester",
+  team_name="feature-discussion",
+  description="AT: 認知的ウォークスルー",
+  subagent_type="feature-discussion:affordance-tester",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: designer, ux-analyst, behavioral-psychologist, engineer, user-liaison
+
+    Step P5: 認知的ウォークスルー
+    - 全画面の初見理解度をスコアリング（1-5）
+    - 各UI要素のアフォーダンス（操作方法の自明性）を評価
+    - ラベル・アイコンの理解度をチェック
+    - ナビゲーション構造の直感性を評価
+  `
+)
+Task(
+  name="user-liaison",
+  team_name="feature-discussion",
+  description="UL: ユーザー質問管理",
+  subagent_type="feature-discussion:user-liaison",
+  prompt=`
+    [共通コンテキスト + Mode B 追加コンテキスト]
+    チームメンバー: designer, ux-analyst, behavioral-psychologist, affordance-tester, engineer
+
+    【このステップで特に確認すべき事項】
+    - ナビゲーション構造の好み
+    - 画面構成の直感的な印象
+    - 主要フローの操作感
+    - 既存デザインの参考
+    画面設計はユーザーの好みに大きく依存するため、早い段階でナビゲーション方針を確認してください。
+  `
+)
+```
+
+---
+
+## Devil's Advocate 起動（Mode B 共通）
+
+Mode A と同じ Devil's Advocate テンプレートを使用する。
+ただし、Mode B では以下の観点を追加で指摘する：
+
+- **P2**: 「本当に15個以上必要か？ 3つの機能で80%の価値を出せないか？」
+- **P3**: 「スコアリングの前提が間違っていたら？ 市場が変わったら？」
+- **P4**: 「MVPが大きすぎないか？ さらに半分にできないか？」
+- **P5**: 「この画面数でユーザーは迷わないか？ 3画面で済まないか？」
