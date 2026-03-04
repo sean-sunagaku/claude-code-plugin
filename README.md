@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-34-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-37-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -38,7 +38,7 @@ Or use the slash command inside Claude Code:
 
 | Category | Skills | Description |
 |----------|--------|-------------|
-| [Product](./product/) | 5 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
+| [Product](./product/) | 7 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
 | [Planning](./planning/) | 4 skills | 機能検討・技術設計の議論・実装計画の策定 |
 | [Design](./design/) | 4 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
 | [Development](./development/) | 7 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
@@ -90,7 +90,7 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **eas-cli** — eas-deploy
+- **EAS CLI** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
