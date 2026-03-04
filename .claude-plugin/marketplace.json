@@ -712,6 +712,20 @@
         "plan",
         "compare"
       ]
+    },
+    {
+      "name": "app-tone-manner",
+      "source": "./design/app-tone-manner",
+      "description": " アプリのトーン&マナー（トンマナ）を8名のエージェントチームで設計するスキル。 ブランドアーキタイプ・パーソナリティ定義から、カラー・タイポグラフィ・ビジュアルスタイル・ トーン・オブ・ボイスまでを一貫設計し、Pencil (.pen) + Markdown で成果物を出力する。 「デザインテンション」（矛盾ペア）を核に、AIっぽくない独自のブランドアイデンティティを生成する。",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "app",
+        "tone",
+        "manner"
+      ]
     }
   ],
   "metadata": {
