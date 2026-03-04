@@ -1,7 +1,7 @@
 {
   "name": "ui-variations",
-  "version": "1.1.0",
-  "description": "5つのデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。各デザイナーがMCP経由でPencilに直接構築。3人チーム（デザイナー+レビュアー+コピーライター）x5の並列実行。",
+  "version": "1.2.0",
+  "description": "5つのデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。Mode A: スタイルプリセット / Mode B: ペルソナ駆動（情報設計レベルで差別化）。各デザイナーがMCP経由でPencilに直接構築。3人チーム（デザイナー+レビュアー+コピーライター）x5の並列実行。",
   "author": { "name": "sunagaku" },
   "license": "MIT",
   "keywords": ["ui", "design", "variations", "pencil", "agent-team", "comparison", "parallel"]
