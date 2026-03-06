@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-38-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-39-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -39,7 +39,7 @@ Or use the slash command inside Claude Code:
 | Category | Skills | Description |
 |----------|--------|-------------|
 | [Product](./product/) | 7 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
-| [Planning](./planning/) | 4 skills | 機能検討・技術設計の議論・実装計画の策定 |
+| [Planning](./planning/) | 5 skills | 機能検討・技術設計の議論・実装計画の策定 |
 | [Design](./design/) | 5 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
 | [Development](./development/) | 7 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
 | [Review](./review/) | 5 skills | コードレビュー・プランレビュー・UI検証・品質チェック |
@@ -90,15 +90,14 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **Codex CLI** — multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI (eas)** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect
-- **ffprobe** — app-store-preview-movie / frame-inspect
+- **EAS CLI** — eas-deploy
+- **FFmpeg** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
-- **npm** — ci-check / frame-inspect / svg-to-png
+- **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
