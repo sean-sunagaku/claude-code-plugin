@@ -1,0 +1,8 @@
+{
+  "name": "long-run-implement",
+  "version": "1.0.0",
+  "description": "大きな実装タスクを TODO 駆動で段階的に実装し、サブエージェントがレビューするスキル",
+  "author": {
+    "name": "sunagaku"
+  }
+}

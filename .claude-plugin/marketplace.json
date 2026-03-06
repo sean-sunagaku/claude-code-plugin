@@ -726,6 +726,23 @@
         "tone",
         "manner"
       ]
+    },
+    {
+      "name": "long-run-implement",
+      "source": "./planning/long-run-implement",
+      "description": "[Beta] エージェントを長時間稼働させて大きな実装タスクを完遂するためのスキル。TODO ファイルを真実の源泉として管理し、高レベル TODO を細かい TODO に分解→実装→サブエージェントレビュー→不足分 TODO 追加のサイクルで着実に完遂する",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "long-run",
+        "implement",
+        "todo-driven",
+        "iterative",
+        "review-gate",
+        "step-by-step"
+      ]
     }
   ],
   "metadata": {
