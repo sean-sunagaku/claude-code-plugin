@@ -762,6 +762,26 @@
         "review-gate",
         "step-by-step"
       ]
+    },
+    {
+      "name": "swiftui-best-practice",
+      "source": "./development/swiftui-best-practice",
+      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。.frame + .safeAreaInset の罠、ViewThatFits のアンチパターン、マルチデバイス対応の3段階ブレークポイントパターンを網羅",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "swiftui",
+        "layout",
+        "best-practice",
+        "safeAreaInset",
+        "ViewThatFits",
+        "GeometryReader",
+        "adaptive",
+        "multi-device",
+        "iPhone-SE"
+      ]
     }
   ],
   "metadata": {
