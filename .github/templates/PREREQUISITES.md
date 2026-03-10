@@ -5,14 +5,14 @@
 
 **Optional** (skill-specific)
 
-- **Codex CLI** — multi-ai-review / plan-review
+- **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI** — eas-deploy
-- **FFmpeg** — app-store-preview-movie / frame-inspect
+- **EAS CLI** — eas-deploy / rn-debug
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
+- **go** — arch-review
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
