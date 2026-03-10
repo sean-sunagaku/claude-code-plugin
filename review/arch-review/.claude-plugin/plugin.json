@@ -1,0 +1,18 @@
+{
+  "name": "arch-review",
+  "version": "0.1.0-beta",
+  "description": "[Beta] 6つの専門エージェントチームでコードベースのアーキテクチャを多角的に分析するスキル",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "architecture",
+    "review",
+    "performance",
+    "security",
+    "reliability",
+    "agent-team",
+    "codex"
+  ]
+}

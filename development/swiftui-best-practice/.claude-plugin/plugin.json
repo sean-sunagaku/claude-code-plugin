@@ -1,0 +1,8 @@
+{
+  "name": "swiftui-best-practice",
+  "version": "1.0.0",
+  "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。.frame + .safeAreaInset の罠、ViewThatFits のアンチパターン、マルチデバイス対応の3段階ブレークポイントパターンを網羅",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["swiftui", "layout", "best-practice", "safeAreaInset", "ViewThatFits", "adaptive"]
+}
