@@ -728,6 +728,25 @@
       ]
     },
     {
+      "name": "arch-review",
+      "source": "./review/arch-review",
+      "description": "[Beta] 6つの専門エージェント（パフォーマンス・信頼性・セキュリティ・運用DX・データ依存・Codexクロスカット）がチームでコードベースのアーキテクチャを多角的に分析し、リスク・デグレしやすい箇所・改善ポイントを洗い出すスキル。エージェント間の反論・補足・自由議論を経て統合レポートを出力する",
+      "version": "0.1.0-beta",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "architecture",
+        "review",
+        "performance",
+        "security",
+        "reliability",
+        "agent-team",
+        "codex",
+        "cross-review"
+      ]
+    },
+    {
       "name": "long-run-implement",
       "source": "./planning/long-run-implement",
       "description": "[Beta] エージェントを長時間稼働させて大きな実装タスクを完遂するためのスキル。TODO ファイルを真実の源泉として管理し、高レベル TODO を細かい TODO に分解→実装→サブエージェントレビュー→不足分 TODO 追加のサイクルで着実に完遂する",
@@ -742,6 +761,26 @@
         "iterative",
         "review-gate",
         "step-by-step"
+      ]
+    },
+    {
+      "name": "swiftui-best-practice",
+      "source": "./development/swiftui-best-practice",
+      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。.frame + .safeAreaInset の罠、ViewThatFits のアンチパターン、マルチデバイス対応の3段階ブレークポイントパターンを網羅",
+      "version": "1.0.0",
+      "author": {
+        "name": "sunagaku"
+      },
+      "keywords": [
+        "swiftui",
+        "layout",
+        "best-practice",
+        "safeAreaInset",
+        "ViewThatFits",
+        "GeometryReader",
+        "adaptive",
+        "multi-device",
+        "iPhone-SE"
       ]
     }
   ],
