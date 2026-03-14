@@ -26,7 +26,8 @@ description: >
 - **スクリーンショット枚数**: 1〜10 枚（推奨 5〜6 枚）
 - **実スクリーンショット**: アプリの実際のキャプチャ画像のパス（任意。あれば UIモックアップに使用）
 - **.pen ファイルパス**: 任意。指定なければ新規作成
-- **デバイスサイズ**: iPhone 6.9" / 6.5" / iPad Pro 13"（デフォルト: iPhone 6.9"）
+- **デバイスサイズ**: iPhone 6.5" / 6.7" / 6.9" / iPad Pro 13"（デフォルト: iPhone 6.5" = 1284×2778px）
+- **CaptionArea 構成**: 2行（ヘッドライン+サブ1行）or 3行（ヘッドライン+サブ2行）。ユーザーに確認
 
 ## 実スクリーンショットの使用（任意）
 
@@ -55,6 +56,41 @@ description: >
 
 > **注意**: `G()` 操作（AI生成/Stock画像）と image fill（ローカルファイル）は使い分ける。
 > 実スクリーンショットがある場合は image fill を優先使用する。
+
+### シミュレーター画像の前処理（重要）
+
+iOS シミュレーターのスクリーンショットには macOS のタイトルバー・ツールバーが含まれることがある。
+PhoneMockup に配置する前に**必ずシミュレーター枠を除去**すること。
+
+**除去手順（リーダーが実行）:**
+```python
+# Python (PIL) でシミュレーター枠を自動除去
+from PIL import Image
+
+img = Image.open("screenshot.png")
+w, h = img.size
+
+# シミュレーター chrome を検出: 上部の連続する灰色行(RGB 20-80)を除去
+crop_top = 0
+found_black = False
+for y in range(min(100, h)):
+    pixels = [img.getpixel((x, y))[:3] for x in range(w//4, 3*w//4, 8)]
+    avg = sum(sum(p)/3 for p in pixels) / len(pixels)
+    if avg < 5:
+        found_black = True
+    elif found_black and 15 < avg < 90:
+        crop_top = y + 1  # ツールバー行
+    elif found_black and avg >= 90:
+        break
+    elif not found_black and avg > 15:
+        crop_top = y + 1  # タイトルバー行
+
+cropped = img.crop((0, crop_top, w, h))
+cropped.save("screenshot_clean.png")
+```
+
+- シミュレーター枠が残ると PhoneMockup 内に「iPhone 16 Pro」テキストが表示されてしまう
+- 除去後の画像パスを screenshot-designer に伝えること
 
 ## Step 2: チーム作成とエージェント起動
 
@@ -191,9 +227,47 @@ copy-writer → screenshot-designer                        （Phase 3: 確定・
 1. 全エージェントに `shutdown_request` を送信
 2. 全員シャットダウン後に `TeamDelete` でチーム削除
 
+## Step 6: エクスポート
+
+最終確認後、`mcp__pencil__export_nodes` で PNG エクスポートする。
+
+### エクスポート時の必須設定
+
+**フレームに `clip: true` を設定すること（重要）:**
+
+PhoneMockup のドロップシャドウがフレーム外にはみ出し、エクスポート画像のサイズがフレームサイズより大きくなる問題がある。
+エクスポート前に**必ず**全フレームに `clip: true` を設定する:
+
+```javascript
+U("frame1Id", {clip: true})
+U("frame2Id", {clip: true})
+U("frame3Id", {clip: true})
+```
+
+**エクスポート設定:**
+```
+mcp__pencil__export_nodes:
+  format: "png"
+  scale: 3  // @3x
+```
+
+**エクスポート後の寸法確認:**
+```bash
+sips -g pixelWidth -g pixelHeight export/*.png
+```
+
+| フレームサイズ | @3x エクスポート | App Store サイズ |
+|---|---|---|
+| 428 × 926 pt | 1284 × 2778 px | iPhone 6.5" ✓ |
+| 430 × 932 pt | 1290 × 2796 px | iPhone 6.7" ✓ |
+| 440 × 956 pt | 1320 × 2868 px | iPhone 6.9" ✓ |
+
+> **clip: true を忘れるとシャドウ分だけ画像が大きくなり、App Store に提出できない。**
+
 ## 出力成果物
 
 - Pencil .pen ファイル（スクリーンショット全枚数）
+- **PNG エクスポート画像**（App Store 要求サイズ一致を sips で確認済み）
 - 各スクリーンショットのノードID一覧
 - コピーテキスト一覧（日本語・英語）
 - 技術仕様バリデーションレポート（spec-validator: 10項目 PASS/WARN/FAIL）
@@ -222,20 +296,29 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 
 ### CaptionArea とのバランス
 
-フレーム全体（390 × 844）内での推奨配分:
+フレーム全体内での推奨配分:
 
-| エリア | 推奨高さ | 備考 |
-|--------|---------|------|
-| CaptionArea | 160pt | padding: [40, 24, 12, 24] |
-| MockupArea | 残り（684pt） | padding: [0, 20, 0, 20]、PhoneMockup 640pt + 余白 |
+**iPhone 6.5"（デフォルト: 428 × 926 pt）:**
+
+| エリア | 2行構成 | 3行構成 | 備考 |
+|--------|---------|---------|------|
+| CaptionArea | 130pt | 160pt | padding: [30, 24, 12, 24] |
+| MockupArea | 残り（796pt） | 残り（766pt） | PhoneMockup + 余白 |
+
+**MockupArea の背景色は CaptionArea と同じ `#F2F7F5` に統一すること。**
+別の色（例: #E8EFED）を使うと色の境目が目立ち、デザインが分断される。
 
 > **原則**: CaptionArea を小さく、PhoneMockup を大きくして、アプリ画面をできるだけ多く見せる。
 
 ### CaptionArea テキストガイドライン
 
-テキストは**短く、中央揃え**で配置する。**ヘッドライン1行 + サブテキスト2行**の3行構成。
+テキストは**短く、中央揃え**で配置する。**2行構成 or 3行構成**をユーザーに確認する。
 
-**構成（3ノード）:**
+**構成A（2ノード — 推奨）:**
+- **ヘッドライン（1行）**: 短いキャッチコピー（fontSize 32, fontWeight 700）
+- **サブテキスト（1行）**: 短い補足（fontSize 18）
+
+**構成B（3ノード）:**
 - **ヘッドライン（1行）**: 短いキャッチコピー（fontSize 32, fontWeight 700）
 - **サブテキスト1（1行）**: 補足説明の前半（fontSize 18）
 - **サブテキスト2（1行）**: 補足説明の後半（fontSize 18）
@@ -244,7 +327,7 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 
 | パターン | 背景 | ヘッドライン | サブテキスト | ロゴ |
 |---------|------|-----------|-----------|-----|
-| **ライト（推奨）** | `#F2F7F5` | `#1A1A1A` | `#6B7B75` | `rgba(0,0,0,0.2)` |
+| **ライト（推奨）** | `#F2F7F5` | `#1A1A1A` | `#4A5A54` | `rgba(0,0,0,0.2)` |
 | **ダーク** | `#2D6B5E` | `#FFFFFF` | `#FFFFFF` | `rgba(255,255,255,0.5)` |
 
 - **ライトパターンを推奨** — 背景がアプリ画面と馴染み、テキストの視認性が高い
@@ -277,17 +360,26 @@ PhoneMockup フレームのアスペクト比は、**実際のスクリーンシ
 | **spec-validator** | テキストノード数 ≤ 3 / `alignItems: "center"` / `textAlign: "center"` / headline fontSize ≥ 30 を数値検証 |
 | **quality-reviewer** | コピーの簡潔さ・インパクト・ベネフィット訴求・全スクリーン間の一貫性を主観評価 |
 
-**CaptionArea ノード構成例:**
+**CaptionArea ノード構成例（2行構成 — 推奨）:**
 ```javascript
-// ライトパターン（推奨）
+captionArea=I(frame, {type: "frame", layout: "vertical", alignItems: "center",
+  justifyContent: "center", gap: 6, height: 130, padding: [30, 24, 12, 24], fill: "#F2F7F5"})
+headline=I(captionArea, {type: "text", content: "持ち物メモをセット",
+  fontSize: 32, fontWeight: "700", textAlign: "center", fill: "#1A1A1A"})
+sub1=I(captionArea, {type: "text", content: "忘れ物はもうしない",
+  fontSize: 18, textAlign: "center", fill: "#4A5A54"})
+```
+
+**CaptionArea ノード構成例（3行構成）:**
+```javascript
 captionArea=I(frame, {type: "frame", layout: "vertical", alignItems: "center",
   justifyContent: "center", gap: 6, height: 160, padding: [40, 24, 12, 24], fill: "#F2F7F5"})
 headline=I(captionArea, {type: "text", content: "悩みを書くだけ",
   fontSize: 32, fontWeight: "700", textAlign: "center", fill: "#1A1A1A"})
 sub1=I(captionArea, {type: "text", content: "テキストを入力して",
-  fontSize: 18, textAlign: "center", fill: "#6B7B75"})
+  fontSize: 18, textAlign: "center", fill: "#4A5A54"})
 sub2=I(captionArea, {type: "text", content: "ボタンを押すだけでOK",
-  fontSize: 18, textAlign: "center", fill: "#6B7B75"})
+  fontSize: 18, textAlign: "center", fill: "#4A5A54"})
 ```
 
 ### クリップ・見切れの禁止ルール
