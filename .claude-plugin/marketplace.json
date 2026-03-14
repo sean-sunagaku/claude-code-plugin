@@ -114,7 +114,9 @@
     },
     {
       "name": "agent-teams-log",
-      "source": "./agent-toolkit/agent-teams-log"
+      "source": "./agent-toolkit/agent-teams-log",
+      "version": "1.0.0",
+      "description": "Agent Teams のチーム間通信ログを PostToolUse Hook で自動記録する"
     },
     {
       "name": "hook-publisher",
@@ -190,7 +192,9 @@
     },
     {
       "name": "task-granularity",
-      "source": "./agent-toolkit/task-granularity"
+      "source": "./agent-toolkit/task-granularity",
+      "version": "1.0.0",
+      "description": "タスクの粒度を自動検証し、大きすぎるタスクを分割提案する Hook"
     },
     {
       "name": "rn-debug",
@@ -218,7 +222,9 @@
     },
     {
       "name": "ui-quality-hooks",
-      "source": "./review/ui-quality-hooks"
+      "source": "./review/ui-quality-hooks",
+      "version": "1.0.0",
+      "description": "UI コード変更時にアクセシビリティとレイアウト品質を自動チェックする Hook"
     },
     {
       "name": "pencil-replicator",
