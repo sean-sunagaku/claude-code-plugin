@@ -264,12 +264,90 @@ sips -g pixelWidth -g pixelHeight export/*.png
 
 > **clip: true を忘れるとシャドウ分だけ画像が大きくなり、App Store に提出できない。**
 
+## Step 7: 多言語対応（任意）
+
+App Store は言語ごとに異なるスクリーンショットを登録できる。
+日本語版を作成後、**C()（コピー）操作でフレームを複製し、CaptionArea のテキストのみ差し替える**ことで効率的に多言語版を作成できる。
+
+### 対応言語の確認
+
+ユーザーに対応言語を確認する。一般的な構成:
+- **日本語**（メイン）
+- **英語**（グローバル）
+- **中国語（簡体）**
+- **韓国語**
+
+### 多言語フレームの作成手順
+
+**1. 日本語版フレームを C() で複製:**
+```javascript
+// 英語版（y を下にずらして配置）
+en_hero=C("ja_heroFrameId", document, {
+  name: "SS01_Hero_EN",
+  x: 0, y: 960,
+  placeholder: true,
+  descendants: {
+    "captionAreaId/headlineId": {content: "Set Your Packing List"},
+    "captionAreaId/subtextId": {content: "Never forget your things"}
+  }
+})
+```
+
+- `placeholder: true` でコピーし、テキスト差し替え後に `U(id, {placeholder: false})` で解除
+- `descendants` で CaptionArea 内のテキストノードのみ差し替え（PhoneMockup の画像はそのまま）
+- 言語ごとに y 座標をずらして整列配置（例: JA=0, EN=960, ZH=1920, KO=2880）
+
+**2. 全言語を一括でコピー:**
+
+1回の `batch_design` で全言語×全スクリーンを同時にコピーできる（最大25操作/回）。
+3画面×3言語 = 9操作なら1回で完了。
+
+**3. placeholder 解除:**
+```javascript
+U("en_heroId", {placeholder: false})
+U("en_resultId", {placeholder: false})
+// ...全フレーム
+```
+
+**4. get_screenshot で各言語を目視確認**
+
+### 翻訳ガイドライン
+
+- **ヘッドライン**: 短く、その言語で自然な表現にする（直訳NG）
+- **サブテキスト**: ベネフィットを伝える自然な表現
+- **文字数**: 言語によって文字幅が異なるため、CaptionArea に収まることを確認
+  - 英語: 日本語より長くなりがち → 短い単語を選ぶ
+  - 中国語: 日本語と近い文字数
+  - 韓国語: 日本語よりやや長い
+
+### PhoneMockup 内のアプリ画面について
+
+- **基本**: 日本語版のスクリーンショット画像をそのまま使用（アプリ内UIは日本語のまま）
+- **理想**: 各言語のローカライズ済みアプリ画面のスクリーンショットを用意して差し替え
+- ユーザーに確認: 「アプリ内画面も各言語版がありますか？」
+
+### 命名規則
+
+フレーム名に言語サフィックスを付ける:
+- `SS01_Hero` → `SS01_Hero_EN`, `SS01_Hero_ZH`, `SS01_Hero_KO`
+- `SS03_Result` → `SS03_Result_EN`, `SS03_Result_ZH`, `SS03_Result_KO`
+
+### エクスポート
+
+言語ごとにフォルダを分けてエクスポートする:
+```
+product/screenShot/export/ja/  ← 日本語版
+product/screenShot/export/en/  ← 英語版
+product/screenShot/export/zh/  ← 中国語版
+product/screenShot/export/ko/  ← 韓国語版
+```
+
 ## 出力成果物
 
-- Pencil .pen ファイル（スクリーンショット全枚数）
-- **PNG エクスポート画像**（App Store 要求サイズ一致を sips で確認済み）
+- Pencil .pen ファイル（全言語×全スクリーンショット）
+- **PNG エクスポート画像**（App Store 要求サイズ一致を sips で確認済み、言語別フォルダ）
 - 各スクリーンショットのノードID一覧
-- コピーテキスト一覧（日本語・英語）
+- コピーテキスト一覧（全対応言語）
 - 技術仕様バリデーションレポート（spec-validator: 10項目 PASS/WARN/FAIL）
 - 品質レビュースコア（quality-reviewer: 10点満点）
 
