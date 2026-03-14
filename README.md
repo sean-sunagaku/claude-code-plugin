@@ -52,21 +52,21 @@ Or use the slash command inside Claude Code:
 
 | Hook | Description | Event | Keywords |
 |------|-------------|-------|----------|
-| **agent-teams-log** | Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する | `PostToolUse` | `agent-team, hook, logging, SendMessage, PostToolUse, discussion` |
-| **task-granularity** | TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する | `PreToolUse` | `task, granularity, hook, PreToolUse, TaskCreate, quality, haiku` |
-| **ui-quality-hooks** | UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パターン検出（createPortal漏れ、z-index競合）+ take_snapshot後のAI DOM分析 + list_console_messages後のAIコンソールエラー分類。claude -p (Haiku) で分析し additionalContext でフィードバック | `PostToolUse` | `ui, quality, hook, PostToolUse, createPortal, DOM, console, accessibility, claude-p, haiku` |
+| **agent-teams-log** | Agent Teams のチーム間通信ログを PostToolUse Hook で自動記録する | `PostToolUse` | `` |
+| **task-granularity** | タスクの粒度を自動検証し、大きすぎるタスクを分割提案する Hook | `PreToolUse` | `` |
+| **ui-quality-hooks** | UI コード変更時にアクセシビリティとレイアウト品質を自動チェックする Hook | `PostToolUse` | `` |
 
 ### agent-teams-log
 
-Agent Teams の SendMessage を自動ログする PostToolUse hook。エージェント間の議論を .claude/agent-teams-log/ にリアルタイム記録する
+Agent Teams のチーム間通信ログを PostToolUse Hook で自動記録する
 
 ### task-granularity
 
-TaskCreate 時にタスクの粒度を自動チェックする PreToolUse hook。静的解析 + LLM（Haiku）のハイブリッド判定で、大きすぎるタスクの作成をブロックし分割案を提示する
+タスクの粒度を自動検証し、大きすぎるタスクを分割提案する Hook
 
 ### ui-quality-hooks
 
-UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パターン検出（createPortal漏れ、z-index競合）+ take_snapshot後のAI DOM分析 + list_console_messages後のAIコンソールエラー分類。claude -p (Haiku) で分析し additionalContext でフィードバック
+UI コード変更時にアクセシビリティとレイアウト品質を自動チェックする Hook
 
 ## Internal Skills
 
@@ -75,8 +75,8 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 | Skill | Description |
 |-------|-------------|
 | **skill-publisher** | 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します |
-| **marketplace-validate** | [Beta] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ。CI バリデーションと同等のチェックをローカルで実行し、missing plugin.json、未登録スキル、frontmatter 不備などを検出・修正する |
-| **hook-publisher** | Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ。hook の構造検証、plugin.json 生成、marketplace.json 自動登録を行う |
+| **marketplace-validate** | claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ |
+| **hook-publisher** | Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ |
 
 ## Prerequisites
 
@@ -90,11 +90,12 @@ UI品質チェック PostToolUse Hook セット。Edit/Write時の静的パタ�
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI** — eas-deploy / rn-debug
+- **EAS CLI (eas)** — eas-deploy
+- **ffmpeg** — app-store-preview-movie / frame-inspect
+- **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
-- **go** — arch-review
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
