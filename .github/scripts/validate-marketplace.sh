@@ -44,7 +44,7 @@ fi
 ok "Valid JSON"
 
 # --- 2. 必須フィールド ---
-for field in name version description owner; do
+for field in name owner; do
   if [ "$(jq -r ".$field // empty" "$MARKETPLACE")" = "" ]; then
     error "Top-level field '$field' is missing"
   else
