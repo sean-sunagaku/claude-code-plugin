@@ -1,8 +1,5 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "sunagaku-marketplace",
-  "version": "1.0.0",
-  "description": "Claude Code development skills: multi-AI review, agent team orchestration, git workflow, CI checks, UI verification, spec-driven testing, and more.",
   "owner": {
     "name": "sunagaku"
   },
