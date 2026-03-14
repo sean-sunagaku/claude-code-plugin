@@ -6,75 +6,111 @@
   "plugins": [
     {
       "name": "multi-ai-review",
-      "source": "./review/multi-ai-review"
+      "source": "./review/multi-ai-review",
+      "version": "1.0.0",
+      "description": "Codex, Gemini, Claude の3つの AI に並列でコードレビューを依頼し、統合レポートを生成する"
     },
     {
       "name": "plan-review",
-      "source": "./review/plan-review"
+      "source": "./review/plan-review",
+      "version": "1.0.0",
+      "description": "Codex, Gemini, Claude の3つの AI で Plan ファイルを並列レビュー。実装計画の妥当性、抜け漏れ、リスクを分析する"
     },
     {
       "name": "agent-team",
-      "source": "./agent-toolkit/agent-team"
+      "source": "./agent-toolkit/agent-team",
+      "version": "1.0.0",
+      "description": "Multi-agent team orchestration for parallel task execution, research, and implementation"
     },
     {
       "name": "git-workflow",
-      "source": "./development/git-workflow"
+      "source": "./development/git-workflow",
+      "version": "1.0.0",
+      "description": "ブランチ作成、Conventional Commits コミット、PR 作成までの Git ワークフローを自動化"
     },
     {
       "name": "ci-check",
-      "source": "./development/ci-check"
+      "source": "./development/ci-check",
+      "version": "2.0.0",
+      "description": ".github/workflows/*.yml を自動解析し、CI 定義のチェックをローカル実行する汎用スキル"
     },
     {
       "name": "ui-verify",
-      "source": "./review/ui-verify"
+      "source": "./review/ui-verify",
+      "version": "1.0.0",
+      "description": "Chrome DevTools でフロントエンドの動作確認。起動中サーバーを自動検出し操作・デバッグ・パフォーマンス分析を実行"
     },
     {
       "name": "spec-test",
-      "source": "./development/spec-test"
+      "source": "./development/spec-test",
+      "version": "1.0.0",
+      "description": "仕様駆動設計。仕様書からクラス責務を分析し、純粋関数を特定、テストファーストで単体テストを設計する"
     },
     {
       "name": "database",
-      "source": "./development/database"
+      "source": "./development/database",
+      "version": "1.0.0",
+      "description": "Drizzle ORM を使ったデータベーススキーマの管理とマイグレーションガイド"
     },
     {
       "name": "app-naming",
-      "source": "./marketing/app-naming"
+      "source": "./marketing/app-naming",
+      "version": "1.1.0",
+      "description": "5つの専門エージェント（ブランディング・商標・デジタルプレゼンス・国際展開・コンテキスト管理）がチームで相互フィードバックしながら議論し、最適なアプリ名を決定する"
     },
     {
       "name": "skill-publisher",
-      "source": "./.internal/skill-publisher"
+      "source": "./.internal/skill-publisher",
+      "version": "1.0.0",
+      "description": "[Internal] 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します"
     },
     {
       "name": "eas-deploy",
-      "source": "./development/eas-deploy"
+      "source": "./development/eas-deploy",
+      "version": "1.0.0",
+      "description": "Expo (EAS) iOS/Android アプリのデプロイ自動化。App ID登録、証明書作成、EASビルド、TestFlight配布、App Store提出までをCLIから実行"
     },
     {
       "name": "ui-review",
-      "source": "./design/ui-review"
+      "source": "./design/ui-review",
+      "version": "1.0.0",
+      "description": "5つの専門エージェント（UX・ビジュアル・アクセシビリティ・モバイル・コピー）がチームでUIを添削・改善し、Pencilで画面デザインを作成・修正する"
     },
     {
       "name": "logo-design",
-      "source": "./design/logo-design"
+      "source": "./design/logo-design",
+      "version": "1.1.0",
+      "description": "6つの専門エージェント（ブランド戦略・ロゴデザイン・カラー/タイポ・トレンド調査・競合分析・コンテキスト管理）がチームで相互フィードバックしながらロゴを作成・議論する"
     },
     {
       "name": "ci-fix",
-      "source": "./development/ci-fix"
+      "source": "./development/ci-fix",
+      "version": "1.0.0",
+      "description": "GitHub Actions の CI 失敗を自動検出・ログ取得・修正・再検証するスキル。gh コマンドで PR のチェック状況を監視し、失敗時はログを分析してコードを修正、push 後に再度 CI を確認するループを回す"
     },
     {
       "name": "aso-optimize",
-      "source": "./marketing/aso-optimize"
+      "source": "./marketing/aso-optimize",
+      "version": "1.0.0",
+      "description": "4つの専門エージェント（ASO戦略・キーワード調査・コピーライティング・ローカライゼーション）がチームでApp Store/Google Playのメタデータを最適化する"
     },
     {
       "name": "skill-creator-team",
-      "source": "./agent-toolkit/skill-creator-team"
+      "source": "./agent-toolkit/skill-creator-team",
+      "version": "1.0.0",
+      "description": "4つの専門エージェント（アーキテクト・リサーチャー・ライター・レビュアー）がチームで高品質なスキルを設計・作成する"
     },
     {
       "name": "marketplace-validate",
-      "source": "./.internal/marketplace-validate"
+      "source": "./.internal/marketplace-validate",
+      "version": "1.0.0",
+      "description": "[Internal] claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ"
     },
     {
       "name": "ui-variations",
-      "source": "./design/ui-variations"
+      "source": "./design/ui-variations",
+      "version": "1.2.0",
+      "description": "5つのデザインバリエーションを並列エージェントチームで生成し、Pencilで比較するスキル。Mode A: スタイルプリセット / Mode B: ペルソナ駆動（情報設計レベルで差別化）。各デザイナーがMCP経由でPencilに直接構築。3人チーム（デザイナー+レビュアー+コピーライター）x5の並列実行。"
     },
     {
       "name": "agent-teams-log",
@@ -82,51 +118,75 @@
     },
     {
       "name": "hook-publisher",
-      "source": "./.internal/hook-publisher"
+      "source": "./.internal/hook-publisher",
+      "version": "1.0.0",
+      "description": "[Internal] Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ"
     },
     {
       "name": "persona-creation",
-      "source": "./product/persona-creation"
+      "source": "./product/persona-creation",
+      "version": "2.0.0",
+      "description": " UX/マーケティング向けのユーザーペルソナを、5つの専門エージェントチームで作成するスキル。 ペルソナ設計、ユーザーリサーチ、ナラティブ執筆、バイアスレビュー、データ検証の 5観点からペルソナをディスカッション型で議論・作成し、Markdownドキュメントとして出力する。 data-critic がライブモデレーターとして矛盾を検出・収束を判定する。"
     },
     {
       "name": "market-research",
-      "source": "./product/market-research"
+      "source": "./product/market-research",
+      "version": "1.0.0",
+      "description": " 8つの専門エージェント（市場規模分析・トレンド調査・競合インテリジェンス・投資シグナル・日本市場・ユーザー需要分析・規制調査・データ検証）が ディスカッション型でアプリ/デジタルプロダクトの市場調査を実施するスキル。 エージェント同士が対話・批判し合い、data-critic がライブモデレーターとして矛盾を検出・収束を判定する。 トライアンギュレーション（データ・方法論・調査者・理論の4種類）をディスカッションに組み込み、 確証バイアスを排除した信頼度付きレポートを出力する。 Gate 1（全員参加の合意形成）→ Gate 2（最終検証 + Devil's Advocate）の2段階ゲートで品質を担保。 コンテキストファイルで過去のセッションを引き継げる。 Use when: 市場調査をしたい、TAM/SAM/SOMを算出したい、市場の成長性を調べたい、 参入タイミングを判断したい、競合市場を分析したい、規制リスクを調べたい。 Triggers: \"市場調査\", \"market research\", \"TAM\", \"SAM\", \"SOM\", \"市場規模\", \"市場分析\", \"market analysis\", \"参入\", \"market entry\", \"市場性\", \"market viability\", \"市場トレンド\", \"market trend\" （addBlockedBy は設定しない。Phase 1 エージェントと同時起動し、ライブモデレートする）"
     },
     {
       "name": "agent-team-guide",
-      "source": "./agent-toolkit/agent-team-guide"
+      "source": "./agent-toolkit/agent-team-guide",
+      "version": "1.1.0",
+      "description": "Agent Teams スキルを設計・構築するためのベストプラクティスガイド。サブエージェント定義、SendMessage 通信プロトコル、タスク依存管理、PostToolUse Hook ログ、MCP ツール統合、コンテキストファイル設計を網羅。7つの実績あるチームスキルから抽出したパターン集"
     },
     {
       "name": "user-journey",
-      "source": "./product/user-journey"
+      "source": "./product/user-journey",
+      "version": "1.0.0",
+      "description": "ユーザージャーニーマップを6つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownとPencil(.pen)ビジュアルで出力する"
     },
     {
       "name": "team-plan",
-      "source": "./planning/team-plan"
+      "source": "./planning/team-plan",
+      "version": "2.1.0",
+      "description": "5つの専門エージェント（コード調査・依存分析・パターン分析・ソリューション設計・計画書作成）がチームでコードベースを調査・議論・合意形成し、Plan Modeで実装計画を作成する。調査エージェントはExploreサブエージェントを無制限に並列起動可能"
     },
     {
       "name": "screenshot-creator",
-      "source": "./marketing/screenshot-creator"
+      "source": "./marketing/screenshot-creator",
+      "version": "1.0.0",
+      "description": "5つの専門エージェントがチームで App Store / Google Play 用プロモーションスクリーンショットを Pencil (.pen) で生成する（技術仕様バリデーション付き）"
     },
     {
       "name": "app-store-preview-movie",
-      "source": "./marketing/app-store-preview-movie"
+      "source": "./marketing/app-store-preview-movie",
+      "version": "0.1.0-beta",
+      "description": "[Beta] 5つの専門エージェントがチームで App Store プレビュー動画を Remotion (React) で生成・検証する"
     },
     {
       "name": "frame-inspect",
-      "source": "./marketing/frame-inspect"
+      "source": "./marketing/frame-inspect",
+      "version": "0.2.0-beta",
+      "description": "[Beta] 動画・画像のフレーム抽出、Remotion レンダリング、仕様チェック、目視検証を行う汎用ビデオツールキット"
     },
     {
       "name": "domain-expertise-extractor",
-      "source": "./product/domain-expertise-extractor"
+      "source": "./product/domain-expertise-extractor",
+      "version": "0.1.0-beta",
+      "description": " デジタルプロダクト系の専門領域（UI/UX, マーケティング, コピーライティング, ASO, グロース等）の 暗黙知を抽出・言語化・構造化し、他のSkillで使えるエージェント定義と評価基準を生成するスキル。 素人では判断できない「良い/悪い」の基準を、AI が専門家レベルで調査・分析・言語化し、 再利用可能なドメインナレッジとして出力する。"
     },
     {
       "name": "subagent-best-practices",
-      "source": "./agent-toolkit/subagent-best-practices"
+      "source": "./agent-toolkit/subagent-best-practices",
+      "version": "1.0.0",
+      "description": " Claude Code の SubAgent（agents/*.md）を正しく定義するためのベストプラクティスガイド。 YAML frontmatter、ツール選択、3-Phase 構造、コンテキスト受け渡し、アンチパターンを網羅。 Use when: agents/*.md を書く、SubAgent 定義を改善する、エージェントの動作が想定外、 コンテキストが渡らない、ツール選択に迷う。 Triggers: \"subagent\", \"agent definition\", \"agents/*.md\", \"エージェント定義\", \"サブエージェント\", \"3-Phase\", \"context passing\", \"コンテキスト渡し\", \"tool selection\", \"ツール選択\", \"subagent_type\", \"bypassPermissions\""
     },
     {
       "name": "team-implement",
-      "source": "./planning/team-implement"
+      "source": "./planning/team-implement",
+      "version": "1.0.0",
+      "description": " 承認済みの実装計画（Plan）を Agent Team で並列に実装するスキル。 Plan をタスクに分割 → 依存関係を設定 → Wave ごとに並列エージェントを起動 → 完了を待って次の Wave → 最後にビルド＆テスト検証。 team-plan スキル（調査→計画）の後に使う「実装実行フェーズ」。"
     },
     {
       "name": "task-granularity",
@@ -134,19 +194,27 @@
     },
     {
       "name": "rn-debug",
-      "source": "./development/rn-debug"
+      "source": "./development/rn-debug",
+      "version": "1.0.0",
+      "description": " React Native (Expo) アプリの総合デバッグスキル。 再レンダリング調査、白い画面、ネイティブモジュールエラー、Firebase接続問題、 API通信エラーなどのトラブルシューティングを体系的に行う。 Use when: 「白い画面」「画面が表示されない」「エラーが出る」「動かない」 「接続できない」「400エラー」「タイムアウト」「再レンダリング」「重い」 「カクつく」などの不具合報告やデバッグ依頼があったとき。 Also use when: 「デバッグして」「原因調べて」「なぜ動かない」 「エミュレータで確認して」「デバッグログを仕込んで」などの依頼があったとき。 ├─ 1. Metro ログを確認（import エラー? ネイティブモジュール?） ├─ 2. 初期 loading 状態が解消されるか確認（Auth 等） ├─ 3. ネイティブモジュールの問題か確認（Expo Go vs dev-client） └─ 4. Provider のクラッシュを切り分け"
     },
     {
       "name": "cruft-code-sweep",
-      "source": "./review/cruft-code-sweep"
+      "source": "./review/cruft-code-sweep",
+      "version": "1.0.0",
+      "description": " コードベースの不要なフォールバック・互換性コード・デッドコードを 3つの専門エージェント（scanner + historian + verifier）が協調して検出・安全性検証する監査スキル。 scanner が自律探索で候補を発見し、historian が git 履歴から時間軸の文脈を付与し、"
     },
     {
       "name": "feature-discussion",
-      "source": "./planning/feature-discussion"
+      "source": "./planning/feature-discussion",
+      "version": "0.3.0-beta",
+      "description": "7つの専門エージェントが議論・反論し合いながら機能を検討するスキル。Mode A: 既存アプリへの個別機能追加（課題深掘り→代替案→スコープ→要件→UI設計の5ステップ）。Mode B: プロダクト全体の機能セット設計（コンテキスト統合→機能発想→優先度→MVP定義→画面構成の5ステップ）。ペルソナ・競合分析・市場調査等のリサーチ資料を自動統合。"
     },
     {
       "name": "design-discussion",
-      "source": "./planning/design-discussion"
+      "source": "./planning/design-discussion",
+      "version": "1.0.0",
+      "description": " 「こんな機能を作りたい」「この設計どうしよう」という技術的な意思決定を、 5人の専門エージェントチームで壁打ちするスキル。 実装アプローチの比較・技術設計の選択・アーキテクチャの意思決定に特化。 Use when: 複数の実装方法があって迷っている時、設計の良し悪しを議論したい時、 技術的トレードオフを整理したい時。 Triggers: \"設計壁打ち\", \"design discussion\", \"どう設計すべき\", \"実装アプローチを比較\", \"アーキテクチャ相談\", \"設計どうしよう\", \"技術選定したい\", \"ADR を作りたい\", \"設計の議論\", \"技術的トレードオフ\""
     },
     {
       "name": "ui-quality-hooks",
@@ -154,43 +222,63 @@
     },
     {
       "name": "pencil-replicator",
-      "source": "./design/pencil-replicator"
+      "source": "./design/pencil-replicator",
+      "version": "1.0.0",
+      "description": " Chrome で表示中の Web 画面を Pencil (.pen) ファイルに高精度で再現する Agent Team スキル。 3つの専門エージェント（screen-analyzer, design-builder, quality-reviewer）が 分析→構築→品質検証のサイクルを回し、忠実な画面再現を実現する。 Use when: Pencil で再現して、画面を Pencil に写して、Chrome を Pencil にコピー、 pencil-replicate、デザインをキャプチャ、UI を Pencil に"
     },
     {
       "name": "user-story-visualizer",
-      "source": "./product/user-story-visualizer"
+      "source": "./product/user-story-visualizer",
+      "version": "1.0.0",
+      "description": " ユーザーストーリーを可視化する専門スキル。6つの専門エージェントチームで、 ジャーニーマップの分析から Pencil (.pen) ビジュアル出力まで一気通貫で実行する。 プロダクト情報とターゲットユーザーを入力し、認知→検討→初回利用→習慣化→推薦の 5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化し、 Markdownドキュメントと Pencil ビジュアルジャーニーマップを出力する。 離脱トリガー分析を強化し、ペインポイントと機会を視覚的に強調する。 ペルソナファイルがあれば自動読み込み、なければ手動入力でも動作する。 Use when: ジャーニーマップを可視化したい、ユーザー体験を図で表現したい、 カスタマージャーニーをビジュアル化したい、離脱要因を分析したい、 UXフローを .pen ファイルで出力したい。 Triggers: \"ジャーニー\", \"journey\", \"ジャーニーマップ\", \"journey map\", \"ユーザー体験\", \"user journey\", \"UXフロー\", \"体験設計\", \"カスタマージャーニー\", \"customer journey\", \"可視化\", \"visualize\", \"user story\", \"ユーザーストーリー\", \"離脱分析\", \"drop-off\" └── journey-map.pen <- Pencil ビジュアルジャーニーマップ - 名前（ラベル） - 年齢層 - 職業 - デジタルリテラシー（高/中/低） - 主な課題・目標"
     },
     {
       "name": "code-review-team",
-      "source": "./review/code-review-team"
+      "source": "./review/code-review-team",
+      "version": "1.0.0",
+      "description": " 5つの専門エージェント（backend-reviewer, frontend-reviewer, test-reviewer, security-reviewer, ux-reviewer）がチームでコードレビューするスキル。"
     },
     {
       "name": "product-discovery",
-      "source": "./product/product-discovery"
+      "source": "./product/product-discovery",
+      "version": "1.0.0",
+      "description": " プロダクトの基盤情報（課題仮説・ソリューション・市場スコープ・原体験・ビジネスモデル・競合・差別化）を ユーザーとの対話で掘り下げ、構造化されたドキュメント（product-context.md）として整理するスキル。 「自分のプロダクトって結局何なの？」を一緒に整理する壁打ち相手として機能する。 ペルソナ作成、LP設計、機能優先順位、マーケティング戦略など、 プロダクトの方向性に関わるあらゆる意思決定の「前提情報」を1ファイルにまとめる。 コードベースがあれば自動で読み取れる部分は埋め、残りをユーザーにヒアリングする。 Use when: 「プロダクトを整理したい」「ターゲット整理」「コンテキスト作成」 「ペルソナの前に」「誰向けのプロダクトか整理」「プロダクト情報まとめ」 「product context」「プロダクト定義」「プロダクトの前提」 「product discovery」「誰向け」と言われた時。 新しいプロジェクトの立ち上げ時や、方向性を見直したい時にも使う。 ペルソナ作成スキルを使う前に、まずこのスキルでプロダクトの前提を整理すべき。 Triggers: \"product discovery\", \"product context\", \"プロダクト整理\", \"ターゲット整理\", \"コンテキスト作成\", \"プロダクト定義\", \"プロダクトの前提\", \"ペルソナの前に\", \"誰向け\", \"プロダクト情報まとめ\", \"プロダクトって何\", \"何を作ってるか整理\", \"どんな需要があるか\""
     },
     {
       "name": "competitive-analysis",
-      "source": "./product/competitive-analysis"
+      "source": "./product/competitive-analysis",
+      "version": "2.0.0",
+      "description": "5つの専門エージェント（競合プロファイリング・レビュー分析・機能ベンチマーク・ポジショニング戦略・データ検証）がディスカッション型で競合環境を調査・分析し、差別化戦略とERRCグリッドを導出する。CHALLENGE/DEFEND プロトコル、Gate チェックポイント、Devil's Advocate による高品質な合意形成"
     },
     {
       "name": "plan-compare",
-      "source": "./plan-compare"
+      "source": "./plan-compare",
+      "version": "1.0.0",
+      "description": "複数の実装アプローチを並列チームで設計・議論し、比較して最適な計画を選ぶスキル。各アプローチに専門グループ（architect, critic, risk-analyst）が付き、グループ内で議論して計画を洗練する。"
     },
     {
       "name": "app-tone-manner",
-      "source": "./design/app-tone-manner"
+      "source": "./design/app-tone-manner",
+      "version": "1.0.0",
+      "description": " アプリのトーン&マナー（トンマナ）を8名のエージェントチームで設計するスキル。 ブランドアーキタイプ・パーソナリティ定義から、カラー・タイポグラフィ・ビジュアルスタイル・ トーン・オブ・ボイスまでを一貫設計し、Pencil (.pen) + Markdown で成果物を出力する。 「デザインテンション」（矛盾ペア）を核に、AIっぽくない独自のブランドアイデンティティを生成する。"
     },
     {
       "name": "arch-review",
-      "source": "./review/arch-review"
+      "source": "./review/arch-review",
+      "version": "0.1.0-beta",
+      "description": "[Beta] 6つの専門エージェントチームでコードベースのアーキテクチャを多角的に分析するスキル"
     },
     {
       "name": "long-run-implement",
-      "source": "./planning/long-run-implement"
+      "source": "./planning/long-run-implement",
+      "version": "1.0.0",
+      "description": "大きな実装タスクを TODO 駆動で段階的に実装し、サブエージェントがレビューするスキル"
     },
     {
       "name": "swiftui-best-practice",
-      "source": "./development/swiftui-best-practice"
+      "source": "./development/swiftui-best-practice",
+      "version": "1.0.0",
+      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。.frame + .safeAreaInset の罠、ViewThatFits のアンチパターン、マルチデバイス対応の3段階ブレークポイントパターンを網羅"
     }
   ]
 }
