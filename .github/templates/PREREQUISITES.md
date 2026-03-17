@@ -8,12 +8,12 @@
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI (eas)** — eas-deploy
 - **ffmpeg** — app-store-preview-movie / frame-inspect
 - **ffprobe** — app-store-preview-movie / frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
+- **go** — arch-review
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
