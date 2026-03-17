@@ -125,6 +125,10 @@ Task(
 
     他のエージェントからの質問リクエストを監視し、ユーザーへの質問を管理してください。
 
+    【重要】質問が整理できたら、Facilitator（チームリード）に SendMessage で送ってください。
+    Facilitator が AskUserQuestion でユーザーに質問します。
+    あなたは AskUserQuestion を直接使わず、質問の集約・整理に専念してください。
+
     【このステップで特に確認すべき事項】
     - 設計の背景・動機（なぜ今これが必要か）
     - 変更できない技術的制約
@@ -216,6 +220,10 @@ Task(
   prompt="""
     [共通コンテキスト]
     チームメンバー: solution-architect, engineer, product-manager
+
+    【重要】質問が整理できたら、Facilitator（チームリード）に SendMessage で送ってください。
+    Facilitator が AskUserQuestion でユーザーに質問します。
+    あなたは AskUserQuestion を直接使わず、質問の集約・整理に専念してください。
 
     【このステップで特に確認すべき事項】
     - 参考にしている設計パターンやアーキテクチャ
@@ -312,6 +320,10 @@ Task(
     [共通コンテキスト]
     チームメンバー: solution-architect, engineer, product-manager, devils-advocate
 
+    【重要】質問が整理できたら、Facilitator（チームリード）に SendMessage で送ってください。
+    Facilitator が AskUserQuestion でユーザーに質問します。
+    あなたは AskUserQuestion を直接使わず、質問の集約・整理に専念してください。
+
     【このステップで特に確認すべき事項】
     - スコアリング結果に対するユーザーの感想（重視する評価軸はどれか）
     - Devil's Advocate の指摘をどこまで許容するか（リスク許容度）
@@ -389,7 +401,7 @@ Task(
     Step 4: ユーザーへの最終提案
     - Solution Architect が作成した推奨案をユーザーに提示してください
     - 却下した案と理由を含めてください
-    - ユーザーの最終判断を取得してください
+    - 最終判断の質問を整理し、Facilitator に SendMessage で送ってください（Facilitator が AskUserQuestion で質問します）
     - 判断理由を記録してください
   """
 )

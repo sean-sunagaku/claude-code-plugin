@@ -60,9 +60,16 @@ TeamDelete()
 - 議論が同じ論点の繰り返しになった（収束のシグナル）
 
 **ユーザーへの質問（CRITICAL）**:
-エージェントは直接 `AskUserQuestion` は使わない。
-必ず user-liaison に SendMessage で質問リクエストを送る。
+- **user-liaison 以外のエージェント**: 直接ユーザーに質問しない。必ず user-liaison に SendMessage で質問リクエストを送る。
+- **user-liaison**: 質問リクエストを整理・集約し、Facilitator（チームリード）に SendMessage で送る。
+- **Facilitator（SKILL.md）**: user-liaison から受け取った質問を `AskUserQuestion` ツールでユーザーに質問する。
 
+**質問フロー**:
+```
+他エージェント →(SendMessage)→ user-liaison →(整理・集約・SendMessage)→ Facilitator →(AskUserQuestion)→ ユーザー
+```
+
+他エージェントから user-liaison への質問リクエスト形式:
 ```
 [ASK_USER_REQUEST]
 質問: [ユーザーに聞きたいこと]
@@ -70,6 +77,8 @@ TeamDelete()
 緊急度: [高/中/低]
 依頼元: [エージェント名]
 ```
+
+user-liaison は質問リクエストを受け取ったら、重複を整理・集約し、Facilitator に送る。Facilitator が `AskUserQuestion` でユーザーに質問し、回答を user-liaison 経由でチームに共有する。
 
 ---
 
