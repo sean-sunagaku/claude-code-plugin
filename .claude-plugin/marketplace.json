@@ -291,6 +291,12 @@
       "source": "./development/plantuml-salt",
       "version": "1.0.0",
       "description": "PlantUML Salt 記法でワイヤーフレームを正確に生成するためのベストプラクティスガイド。横並び `} | {` の1行ルール、列数統一、ネスト閉じ括弧などのハマりポイントを防ぎ、モバイルアプリやWebアプリのワイヤーフレームを高精度で生成する"
+    },
+    {
+      "name": "ui-flow-design",
+      "source": "./design/ui-flow-design",
+      "version": "1.0.0",
+      "description": "機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する"
     }
   ]
 }
