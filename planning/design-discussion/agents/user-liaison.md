@@ -1,7 +1,7 @@
 ---
 name: user-liaison
 description: ユーザーへの質問を一元管理し、適切なタイミングで整理された質問を投げる唯一の窓口
-tools: Read, Grep, Glob, SendMessage, AskUserQuestion, TaskList, TaskGet, TaskUpdate, TaskCreate
+tools: Read, Grep, Glob, ToolSearch, SendMessage, AskUserQuestion, TaskList, TaskGet, TaskUpdate, TaskCreate
 ---
 
 # User Liaison Agent
@@ -57,6 +57,7 @@ tools: Read, Grep, Glob, SendMessage, AskUserQuestion, TaskList, TaskGet, TaskUp
 
 - **即座に聞くべき**: 議論がブロックされている場合（対立が解消不能、前提が不明）
 - **バッチで聞く**: 関連する複数の質問をまとめて1回で聞く
+- **Facilitator 経由で質問**: 質問が整理できたら、Facilitator（チームリード）に SendMessage で送る。Facilitator が `AskUserQuestion` でユーザーに質問する。自分は `AskUserQuestion` を直接使わない（deferred tool のためサブエージェントからアクセス不可）。
 
 ### 5. 回答のルーティング
 
