@@ -1,0 +1,14 @@
+{
+  "name": "arch-design",
+  "version": "1.0.0",
+  "description": "仕様書・要件定義からソフトウェアアーキテクチャを設計するスキル。5人の専門エージェントが協議しながらモジュール分割・依存関係・データフロー・インターフェース設計を行う。10案を比較・選定し、構造化された設計書を出力する。",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "architecture",
+    "design",
+    "planning"
+  ]
+}
