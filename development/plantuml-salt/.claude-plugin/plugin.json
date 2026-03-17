@@ -1,0 +1,8 @@
+{
+  "name": "plantuml-salt",
+  "version": "1.0.0",
+  "description": "PlantUML Salt 記法でワイヤーフレームを正確に生成するためのベストプラクティスガイド。横並び `} | {` の1行ルール、列数統一、ネスト閉じ括弧などのハマりポイントを防ぎ、モバイルアプリやWebアプリのワイヤーフレームを高精度で生成する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["plantuml", "salt", "wireframe", "best-practice", "mobile", "ui-design"]
+}
