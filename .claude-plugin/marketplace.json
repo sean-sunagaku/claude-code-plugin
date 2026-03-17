@@ -149,6 +149,12 @@
       "description": "ユーザージャーニーマップを6つの専門エージェントチームで作成するスキル。認知から推薦まで5フェーズで行動・思考・感情・接点・機能・課題・機会・Devアクションを構造化しMarkdownとPencil(.pen)ビジュアルで出力する"
     },
     {
+      "name": "arch-design",
+      "source": "./planning/arch-design",
+      "version": "1.0.0",
+      "description": "仕様書・要件定義からソフトウェアアーキテクチャを設計するスキル。5人の専門エージェント（Architecture Lead・Module Designer・Dependency Analyst・Platform Expert・Devil's Advocate）が協議しながら10案を比較・選定し、モジュール分割・依存関係・データフロー・インターフェース設計を行う"
+    },
+    {
       "name": "team-plan",
       "source": "./planning/team-plan",
       "version": "2.1.0",
