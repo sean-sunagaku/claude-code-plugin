@@ -285,6 +285,12 @@
       "source": "./development/swiftui-best-practice",
       "version": "1.0.0",
       "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。.frame + .safeAreaInset の罠、ViewThatFits のアンチパターン、マルチデバイス対応の3段階ブレークポイントパターンを網羅"
+    },
+    {
+      "name": "plantuml-salt",
+      "source": "./development/plantuml-salt",
+      "version": "1.0.0",
+      "description": "PlantUML Salt 記法でワイヤーフレームを正確に生成するためのベストプラクティスガイド。横並び `} | {` の1行ルール、列数統一、ネスト閉じ括弧などのハマりポイントを防ぎ、モバイルアプリやWebアプリのワイヤーフレームを高精度で生成する"
     }
   ]
 }
