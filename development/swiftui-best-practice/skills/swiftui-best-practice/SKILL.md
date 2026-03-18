@@ -89,3 +89,35 @@ When writing or modifying SwiftUI layout code:
 6. Visual modifiers (`.background`, `.clipShape`, `.overlay`, `.shadow`) must be grouped together — `.padding` between `.background` and `.clipShape` breaks visible rounding
 7. `.buttonStyle(.plain)` を使うときは、label 内の最外 `.frame()` の直後に `.contentShape(Rectangle())` を付ける — これがないとテキスト部分しかクリックできない
 8. ボタン・タップ可能要素の最小サイズは 44pt（Apple HIG）— アイコンが小さくても frame + contentShape で 44x44 を確保する
+9. データを表示する UI を作るときは CRUD + 並び替えの 5 操作を全てカバーしているか確認する — 特に「編集」「削除」「並び替え」は漏れやすい
+10. 操作動詞チェック: UI 要素に対してユーザーがしたい操作を動詞で列挙し、全て実装されているか確認する
+11. アフォーダンスチェック: 操作手段が初見ユーザーに発見可能か確認する — context menu やスワイプだけでは不十分、ボタンが見えている必要がある
+
+## Subagent: Hit Area Auditor
+
+SwiftUI のボタンヒットエリア問題を自動検出するサブエージェント。
+SwiftUI の View ファイルを作成・修正した後に起動して、漏れを防ぐ。
+
+### 起動方法
+
+```
+Agent(
+  subagent_type: "swiftui-best-practice:swiftui-hit-area-auditor",
+  prompt: "以下のファイルを監査してください: {対象ファイルパス}"
+)
+```
+
+### チェック内容
+
+| ルール | 検出内容 |
+|--------|---------|
+| Rule 1 | `.buttonStyle(.plain)` の label 内に `.contentShape()` がない |
+| Rule 2 | `.background()` が label 内にある（label 外に置くべき） |
+| Rule 3 | ボタンの frame が 44pt 未満（Apple HIG 違反） |
+| Rule 4 | 丸ボタン (`.background(in: Circle())`) に `.contentShape(Rectangle())` を使っている |
+
+### 推奨タイミング
+
+- SwiftUI View ファイルの新規作成後
+- ボタンのレイアウト変更後
+- コードレビュー時
