@@ -290,7 +290,7 @@
       "name": "swiftui-best-practice",
       "source": "./development/swiftui-best-practice",
       "version": "1.0.0",
-      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。.frame + .safeAreaInset の罠、ViewThatFits のアンチパターン、マルチデバイス対応の3段階ブレークポイントパターンを網羅"
+      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティスガイド + Hit Area Auditor サブエージェント。.buttonStyle(.plain) + contentShape、CRUD 機能網羅チェック、アフォーダンスチェックを含む"
     },
     {
       "name": "plantuml-salt",
