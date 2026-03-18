@@ -1,7 +1,7 @@
 {
   "name": "logo-design",
-  "version": "1.1.0",
-  "description": "6つの専門エージェント（ブランド戦略・ロゴデザイン・カラー/タイポ・トレンド調査・競合分析・コンテキスト管理）がチームで相互フィードバックしながらロゴを作成・議論する",
+  "version": "1.2.0",
+  "description": "PDCAサイクルでロゴを反復改善するスキル。6つの専門エージェント+品質バリデーターがチームで議論・SVG生成・品質検証を行う。ブランドエッセンス連携、視覚的意味の具体性チェック、非対称デザイン原則を含む",
   "author": { "name": "sunagaku" },
   "license": "MIT",
   "keywords": ["logo", "brand", "design", "icon", "svg", "agent-team", "pencil"]
