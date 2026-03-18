@@ -90,3 +90,33 @@ ScrollView {
 **Note:** `GeometryReader`'s `proxy.size` may or may not include safe area insets depending on where it's placed in the view hierarchy. If the GeometryReader is at the root level, `proxy.size` includes the full screen. If it's inside a `NavigationStack` or after `.ignoresSafeArea()`, the size changes.
 
 **Best practice:** Always use `proxy.safeAreaInsets` alongside `proxy.size` for calculations that depend on usable space.
+
+---
+
+## 5. `.clipShape` / `.cornerRadius` と `.padding` の順序
+
+**Severity:** High — 角丸やクリッピングが見た目に反映されない
+
+**Problem:** `.padding()` を `.clipShape()` の前に置くと、padding領域（背景がない透明部分）がクリップされるだけで、白背景部分の角は丸くならない。
+
+**Bad:**
+```swift
+TextField("placeholder", text: $text)
+    .padding(12)
+    .background(.white)
+    .padding(.horizontal, 16)  // ← clipShapeの前にpadding
+    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+```
+
+**Good:**
+```swift
+TextField("placeholder", text: $text)
+    .padding(12)
+    .background(.white)
+    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))  // ← backgroundの直後
+    .padding(.horizontal, 16)
+```
+
+**Why:** SwiftUIのmodifierは上から下へ順番に適用される。`.background(.white)` の直後に `.clipShape()` を置くことで、白背景の形状がクリップされる。`.padding()` を間に挟むと、clipShapeは padding を含んだ外側の透明領域に対して適用されるため、見た目に角丸が反映されない。
+
+**一般ルール:** 視覚的な装飾（`.background`, `.clipShape`, `.overlay`, `.shadow`）は連続して書き、レイアウト調整（`.padding`, `.frame`）はその外側に置く。
