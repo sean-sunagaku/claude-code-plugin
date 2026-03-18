@@ -1,0 +1,15 @@
+{
+  "name": "brand-essence",
+  "version": "1.0.0",
+  "description": "アプリ・サービスのブランドエッセンス（USP・差別化・タグライン・カテゴリ帰属）を抽出・言語化し、構造化ドキュメントとして出力する。ロゴ、ASO、LP、トンマナ等あらゆるブランド制作物の前工程として機能する",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "brand",
+    "essence",
+    "USP",
+    "product"
+  ]
+}
