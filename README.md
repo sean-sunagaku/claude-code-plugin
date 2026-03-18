@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-44-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-45-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -38,7 +38,7 @@ Or use the slash command inside Claude Code:
 
 | Category | Skills | Description |
 |----------|--------|-------------|
-| [Product](./product/) | 7 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
+| [Product](./product/) | 8 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
 | [Planning](./planning/) | 6 skills | 機能検討・技術設計の議論・実装計画の策定 |
 | [Design](./design/) | 6 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
 | [Development](./development/) | 9 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
@@ -87,16 +87,18 @@ UI コード変更時にアクセシビリティとレイアウト品質を自�
 
 **Optional** (skill-specific)
 
+- **CocoaPods** — eas-deploy
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
-- **ffmpeg** — frame-inspect
-- **ffprobe** — frame-inspect
+- **Docker** — ci-check
+- **EAS CLI** — eas-deploy
+- **ffmpeg** — app-store-preview-movie
+- **ffprobe** — app-store-preview-movie
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
 - **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
 - **lsof** — ui-verify
-- **Node.js** — svg-to-png
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pnpm** — ci-check / database / ui-verify
