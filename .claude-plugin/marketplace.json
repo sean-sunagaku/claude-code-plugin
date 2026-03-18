@@ -303,6 +303,12 @@
       "source": "./design/ui-flow-design",
       "version": "1.0.0",
       "description": "機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する"
+    },
+    {
+      "name": "brand-essence",
+      "source": "./product/brand-essence",
+      "version": "1.0.0",
+      "description": "アプリ・サービスのブランドエッセンス（USP・差別化・タグライン・カテゴリ帰属）を抽出・言語化し、構造化ドキュメントとして出力する。ロゴ、ASO、LP、トンマナ等あらゆるブランド制作物の前工程として機能する"
     }
   ]
 }
