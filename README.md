@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-45-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-46-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -40,7 +40,7 @@ Or use the slash command inside Claude Code:
 |----------|--------|-------------|
 | [Product](./product/) | 8 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
 | [Planning](./planning/) | 6 skills | 機能検討・技術設計の議論・実装計画の策定 |
-| [Design](./design/) | 6 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
+| [Design](./design/) | 7 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
 | [Development](./development/) | 9 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
 | [Review](./review/) | 6 skills | コードレビュー・プランレビュー・UI検証・品質チェック |
 | [Marketing](./marketing/) | 5 skills | アプリ名決定・ASO最適化・スクリーンショット作成・プレビュー動画生成 |
@@ -90,7 +90,7 @@ UI コード変更時にアクセシビリティとレイアウト品質を自�
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI** — eas-deploy
+- **EAS CLI** — eas-deploy / rn-debug
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
 - **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
@@ -98,7 +98,6 @@ UI コード変更時にアクセシビリティとレイアウト品質を自�
 - **lsof** — ui-verify
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
 - **npx** — frame-inspect / rn-debug
-- **plantuml** — ui-flow-design
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
