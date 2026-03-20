@@ -309,6 +309,12 @@
       "source": "./product/brand-essence",
       "version": "1.0.0",
       "description": "アプリ・サービスのブランドエッセンス（USP・差別化・タグライン・カテゴリ帰属）を抽出・言語化し、構造化ドキュメントとして出力する。ロゴ、ASO、LP、トンマナ等あらゆるブランド制作物の前工程として機能する"
+    },
+    {
+      "name": "svg-to-png",
+      "source": "./design/svg-to-png",
+      "version": "1.0.0",
+      "description": "SVG を高品質 PNG に変換するスキル。寸法・背景色・CSS レンダリング（mix-blend-mode, filter, gradient）を精密制御。アプリアイコンやスプラッシュ画像の一括生成にも対応"
     }
   ]
 }
