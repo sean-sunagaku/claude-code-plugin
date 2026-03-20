@@ -313,7 +313,7 @@
     {
       "name": "svg-to-png",
       "source": "./design/svg-to-png",
-      "version": "1.0.0",
+      "version": "0.1.0",
       "description": "SVG を高品質 PNG に変換するスキル。寸法・背景色・CSS レンダリング（mix-blend-mode, filter, gradient）を精密制御。アプリアイコンやスプラッシュ画像の一括生成にも対応"
     }
   ]
