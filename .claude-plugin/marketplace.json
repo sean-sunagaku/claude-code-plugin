@@ -301,7 +301,7 @@
     {
       "name": "ui-flow-design",
       "source": "./design/ui-flow-design",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する。PostToolUse Hook で .puml ファイルの自動バリデーションも提供"
     },
     {
@@ -315,6 +315,12 @@
       "source": "./design/svg-to-png",
       "version": "0.1.0",
       "description": "SVG を高品質 PNG に変換するスキル。寸法・背景色・CSS レンダリング（mix-blend-mode, filter, gradient）を精密制御。アプリアイコンやスプラッシュ画像の一括生成にも対応"
+    },
+    {
+      "name": "parallel-impl-task-planner",
+      "source": "./planning/parallel-impl-task-planner",
+      "version": "1.0.0",
+      "description": "実装計画からタスクを分解し、ファイル単位の依存関係を分析して並列実行可能な Wave に自動グルーピング。編集ファイルが被らないタスクは全て同時並列にし、Mermaid 依存関係図 + ディレクトリ分割 TODO を出力する"
     }
   ]
 }

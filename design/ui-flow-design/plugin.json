@@ -1,10 +1,10 @@
 {
   "name": "ui-flow-design",
-  "version": "1.0.0",
-  "description": "機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する。PostToolUse Hook で .puml ファイルの自動バリデーションも提供。",
+  "version": "1.1.0",
+  "description": "機能要件から画面構成・ワイヤーフレームまでを2ステップで落とし込むスキル。ワイヤーフレームファーストで、Salt ワイヤーフレームを見ながらユーザーと一緒に画面設計を詰めていく",
   "author": { "name": "sunagaku" },
   "license": "MIT",
-  "keywords": ["ui-design", "wireframe", "plantuml", "salt", "screen-flow", "ui-flow", "agent-team"],
+  "keywords": ["ui-design", "wireframe", "plantuml", "salt", "screen-flow", "ui-flow"],
   "hooks": {
     "PostToolUse": [
       {
@@ -12,7 +12,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.claude/plugins/cache/sunagaku-marketplace/ui-flow-design/1.0.0/hooks/validate-puml/hook.sh\""
+            "command": "bash \"$HOME/.claude/plugins/cache/sunagaku-marketplace/ui-flow-design/1.1.0/hooks/validate-puml/hook.sh\""
           }
         ]
       }
