@@ -1,8 +1,0 @@
-{
-  "name": "skill-publisher",
-  "version": "1.0.0",
-  "description": "[Internal] 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します",
-  "author": { "name": "sunagaku" },
-  "license": "MIT",
-  "keywords": ["skill", "publish", "internal", "packaging", "utility"]
-}

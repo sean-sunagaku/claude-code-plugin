@@ -17,7 +17,7 @@ description: >
 ## 対象リポジトリ
 
 ```
-PLUGIN_REPO=/Users/babashunsuke/Desktop/claude-code-plugin
+PLUGIN_REPO=/Users/babashunsuke/Repository/claude-code-plugin
 ```
 
 ## リポジトリ構成
@@ -134,3 +134,33 @@ scripts/publish-skill.sh <source-path> [skill-name] --internal
 
 コピー後に構造を表示し、正しく配置されたか確認する。
 marketplace.json の登録内容も表示して確認する。
+
+### Step 6: CI バリデーション（必須）
+
+**配置後、必ず CI バリデーションをローカルで実行して PASSED を確認する。**
+
+```bash
+cd /Users/babashunsuke/Repository/claude-code-plugin
+bash .github/scripts/validate-marketplace.sh
+```
+
+確認項目:
+- `Errors: 0` であること
+- 対象プラグインが `OK` で通っていること
+- `PASSED` が出力されること
+
+**CI が通らない場合は修正してから commit する。** 主なエラー原因:
+- `plugin.json` が存在しない or フィールド不足
+- `plugin.json` の `name` / `version` が `marketplace.json` と不一致
+- SKILL.md の frontmatter に `name` / `description` がない
+- agents/ の `.md` ファイルに frontmatter がない
+- hooks/ プラグインで `hooks` キーが `plugin.json` にない
+
+### Step 7: コミット・Push・PR
+
+CI バリデーション PASSED 後:
+1. 変更をステージング・コミット
+2. Push
+3. PR 作成
+4. **リモート CI の結果を `gh pr checks <PR番号> --watch` で確認**
+5. CI が通ったら完了報告
