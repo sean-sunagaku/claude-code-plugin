@@ -1,0 +1,8 @@
+{
+  "name": "ui-flow-design",
+  "version": "1.0.0",
+  "description": "機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["ui-design", "wireframe", "plantuml", "salt", "screen-flow", "ui-flow", "agent-team"]
+}
