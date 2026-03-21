@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-46-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-45-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -40,7 +40,7 @@ Or use the slash command inside Claude Code:
 |----------|--------|-------------|
 | [Product](./product/) | 8 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
 | [Planning](./planning/) | 6 skills | 機能検討・技術設計の議論・実装計画の策定 |
-| [Design](./design/) | 7 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
+| [Design](./design/) | 6 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
 | [Development](./development/) | 9 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
 | [Review](./review/) | 6 skills | コードレビュー・プランレビュー・UI検証・品質チェック |
 | [Marketing](./marketing/) | 5 skills | アプリ名決定・ASO最適化・スクリーンショット作成・プレビュー動画生成 |
@@ -52,9 +52,15 @@ Or use the slash command inside Claude Code:
 
 | Hook | Description | Event | Keywords |
 |------|-------------|-------|----------|
+| **skill-publisher** | [Internal] 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します | `PostToolUse` | `` |
 | **agent-teams-log** | Agent Teams のチーム間通信ログを PostToolUse Hook で自動記録する | `PostToolUse` | `` |
 | **task-granularity** | タスクの粒度を自動検証し、大きすぎるタスクを分割提案する Hook | `PreToolUse` | `` |
 | **ui-quality-hooks** | UI コード変更時にアクセシビリティとレイアウト品質を自動チェックする Hook | `PostToolUse` | `` |
+| **ui-flow-design** | 機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する。PostToolUse Hook で .puml ファイルの自動バリデーションも提供 | `PostToolUse` | `` |
+
+### skill-publisher
+
+[Internal] 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します
 
 ### agent-teams-log
 
@@ -68,13 +74,16 @@ Agent Teams のチーム間通信ログを PostToolUse Hook で自動記録す�
 
 UI コード変更時にアクセシビリティとレイアウト品質を自動チェックする Hook
 
+### ui-flow-design
+
+機能要件から画面構成・ワイヤーフレームまでを段階的に落とし込む Agent Team スキル。6つのエージェント（flow-architect, info-analyst, wireframe-designer, user-liaison, ux-critic, validator）が5ステップで画面設計を行い、PlantUML Salt でワイヤーフレームを生成する。PostToolUse Hook で .puml ファイルの自動バリデーションも提供
+
 ## Internal Skills
 
 > 以下は作者の内部リポジトリ向けスキルです。一般利用者向けではありません。
 
 | Skill | Description |
 |-------|-------------|
-| **skill-publisher** | 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。一般利用者向けではありません。自分のプロジェクトにスキルを追加する際の構造化とmarketplace.json登録を自動化します |
 | **marketplace-validate** | claude-code-plugin リポジトリの marketplace 構造を検証し、エラーを自動修正する内部ユーティリティ |
 | **hook-publisher** | Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ |
 
@@ -90,14 +99,17 @@ UI コード変更時にアクセシビリティとレイアウト品質を自�
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
 - **Docker** — ci-check
-- **EAS CLI** — eas-deploy / rn-debug
+- **ffmpeg** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
-- **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow
-- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher
+- **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow / skill-publisher
+- **go** — arch-review
+- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher / unknown
 - **lsof** — ui-verify
+- **Node.js** — svg-to-png
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
 - **npx** — frame-inspect / rn-debug
+- **plantuml** — ui-flow-design
 - **pnpm** — ci-check / database / ui-verify
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
