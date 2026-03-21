@@ -1,0 +1,21 @@
+{
+  "name": "skill-publisher",
+  "version": "1.0.0",
+  "description": "[Internal] 作者のリポジトリ間でスキルを配置・登録するための内部ユーティリティ。publish 後に marketplace 構造の自動バリデーションを実行する PostToolUse Hook 付き。",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["skill", "publish", "internal", "packaging", "utility"],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/plugins/cache/sunagaku-marketplace/skill-publisher/1.0.0/hooks/validate-marketplace/hook.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}
