@@ -324,17 +324,9 @@
     },
     {
       "name": "simulator-screenshot-crop",
-      "source": "development/simulator-screenshot-crop",
-      "description": "シミュレーターのスクリーンショットからタイトルバーを自動検出して除去する",
+      "source": "./development/simulator-screenshot-crop",
       "version": "1.0.0",
-      "author": "sean-sunagaku",
-      "keywords": [
-        "simulator",
-        "screenshot",
-        "crop",
-        "xcode",
-        "ios"
-      ]
+      "description": "シミュレーターのスクリーンショットからタイトルバーを自動検出して除去する"
     }
   ]
 }

@@ -98,6 +98,28 @@ for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
   [ -z "$DESC" ]    && error "plugins[$i].description is missing"
   [ -z "$VERSION" ] && error "plugins[$i].version is missing"
 
+  # source は "./" で始まること
+  if [ -n "$SOURCE" ] && [[ "$SOURCE" != ./* ]]; then
+    error "$NAME: source '$SOURCE' must start with './' (got '$SOURCE')"
+  fi
+
+  # author が存在する場合はオブジェクト型であること（文字列は不可）
+  AUTHOR_TYPE=$(jq -r ".plugins[$i].author | type" "$MARKETPLACE")
+  if [ "$AUTHOR_TYPE" = "string" ]; then
+    error "$NAME: author must be an object {\"name\": \"...\"}, not a string"
+  elif [ "$AUTHOR_TYPE" = "object" ]; then
+    AUTHOR_NAME=$(jq -r ".plugins[$i].author.name // empty" "$MARKETPLACE")
+    if [ -z "$AUTHOR_NAME" ]; then
+      error "$NAME: author object must have a 'name' field"
+    fi
+  fi
+
+  # keywords が存在する場合は配列型であること
+  KEYWORDS_TYPE=$(jq -r ".plugins[$i].keywords | type" "$MARKETPLACE")
+  if [ "$KEYWORDS_TYPE" != "null" ] && [ "$KEYWORDS_TYPE" != "array" ]; then
+    error "$NAME: keywords must be an array, not $KEYWORDS_TYPE"
+  fi
+
   # [Beta] プレフィックスの確認
   if [[ "$DESC" =~ ^\[Beta\] ]]; then
     ok "$NAME: marked as [Beta]"
