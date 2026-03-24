@@ -13,6 +13,7 @@ PLUGIN_REPO="/Users/babashunsuke/Desktop/claude-code-plugin"
 MARKETPLACE="$PLUGIN_REPO/.claude-plugin/marketplace.json"
 INTERNAL=false
 BETA=false
+MAX_DESC_LEN=150
 CATEGORY=""
 
 # 引数パース
@@ -167,8 +168,7 @@ echo ""
 # SKILL.md から description を抽出（YAML frontmatter の description フィールド）
 FULL_DESCRIPTION=$(sed -n '/^description:/,/^[a-z]/{ /^description:/{ s/^description: *>* *//; p; d; }; /^  /{ s/^  *//; p; }; /^[a-z]/q; }' "$SOURCE_PATH/SKILL.md" | tr '\n' ' ' | sed 's/  */ /g; s/ *$//')
 
-# marketplace.json 用に要約: 不要な部分をカットし、150文字以内に短縮
-MAX_DESC_LEN=150
+# marketplace.json 用に要約: 不要な部分をカットし、MAX_DESC_LEN文字以内に短縮
 
 # Step 1: "Use when:" / "Triggers:" / "Also use when:" 以降をカット
 DESCRIPTION=$(echo "$FULL_DESCRIPTION" | sed 's/[[:space:]]*Use when:.*//; s/[[:space:]]*Triggers:.*//; s/[[:space:]]*Also use when:.*//; s/ *$//')
