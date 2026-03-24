@@ -120,6 +120,53 @@ ForEach($viewModel.items) { $item in
 - 削除後のフォーカス移動は `DispatchQueue.main.async` で1フレーム遅延させる
 - 削除前にフォーカス先 ID を算出し、削除後にインデックスを参照しない
 
+### @FocusState の所有権と .sheet の制約
+
+`@FocusState` は **宣言した View と同じビュー階層** のフォーカスしか制御できない。`.sheet` は独立したビュー階層を作るため、親 View の `@FocusState` を sheet 内で使っても動かない。
+
+詳細は [references/focusstate-ownership.md](references/focusstate-ownership.md) を参照。
+
+```swift
+// ❌ BAD — 親の @FocusState を sheet 内で使う → フォーカスが当たらない
+struct ParentView: View {
+    @FocusState private var focusedID: UUID?
+    @State private var items: [Item] = [...]
+
+    var body: some View {
+        Button("Show") { showSheet = true }
+        .sheet(isPresented: $showSheet) {
+            ForEach($items) { $item in
+                TextField("", text: $item.text)
+                    .focused($focusedID, equals: item.id) // ← 動かない
+            }
+        }
+    }
+}
+
+// ✅ GOOD — sheet 内のビューが自身の @FocusState を持つ
+struct ItemListView: View {
+    @Binding var items: [Item]
+    @FocusState private var focusedID: UUID?  // ← ここで宣言
+
+    var body: some View {
+        ForEach($items) { $item in
+            TextField("", text: $item.text)
+                .focused($focusedID, equals: item.id) // ← 正常に動く
+        }
+    }
+}
+
+// 親は ItemListView を sheet に渡すだけ
+.sheet(isPresented: $showSheet) {
+    ItemListView(items: $items)
+}
+```
+
+**要点:**
+- `@FocusState` は使用する TextField と同じ View struct 内で宣言する
+- `.sheet` / `.fullScreenCover` 内で使うなら、専用の子 View struct に切り出す
+- 関数パラメータとして `FocusState<T>.Binding` を渡しても動かない
+
 ### Adaptive multi-device layout
 
 See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoint patterns and responsive design best practices.
@@ -141,6 +188,9 @@ When writing or modifying SwiftUI layout code:
 11. アフォーダンスチェック: 操作手段が初見ユーザーに発見可能か確認する — context menu やスワイプだけでは不十分、ボタンが見えている必要がある
 12. `ForEach` で動的配列を表示するとき、要素は必ず `Identifiable` にする — `ForEach(array.indices, id: \.self)` + 要素削除は **確実にクラッシュ** する
 13. 配列要素の削除後にフォーカス移動する場合は `DispatchQueue.main.async` で遅延させる — 同一フレーム内だと SwiftUI の差分更新と競合する
+14. `@FocusState` は sheet 内で使うなら sheet のコンテンツ View 自体が所有すること — 親 View の `@FocusState` を sheet 越しに渡しても動かない
+15. TextField 横の削除ボタンは `Button` ではなく `Image` + `.onTapGesture` を使う — `Button` タップはキーボードを一瞬閉じてしまう
+16. `.onSubmit` もキーボードを一瞬閉じるため、連続フォーカス移動には `TextField(axis: .vertical)` + `onChange` で改行検知する方式を使う
 
 ## Subagent: Hit Area Auditor
 
