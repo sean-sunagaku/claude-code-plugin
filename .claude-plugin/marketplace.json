@@ -282,9 +282,9 @@
     },
     {
       "name": "long-run-implement",
-      "source": "./planning/long-run-implement",
-      "version": "1.0.0",
-      "description": "大きな実装タスクを TODO 駆動で段階的に実装し、サブエージェントがレビューするスキル"
+      "source": "./development/long-run-implement",
+      "version": "1.1.0",
+      "description": "TODO駆動で大きな実装タスクを段階的に進め、サブエージェントがレビューするスキル。ディレクトリベースのタスク管理で長時間・大規模な変更を着実に完遂"
     },
     {
       "name": "swiftui-best-practice",
