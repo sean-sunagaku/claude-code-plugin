@@ -321,6 +321,20 @@
       "source": "./planning/parallel-impl-task-planner",
       "version": "1.0.0",
       "description": "実装計画からタスクを分解し、ファイル単位の依存関係を分析して並列実行可能な Wave に自動グルーピング。編集ファイルが被らないタスクは全て同時並列にし、Mermaid 依存関係図 + ディレクトリ分割 TODO を出力する"
+    },
+    {
+      "name": "simulator-screenshot-crop",
+      "source": "development/simulator-screenshot-crop",
+      "description": "シミュレーターのスクリーンショットからタイトルバーを自動検出して除去する",
+      "version": "1.0.0",
+      "author": "sean-sunagaku",
+      "keywords": [
+        "simulator",
+        "screenshot",
+        "crop",
+        "xcode",
+        "ios"
+      ]
     }
   ]
 }

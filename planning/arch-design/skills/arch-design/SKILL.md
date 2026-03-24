@@ -13,7 +13,7 @@ description: >
   "モジュール分割", "設計書を作りたい", "アーキテクチャを考えて",
   "コンポーネント設計", "依存関係を設計", "どう設計する",
   "design the architecture", "design from spec"
-allowed-tools: "Read, Write, Edit, Glob, Grep, Bash, Task, SendMessage, AskUserQuestion"
+allowed-tools: "Read, Write, Edit, Glob, Grep, Bash, Task, SendMessage, AskUserQuestion, TeamCreate, TeamDelete, Agent"
 ---
 
 # Arch Design - アーキテクチャ設計スキル
@@ -101,8 +101,28 @@ Step 4: 設計書出力・ユーザー承認
    - Light: 単一モジュール・明確な要件・小規模変更
    - Standard: 複数モジュール・新機能追加（デフォルト）
    - Deep: システム全体設計・アーキテクチャ変更・複数チーム横断
-9. **Agent Team を作成**
-10. Step 1 を開始（Phase A の回答をエージェントのプロンプトに含める）
+9. **Agent Team を作成（TeamCreate — CRITICAL）**:
+   ```
+   TeamCreate:
+     team_name: "arch-design-<design-slug>"
+     description: "<設計テーマ>のアーキテクチャ設計チーム"
+   ```
+   - **必ず TeamCreate を先に実行してからエージェントを起動する**
+   - TeamCreate なしで Agent を起動すると SendMessage（broadcast）が機能しない
+10. **エージェントを Agent ツールで起動**（team_name パラメータ必須）:
+   ```
+   Agent:
+     name: "architecture-lead"
+     team_name: "arch-design-<design-slug>"
+     subagent_type: "general-purpose"
+     prompt: "<タスク指示 + Phase A の回答 + 設計方針>"
+     run_in_background: true
+   ```
+   - 5エージェント全てに `team_name` を指定して起動する
+   - `run_in_background: true` で並列起動
+   - 各エージェントのプロンプトには Phase A の回答を含める
+   - エージェント定義（`agents/*.md`）の内容をプロンプトに含めるか、参照パスを指示する
+11. Step 1 を開始
 
 ### Phase A: 事前ヒアリング（Step 1 開始前・CRITICAL）
 
@@ -281,10 +301,11 @@ Step <N> 完了: <ステップ名>
 │       └── 10-<pattern-name>/ ...
 │
 ├── step3-module-design/                   # Step 3 成果物
-│   ├── README.md                          # モジュール一覧・依存グラフ・依存ルール
-│   ├── module-designer-proposal.md        # モジュール分割提案
-│   ├── dependency-analyst-review.md       # 依存方向レビュー・循環依存チェック
-│   └── devils-advocate-review.md          # 過剰分割・過剰抽象化への批判
+│   ├── README.md                          # 統合版（最終合意のモジュール設計・Swift コード付き）
+│   ├── module-designer-proposal.md        # モジュール分割提案（責務・境界・インターフェース）
+│   ├── dependency-analyst-review.md       # 依存方向レビュー・循環依存チェック・レイヤー図
+│   ├── platform-expert-review.md          # 技術制約レビュー（TC-1〜N）
+│   └── devils-advocate-review.md          # YAGNI 批判・行数制約・過剰分割チェック
 │
 └── step4-output/                          # Step 4 成果物
     └── architecture.md                    # 最終アーキテクチャ設計書（ADR 含む）
