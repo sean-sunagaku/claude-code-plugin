@@ -73,6 +73,53 @@ Button { action() } label: {
 
 **`.background()` は label の外に置く**: `.background(in: Shape)` を label 内に入れると `contentShape` とバッティングして押せない領域ができる。`.buttonStyle(.plain)` の直後に `.background()` を付ける。
 
+### ForEach + 動的配列の削除クラッシュ
+
+`ForEach(array.indices, id: \.self)` や `ForEach($array)` で配列を表示し、ボタンで要素を削除すると **index out of range でクラッシュ** する。SwiftUI の差分更新と配列インデックスのタイミング不整合が原因。
+
+詳細は [references/foreach-mutation.md](references/foreach-mutation.md) を参照。
+
+```swift
+// ❌ BAD — 削除時にインデックスがずれてクラッシュ
+ForEach(items.indices, id: \.self) { index in
+    HStack {
+        TextField("", text: $items[index])
+        Button { items.remove(at: index) } label: { Image(systemName: "xmark") }
+    }
+}
+
+// ❌ STILL BAD — Identifiable でも削除アクション内でキャプチャした item が古い
+ForEach($viewModel.items) { $item in
+    Button {
+        let idx = viewModel.items.firstIndex(where: { $0.id == item.id }) ?? 0
+        let prevID = viewModel.items[max(0, idx - 1)].id  // ← 削除前のインデックスで参照→クラッシュ
+        viewModel.items.removeAll { $0.id == item.id }
+        focusedID = prevID
+    } label: { Image(systemName: "xmark") }
+}
+
+// ✅ GOOD — 削除前に次のフォーカス先を安全に算出し、DispatchQueue で遅延実行
+ForEach($viewModel.items) { $item in
+    Button {
+        let targetID: UUID? = {
+            guard viewModel.items.count > 1,
+                  let idx = viewModel.items.firstIndex(where: { $0.id == item.id }) else { return nil }
+            return idx > 0 ? viewModel.items[idx - 1].id : viewModel.items[idx + 1].id
+        }()
+        viewModel.removeItem(id: item.id)
+        if let targetID {
+            DispatchQueue.main.async { focusedID = targetID }
+        }
+    } label: { Image(systemName: "xmark") }
+}
+```
+
+**要点:**
+- 配列要素は必ず `Identifiable` にする（`id: \.self` は NG）
+- 削除は ID ベースで行う（`removeAll { $0.id == id }`）
+- 削除後のフォーカス移動は `DispatchQueue.main.async` で1フレーム遅延させる
+- 削除前にフォーカス先 ID を算出し、削除後にインデックスを参照しない
+
 ### Adaptive multi-device layout
 
 See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoint patterns and responsive design best practices.
@@ -92,6 +139,8 @@ When writing or modifying SwiftUI layout code:
 9. データを表示する UI を作るときは CRUD + 並び替えの 5 操作を全てカバーしているか確認する — 特に「編集」「削除」「並び替え」は漏れやすい
 10. 操作動詞チェック: UI 要素に対してユーザーがしたい操作を動詞で列挙し、全て実装されているか確認する
 11. アフォーダンスチェック: 操作手段が初見ユーザーに発見可能か確認する — context menu やスワイプだけでは不十分、ボタンが見えている必要がある
+12. `ForEach` で動的配列を表示するとき、要素は必ず `Identifiable` にする — `ForEach(array.indices, id: \.self)` + 要素削除は **確実にクラッシュ** する
+13. 配列要素の削除後にフォーカス移動する場合は `DispatchQueue.main.async` で遅延させる — 同一フレーム内だと SwiftUI の差分更新と競合する
 
 ## Subagent: Hit Area Auditor
 
