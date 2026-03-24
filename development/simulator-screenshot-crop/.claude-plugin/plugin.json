@@ -1,0 +1,14 @@
+{
+  "name": "simulator-screenshot-crop",
+  "version": "1.0.0",
+  "description": " iOS/Android シミュレーターのスクリーンショットから macOS ウィンドウのタイトルバー",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "simulator",
+    "screenshot",
+    "crop"
+  ]
+}
