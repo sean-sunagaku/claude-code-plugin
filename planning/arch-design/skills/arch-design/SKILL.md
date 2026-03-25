@@ -94,13 +94,15 @@ Step 4: 設計書出力・ユーザー承認
 4. **セッション名（design-slug）を生成**:
    - 設計テーマを英語の kebab-case スラッグに変換
    - 日本語の場合は英訳してからスラッグ化
-5. **セッションディレクトリを Bash スクリプトで一括作成**:
+5. **セッションディレクトリを初期化スクリプトで一括作成**:
    ```bash
-   SESSION_DIR=".claude/arch-design/sessions/<design-slug>"
-   mkdir -p "$SESSION_DIR/step1-context"
+   bash <skill-dir>/scripts/init-session.sh <design-slug>
    ```
-   - `step1-context/` のみサブディレクトリとして作成（複数エージェントのフィードバックを格納）
-   - **Step 2〜4 の成果物はサブディレクトリを作成せず、セッションルートに `step2-*.md`, `step3-*.md`, `step4-*.md` として配置する**
+   スクリプトが以下のディレクトリを自動作成する:
+   - `step1-context/` — 複数エージェントのフィードバックを格納
+   - `step2-pattern-comparison/patterns/` — 10案の詳細設計図を格納
+   - `step3-module-design/` — モジュール設計・依存関係のレビューを格納
+   - `step4-output/` — 最終アーキテクチャ設計書を格納
 6. `session.json` を作成（下記テンプレート）— Phase A の回答を `designPolicy` に記録
 7. `design_log.md` を作成（インデックス兼進捗管理）
 8. **設計深さモードを自動判定**:
@@ -295,21 +297,38 @@ Step <N> 完了: <ステップ名>
 │   ├── devils-advocate-feedback.md
 │   └── platform-expert-feedback.md
 │
-├── step2-patterns.md               # Step 2: 10案列挙・比較表・スコアリング
-├── step2-scoring-rationale.md      # Step 2: スコア根拠・エージェント間合意
-├── step2-selected-pattern.md       # Step 2: 確定パターン・ADR・棄却理由
+├── step2-pattern-comparison/              # Step 2 成果物
+│   ├── README.md                          # 10案比較表・Top 3 サマリー・棄却理由
+│   ├── scoring-rationale.md               # Top 3 詳細スコア根拠・エージェント間合意事項
+│   ├── implementation-details.md          # 確定実装方式・依存マップ・コード例
+│   └── patterns/                          # 各案の詳細設計図
+│       ├── 01-<pattern-name>/
+│       │   ├── README.md                  # 解説・ディレクトリ構成・メリデメ
+│       │   └── architecture.drawio        # draw.io アーキテクチャ図
+│       ├── 02-<pattern-name>/ ...
+│       └── 10-<pattern-name>/ ...
 │
-├── step3-module-design.md          # Step 3: モジュール一覧・依存グラフ・インターフェース
-├── step3-devils-advocate-review.md # Step 3: YAGNI 批判・過剰分割チェック
+├── step3-module-design/                   # Step 3 成果物
+│   ├── README.md                          # 統合版（最終合意のモジュール設計）
+│   ├── module-designer-proposal.md        # モジュール分割提案（責務・境界・インターフェース）
+│   ├── dependency-analyst-review.md       # 依存方向レビュー・循環依存チェック・レイヤー図
+│   ├── platform-expert-review.md          # 技術制約レビュー
+│   └── devils-advocate-review.md          # YAGNI 批判・行数制約・過剰分割チェック
 │
-└── step4-architecture.md           # Step 4: 最終アーキテクチャ設計書（ADR 含む）
+└── step4-output/                          # Step 4 成果物
+    └── architecture.md                    # 最終アーキテクチャ設計書（ADR 含む）
 ```
 
-**ファイル出力ルール（CRITICAL）**:
-- **Step 1 のみ `step1-context/` サブディレクトリを使用**（複数エージェントのフィードバックを格納するため）
-- **Step 2〜4 はサブディレクトリを一切作成しない**。セッションルートに `step2-*.md`, `step3-*.md`, `step4-*.md` として配置
-- `patterns/`, `diagrams/` 等のサブディレクトリも作成禁止。パターン詳細は `step2-patterns.md` 内のセクションとして記述
-- エージェントが成果物を書き出す際は、**必ず上記のファイルパスに従う**。独自のディレクトリやファイルを追加しない
+**ファイル出力ルール（CRITICAL — 全ステップ共通）**:
+- **全ステップの成果物は必ず専用サブディレクトリに配置する**。セッションルート直下にステップ成果物のファイルを置くことは禁止
+- `step1-context/` — 複数エージェントのフィードバックを格納
+- `step2-pattern-comparison/` — 10案の比較表・スコアリング・各パターンの詳細設計図を格納
+  - 各パターン案は `patterns/01-<pattern-name>/` 〜 `patterns/10-<pattern-name>/` に配置
+- `step3-module-design/` — モジュール設計・依存関係・各エージェントのレビューを格納
+- `step4-output/` — 最終アーキテクチャ設計書を格納
+- 各ディレクトリの `README.md` がそのステップの主要成果物
+- エージェントのフィードバックは個別ファイルに分離（`<role>-feedback.md` / `<role>-review.md`）
+- エージェントが成果物を書き出す際は、**必ず上記のディレクトリパスに従う**。独自のディレクトリやファイルを追加しない
 
 ## 既存スキルとの連携
 

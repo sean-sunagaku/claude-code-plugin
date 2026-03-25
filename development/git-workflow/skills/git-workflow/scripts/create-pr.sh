@@ -1,12 +1,19 @@
 #!/bin/bash
-# PR作成スクリプト - ベースブランチは常に develop
+# PR作成スクリプト - ベースブランチを自動検出（develop or main）
 # Usage: ./create-pr.sh "PR Title" "PR Body"
 
 set -e
 
 TITLE="${1:-}"
 BODY="${2:-}"
-BASE_BRANCH="develop"
+
+# ベースブランチを自動検出（develop があれば develop、なければ main）
+git fetch origin --quiet
+if git rev-parse --verify origin/develop >/dev/null 2>&1; then
+  BASE_BRANCH="develop"
+else
+  BASE_BRANCH="main"
+fi
 
 # 引数チェック
 if [ -z "$TITLE" ]; then
