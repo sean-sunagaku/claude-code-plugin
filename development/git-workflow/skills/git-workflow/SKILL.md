@@ -14,10 +14,10 @@ disable-model-invocation: false
 
 | スクリプト | 用途 | 例 |
 | --- | --- | --- |
-| `full-workflow.sh` | commit → push → PR（フル） | `.claude/skills/git-workflow/scripts/full-workflow.sh "msg" "title" "body"` |
-| `create-branch.sh` | ブランチ作成（develop から） | `.claude/skills/git-workflow/scripts/create-branch.sh feat/add-login` |
+| `full-workflow.sh` | (新ブランチ →) commit → push → PR | `.claude/skills/git-workflow/scripts/full-workflow.sh "msg" "title" "body" [branch]` |
+| `create-branch.sh` | ブランチ作成（最新 pull + 自動検出） | `.claude/skills/git-workflow/scripts/create-branch.sh feat/add-login` |
 | `commit.sh` | コミット（Co-Author 付き） | `.claude/skills/git-workflow/scripts/commit.sh "feat(web): add login"` |
-| `create-pr.sh` | PR作成（base: develop） | `.claude/skills/git-workflow/scripts/create-pr.sh "title" "body"` |
+| `create-pr.sh` | PR作成（base: 自動検出） | `.claude/skills/git-workflow/scripts/create-pr.sh "title" "body"` |
 
 ## Usage
 
@@ -45,17 +45,28 @@ disable-model-invocation: false
 1. `git status` で変更を確認
 2. 変更があればステージング (`git add`)
 3. コミットメッセージ、PRタイトル、PRボディを生成 **（必ず英語で生成すること）**
-4. **`.claude/skills/git-workflow/scripts/full-workflow.sh` を実行**
+4. 現在のブランチが main/develop、または別タスクのブランチにいる場合は **新ブランチ名を4番目の引数に指定**
+5. **`.claude/skills/git-workflow/scripts/full-workflow.sh` を実行**
 
 ```bash
-# フルワークフロースクリプトを使用
+# 現在のフィーチャーブランチからそのままコミット → push → PR
 .claude/skills/git-workflow/scripts/full-workflow.sh "<commit message>" "<pr title>" "<pr body>"
+
+# 新しいブランチを切ってからコミット → push → PR（main/develop にいるとき、または別ブランチから独立させたいとき）
+.claude/skills/git-workflow/scripts/full-workflow.sh "<commit message>" "<pr title>" "<pr body>" "feat/new-feature"
 ```
+
+スクリプトが自動で以下を実行:
+1. `git fetch origin` でリモートの最新を取得
+2. ベースブランチを自動検出（develop or main）
+3. 新ブランチ名が指定された場合: stash → ベースブランチを pull → 新ブランチ作成 → stash pop
+4. commit → push → PR作成（既存PRがあれば更新のみ）
 
 ### Notes
 
-- main/develop ブランチでは実行しない（スクリプトが警告を出す）
-- ベースブランチは develop に固定
+- main/develop ブランチでは新ブランチ名の指定が必須
+- ベースブランチは自動検出（develop があれば develop、なければ main）
+- 既存PRがあれば新規作成せず push のみ
 - Co-Authored-By は自動付与
 
 ---
@@ -68,9 +79,15 @@ disable-model-invocation: false
 2. **`.claude/skills/git-workflow/scripts/create-branch.sh` を実行**
 
 ```bash
-# develop から新しいブランチを作成
+# ベースブランチから最新を pull して新しいブランチを作成
 .claude/skills/git-workflow/scripts/create-branch.sh <branch-name>
 ```
+
+スクリプトが自動で以下を実行:
+1. `git fetch origin` でリモートの最新を取得
+2. `develop` ブランチが存在するか確認 → なければ `main` をベースに
+3. ベースブランチに checkout して `git pull`
+4. 新しいブランチを作成
 
 ### Branch Naming Convention
 
@@ -86,11 +103,12 @@ disable-model-invocation: false
 | `docs`     | ドキュメント       | `docs/api-readme`           |
 | `chore`    | 雑務・設定         | `chore/update-deps`         |
 | `perf`     | パフォーマンス改善 | `perf/optimize-queries`     |
+| `update`   | 既存機能の改善     | `update/improve-logging`    |
 
 ### Base Branch
 
-- **develop**: 通常の開発ブランチのベース（スクリプトで固定）
-- **main**: リリース用（直接ブランチを切らない）
+- ベースブランチは**自動検出**: `develop` があれば `develop`、なければ `main`
+- ブランチ作成前に必ず最新を pull する
 
 ---
 
@@ -160,19 +178,19 @@ disable-model-invocation: false
 
 ## 3. PR - Pull Request作成
 
-### IMPORTANT: ベースブランチは必ず develop
+### ベースブランチの自動検出
 
-**絶対に `--base main` を使わないこと。スクリプトが `develop` に固定する。**
+スクリプトが `develop` の存在を確認し、なければ `main` をベースに PR を作成する。
 
 ### Instructions
 
 1. 現在のブランチを確認（develop/main でないことを確認）
-2. `git log` と `git diff develop...HEAD` で変更内容を分析
+2. `git log` と `git diff <base>...HEAD` で変更内容を分析（base はスクリプトが自動検出）
 3. PRのタイトルとボディを生成 **（必ず英語で生成すること）**
 4. **`.claude/skills/git-workflow/scripts/create-pr.sh` を実行**
 
 ```bash
-# PR作成（push も含む、base は develop 固定）
+# PR作成（push も含む、base は自動検出）
 .claude/skills/git-workflow/scripts/create-pr.sh "<title>" "<body>"
 ```
 

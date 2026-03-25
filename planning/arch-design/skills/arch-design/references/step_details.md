@@ -139,12 +139,14 @@ Phase 2d: 1案の選定（ユーザー選択・CRITICAL）
 - [ ] Top 2-3 への絞り込み経緯が記録されている
 - [ ] アーキテクチャパターンが1つに選定されている
 - [ ] 採用理由・棄却理由が記録されている
-- [ ] セッションルートに `step2-*.md` として成果物が配置されている
+- [ ] `step2-pattern-comparison/` ディレクトリに成果物が配置されている
 
-**成果物ファイル**（セッションルート直下に配置、サブディレクトリ禁止）:
-- `step2-patterns.md` — 10案列挙・比較表・スコアリング（全パターンの詳細を1ファイルに統合）
-- `step2-scoring-rationale.md` — Top 3 詳細スコア根拠・エージェント間合意事項
-- `step2-selected-pattern.md` — 確定パターン・ADR・棄却理由
+**成果物ディレクトリ** (`step2-pattern-comparison/`):
+- `README.md` — 10案比較表・Top 3 サマリー・棄却理由
+- `scoring-rationale.md` — Top 3 詳細スコア根拠・エージェント間合意事項
+- `implementation-details.md` — 確定実装方式・依存マップ・コード例
+- `patterns/` — 各案の詳細設計図（アーキテクチャ図・ディレクトリ構成・メリデメ）
+  - `01-<pattern>/README.md` 〜 `10-<pattern>/README.md`
 
 **成果物フォーマット** (`2_pattern.md`):
 ```markdown
@@ -259,11 +261,14 @@ Round 3（収束）:
 - [ ] 各モジュールの公開インターフェースが定義済み
 - [ ] 依存方向が図示されている
 - [ ] 循環依存がない
-- [ ] セッションルートに `step3-*.md` として成果物が配置されている
+- [ ] `step3-module-design/` ディレクトリに成果物が配置されている
 
-**成果物ファイル**（セッションルート直下に配置、サブディレクトリ禁止）:
-- `step3-module-design.md` — モジュール一覧・依存グラフ・インターフェース・依存ルール（統合版）
-- `step3-devils-advocate-review.md` — 過剰分割・過剰抽象化への批判・YAGNI制約
+**成果物ディレクトリ** (`step3-module-design/`):
+- `README.md` — 統合版（最終合意のモジュール設計・依存グラフ・インターフェース・依存ルール）
+- `module-designer-proposal.md` — モジュール分割提案（責務・境界・インターフェース）
+- `dependency-analyst-review.md` — 依存方向レビュー・循環依存チェック・レイヤー図
+- `platform-expert-review.md` — 技術制約レビュー
+- `devils-advocate-review.md` — 過剰分割・過剰抽象化への批判・YAGNI制約
 
 **成果物フォーマット** (`3_modules.md`):
 ```markdown
@@ -322,7 +327,7 @@ Round 3（収束）:
    - 不整合があれば修正
 
 2. Facilitator が設計書を Write で出力
-   - step4-architecture.md を作成
+   - step4-output/architecture.md を作成
    - references/output_templates.md のテンプレートを使用
 
 3. ユーザーへの提示
@@ -338,7 +343,7 @@ Round 3（収束）:
 ```
 
 **完了条件**:
-- [ ] セッションルートに `step4-architecture.md` が作成されている
+- [ ] `step4-output/architecture.md` が作成されている
 - [ ] 全モジュールとその依存関係が設計書に含まれている
 - [ ] ADR（主要な設計決定の記録）が含まれている
 - [ ] ユーザーの承認が得られている

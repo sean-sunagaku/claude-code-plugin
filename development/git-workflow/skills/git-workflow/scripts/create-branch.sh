@@ -1,12 +1,11 @@
 #!/bin/bash
-# ブランチ作成スクリプト - develop から分岐
+# ブランチ作成スクリプト - develop or main から分岐（自動検出）
 # Usage: ./create-branch.sh <branch-name>
 # Example: ./create-branch.sh feat/add-login
 
 set -e
 
 BRANCH_NAME="${1:-}"
-BASE_BRANCH="develop"
 
 # 引数チェック
 if [ -z "$BRANCH_NAME" ]; then
@@ -17,9 +16,9 @@ if [ -z "$BRANCH_NAME" ]; then
 fi
 
 # ブランチ名のバリデーション
-if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|refactor|docs|chore|perf|test|ci)/ ]]; then
+if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|refactor|docs|chore|perf|test|ci|update)/ ]]; then
   echo "Warning: Branch name should follow convention: <type>/<description>"
-  echo "Types: feat, fix, refactor, docs, chore, perf, test, ci"
+  echo "Types: feat, fix, refactor, docs, chore, perf, test, ci, update"
   echo "Example: feat/add-login, fix/auth-bug"
   read -p "Continue anyway? (y/N): " confirm
   if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
@@ -27,14 +26,26 @@ if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|refactor|docs|chore|perf|test|ci)/ ]]; then
   fi
 fi
 
-# develop の最新を取得
-echo "Fetching latest from origin/$BASE_BRANCH..."
-git fetch origin "$BASE_BRANCH"
+# リモートの最新を取得
+echo "Fetching latest from origin..."
+git fetch origin
 
-# ブランチ作成
-echo "Creating branch: $BRANCH_NAME from origin/$BASE_BRANCH"
-git checkout -b "$BRANCH_NAME" "origin/$BASE_BRANCH"
+# ベースブランチを自動検出（develop があれば develop、なければ main）
+if git rev-parse --verify origin/develop >/dev/null 2>&1; then
+  BASE_BRANCH="develop"
+else
+  BASE_BRANCH="main"
+fi
+echo "Base branch: $BASE_BRANCH"
+
+# ベースブランチを最新に pull してからブランチ作成
+echo "Switching to $BASE_BRANCH and pulling latest..."
+git checkout "$BASE_BRANCH"
+git pull origin "$BASE_BRANCH"
+
+echo "Creating branch: $BRANCH_NAME from $BASE_BRANCH"
+git checkout -b "$BRANCH_NAME"
 
 echo ""
 echo "✅ Branch created: $BRANCH_NAME"
-echo "   Base: origin/$BASE_BRANCH"
+echo "   Base: $BASE_BRANCH (latest)"
