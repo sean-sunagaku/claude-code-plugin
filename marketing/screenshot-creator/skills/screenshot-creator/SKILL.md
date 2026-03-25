@@ -229,13 +229,14 @@ copy-writer → screenshot-designer                        （Phase 3: 確定・
 
 ## Step 6: エクスポート
 
-最終確認後、`mcp__pencil__export_nodes` で PNG エクスポートする。
+最終確認後、以下の手順で PNG エクスポートする。
 
-### エクスポート時の必須設定
+> **⚠ 重要: `export_nodes` のデフォルト scale は 2（@2x）。App Store には @3x が必要。`scale: 3` を必ず指定すること。**
+> scale: 2 だと 856×1852px になり、App Store に提出できない。
 
-**フレームに `clip: true` を設定すること（重要）:**
+### 6-1. フレームに `clip: true` を設定
 
-PhoneMockup のドロップシャドウがフレーム外にはみ出し、エクスポート画像のサイズがフレームサイズより大きくなる問題がある。
+PhoneMockup のドロップシャドウがフレーム外にはみ出し、エクスポート画像のサイズがフレームサイズより大きくなる。
 エクスポート前に**必ず**全フレームに `clip: true` を設定する:
 
 ```javascript
@@ -244,25 +245,77 @@ U("frame2Id", {clip: true})
 U("frame3Id", {clip: true})
 ```
 
-**エクスポート設定:**
+### 6-2. フレーム情報を取得（リネーム用マッピング）
+
+`batch_get` で全フレームの ID と name を取得する:
+
 ```
-mcp__pencil__export_nodes:
-  format: "png"
-  scale: 3  // @3x
+mcp__pencil__batch_get:
+  filePath: "path/to/file.pen"
+  patterns: [{"type": "frame", "name": "SS"}]
+  searchDepth: 1
 ```
 
-**エクスポート後の寸法確認:**
-```bash
-sips -g pixelWidth -g pixelHeight export/*.png
+結果から `id:name` マッピングを作成する:
 ```
+b4SOM:SS01_Hero dBSNw:SS03_Result SM4Ui:SS04_Template
+dhs8L:SS01_Hero_EN WG7lQ:SS03_Result_EN eE2yT:SS04_Template_EN
+...
+```
+
+### 6-3. 言語別にエクスポート（scale: 3 必須）
+
+`export_nodes` を言語グループごとに呼び出す。**scale: 3 を必ず指定**:
+
+```
+mcp__pencil__export_nodes:
+  filePath: "path/to/file.pen"
+  outputDir: "/tmp/pencil-export"
+  nodeIds: ["b4SOM", "dBSNw", "SM4Ui", ...]
+  format: "png"
+  scale: 3          ← 必須！デフォルトの 2 では App Store サイズにならない
+```
+
+### 6-4. リネーム・整理・検証スクリプトを実行
+
+`export_nodes` はノード ID をファイル名にする（例: `b4SOM.png`）。
+付属スクリプトでフレーム名にリネームし、言語別フォルダに整理し、サイズを検証する:
+
+```bash
+scripts/export-screenshots.sh /tmp/pencil-export ./exported \
+  b4SOM:SS01_Hero dBSNw:SS03_Result SM4Ui:SS04_Template \
+  dhs8L:SS01_Hero_EN WG7lQ:SS03_Result_EN eE2yT:SS04_Template_EN \
+  mKJ5F:SS01_Hero_ZH BEODM:SS03_Result_ZH rwu06:SS04_Template_ZH \
+  sKzRu:SS01_Hero_KO HYsfY:SS03_Result_KO 0utRp:SS04_Template_KO
+```
+
+スクリプトの動作:
+1. **リネーム**: ノードID.png → フレーム名.png（例: `b4SOM.png` → `SS01_Hero.png`）
+2. **言語振り分け**: サフィックスで自動判定（`_EN` → `EN/`、`_ZH` → `ZH/`、`_KO` → `KO/`、なし → `JP/`）
+3. **サイズ検証**: 全ファイルが App Store 要求サイズ（1284×2778 等）と一致するか検証
+4. **サマリー出力**: PASS / FAIL / MISSING をレポート
+
+出力ディレクトリ構造:
+```
+exported/
+  JP/SS01_Hero.png
+  JP/SS03_Result.png
+  JP/SS04_Template.png
+  EN/SS01_Hero.png
+  EN/SS03_Result.png
+  ...
+```
+
+### App Store 要求サイズ一覧
 
 | フレームサイズ | @3x エクスポート | App Store サイズ |
 |---|---|---|
-| 428 × 926 pt | 1284 × 2778 px | iPhone 6.5" ✓ |
+| 428 × 926 pt | **1284 × 2778 px** | iPhone 6.5" ✓ |
 | 430 × 932 pt | 1290 × 2796 px | iPhone 6.7" ✓ |
 | 440 × 956 pt | 1320 × 2868 px | iPhone 6.9" ✓ |
 
 > **clip: true を忘れるとシャドウ分だけ画像が大きくなり、App Store に提出できない。**
+> **scale: 3 を忘れると @2x（856×1852px）になり、App Store に提出できない。**
 
 ## Step 7: 多言語対応（任意）
 
