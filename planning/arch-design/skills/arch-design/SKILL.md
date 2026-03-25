@@ -94,9 +94,15 @@ Step 4: 設計書出力・ユーザー承認
 4. **セッション名（design-slug）を生成**:
    - 設計テーマを英語の kebab-case スラッグに変換
    - 日本語の場合は英訳してからスラッグ化
-5. `.claude/arch-design/sessions/<design-slug>/` ディレクトリを作成（下記ディレクトリ構成に従う）
+5. **セッションディレクトリを Bash スクリプトで一括作成**:
+   ```bash
+   SESSION_DIR=".claude/arch-design/sessions/<design-slug>"
+   mkdir -p "$SESSION_DIR/step1-context"
+   ```
+   - `step1-context/` のみサブディレクトリとして作成（複数エージェントのフィードバックを格納）
+   - **Step 2〜4 の成果物はサブディレクトリを作成せず、セッションルートに `step2-*.md`, `step3-*.md`, `step4-*.md` として配置する**
 6. `session.json` を作成（下記テンプレート）— Phase A の回答を `designPolicy` に記録
-7. `design_log.md` を作成（インデックス兼進捗管理。詳細は各 step ディレクトリに配置）
+7. `design_log.md` を作成（インデックス兼進捗管理）
 8. **設計深さモードを自動判定**:
    - Light: 単一モジュール・明確な要件・小規模変更
    - Standard: 複数モジュール・新機能追加（デフォルト）
@@ -275,49 +281,35 @@ Step <N> 完了: <ステップ名>
 }
 ```
 
-**生成物（ディレクトリ構成）**:
+**生成物（ファイル構成）**:
 
 ```
 .claude/arch-design/sessions/<design-slug>/
-├── session.json                           # セッション進捗管理
-├── design_log.md                          # インデックス（進捗+ディレクトリ案内）
+├── session.json                    # セッション進捗管理
+├── design_log.md                   # インデックス（進捗管理）
 │
-├── step1-context/                         # Step 1 成果物
-│   ├── README.md                          # 機能要件・非機能要件・制約・状態遷移・設計キーポイント
-│   ├── module-designer-feedback.md        # モジュール設計観点の論点
-│   ├── dependency-analyst-feedback.md     # 依存関係分析・循環依存リスク
-│   ├── devils-advocate-feedback.md        # YAGNI 警告・本当に重要な技術課題
-│   └── platform-expert-feedback.md        # スタック適合性・設計提言・フレームワーク制約
+├── step1-context/                  # Step 1 成果物（唯一のサブディレクトリ）
+│   ├── README.md                   # 機能要件・非機能要件・制約・設計キーポイント
+│   ├── module-designer-feedback.md
+│   ├── dependency-analyst-feedback.md
+│   ├── devils-advocate-feedback.md
+│   └── platform-expert-feedback.md
 │
-├── step2-pattern-comparison/              # Step 2 成果物
-│   ├── README.md                          # 10案比較表・Top 3 サマリー・棄却理由
-│   ├── scoring-rationale.md               # Top 3 詳細スコア根拠・エージェント間合意事項
-│   ├── implementation-details.md          # 確定実装方式・依存マップ・コード例
-│   └── patterns/                          # 各案の詳細設計図
-│       ├── 01-<pattern-name>/
-│       │   ├── README.md                  # 解説・ディレクトリ構成・メリデメ
-│       │   └── architecture.drawio        # draw.io アーキテクチャ図
-│       ├── 02-<pattern-name>/ ...
-│       └── 10-<pattern-name>/ ...
+├── step2-patterns.md               # Step 2: 10案列挙・比較表・スコアリング
+├── step2-scoring-rationale.md      # Step 2: スコア根拠・エージェント間合意
+├── step2-selected-pattern.md       # Step 2: 確定パターン・ADR・棄却理由
 │
-├── step3-module-design/                   # Step 3 成果物
-│   ├── README.md                          # 統合版（最終合意のモジュール設計・Swift コード付き）
-│   ├── module-designer-proposal.md        # モジュール分割提案（責務・境界・インターフェース）
-│   ├── dependency-analyst-review.md       # 依存方向レビュー・循環依存チェック・レイヤー図
-│   ├── platform-expert-review.md          # 技術制約レビュー（TC-1〜N）
-│   └── devils-advocate-review.md          # YAGNI 批判・行数制約・過剰分割チェック
+├── step3-module-design.md          # Step 3: モジュール一覧・依存グラフ・インターフェース
+├── step3-devils-advocate-review.md # Step 3: YAGNI 批判・過剰分割チェック
 │
-└── step4-output/                          # Step 4 成果物
-    └── architecture.md                    # 最終アーキテクチャ設計書（ADR 含む）
+└── step4-architecture.md           # Step 4: 最終アーキテクチャ設計書（ADR 含む）
 ```
 
-**設計原則**:
-- `design_log.md` はインデックス（進捗管理+ディレクトリ案内）のみ。詳細内容は各 step ディレクトリに配置
-- 各 step ディレクトリの `README.md` がそのステップの主要成果物
-- エージェントのフィードバックは個別ファイルに分離（`<role>-feedback.md` / `<role>-review.md`）
-- Step 2 の patterns/ にはアーキテクチャ案ごとにディレクトリを作成し、README.md（解説）+ architecture.drawio（draw.io 図）を配置
-- draw.io ファイルには依存関係・レイヤー構成・棄却理由をビジュアルで表現する
-- 推奨案には追加で状態遷移図・依存グラフ・ディレクトリ構成図を `diagrams/` に配置
+**ファイル出力ルール（CRITICAL）**:
+- **Step 1 のみ `step1-context/` サブディレクトリを使用**（複数エージェントのフィードバックを格納するため）
+- **Step 2〜4 はサブディレクトリを一切作成しない**。セッションルートに `step2-*.md`, `step3-*.md`, `step4-*.md` として配置
+- `patterns/`, `diagrams/` 等のサブディレクトリも作成禁止。パターン詳細は `step2-patterns.md` 内のセクションとして記述
+- エージェントが成果物を書き出す際は、**必ず上記のファイルパスに従う**。独自のディレクトリやファイルを追加しない
 
 ## 既存スキルとの連携
 
