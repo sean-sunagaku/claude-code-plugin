@@ -21,9 +21,17 @@ brand-strategist が提案するアプリ名候補を評価・フィルタリン
 2. TaskUpdate でタスクを in_progress にする
 3. brand-strategist から候補リストが届くのを待つ
 4. 各候補について WebSearch で以下を調査:
+   - **`.app` ドメインの実検索**（最重要。現役サービスが稼働していたら即NG）
+   - `.com` / `.io` / `.dev` ドメインの取得可能性
    - App Store / Google Play に同名・類似名のアプリがないか
-   - 商標として問題になりそうなケースがないか
-   - .com / .jp / .app ドメインの取得可能性
+   - 商標として問題になりそうなケースがないか（USPTO, J-PlatPat）
+   - 日本商標の「称呼同一」問題: カタカナ読みが同じになる既存商標がないか
+
+   **過去の脱落パターン（特に注意）:**
+   - `.app` ドメインが現役サービスで使用中 → 事実上使えない（例: spelo.app→AI英語コーチ、navelo.app→サイクリングアプリ）
+   - `.com` がパーキング中（売却目的）→ 交渉可能だが、現役サービスとは違う
+   - Nasdaq上場企業と1文字違い → 商標侵害リスク（例: Movela→Movella）
+   - 異なる綴りでカタカナ称呼が同一 → 日本商標で拒絶リスク（例: Velora/Verola→両方「ヴェロラ」）
 5. **全員（brand-strategist, digital-presence, global-checker, context-manager）に SendMessage で共有し、以下を明示的に伝える**:
    ```
    [全員へ] 法的調査結果を共有します。
