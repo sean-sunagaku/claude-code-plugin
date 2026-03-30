@@ -4,51 +4,14 @@ on:
   pull_request:
     paths:
       - '.claude-plugin/marketplace.json'
-      # Skills
       - '**/SKILL.md'
       - '**/.claude-plugin/plugin.json'
       - '**/references/**'
       - '**/scripts/**'
       - '**/agents/**'
-      # Hooks
       - '**/hooks/**'
       - '**/plugin.json'
 
 jobs:
-  validate-structure:
-    name: Validate marketplace structure
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Validate marketplace.json & plugin structure
-        run: |
-          chmod +x .github/scripts/validate-marketplace.sh
-          .github/scripts/validate-marketplace.sh
-
-  validate-schema:
-    name: Validate with Claude Code CLI
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Validate marketplace manifest schema
-        run: |
-          echo "=== Claude Code plugin validate ==="
-          OUTPUT=$(claude plugin validate . 2>&1) || true
-          echo "$OUTPUT"
-          if echo "$OUTPUT" | grep -q "Validation failed"; then
-            exit 1
-          fi
+  validate:
+    uses: ./.github/workflows/reusable-validate.yml
