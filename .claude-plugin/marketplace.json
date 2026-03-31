@@ -289,8 +289,8 @@
     {
       "name": "swiftui-best-practice",
       "source": "./development/swiftui-best-practice",
-      "version": "1.0.0",
-      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティスガイド + Hit Area Auditor サブエージェント。.buttonStyle(.plain) + contentShape、CRUD 機能網羅チェック、アフォーダンスチェックを含む"
+      "version": "1.1.0",
+      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティスガイド + Hit Area Auditor サブエージェント。ATT呼び出しタイミング、.buttonStyle(.plain) + contentShape、CRUD 機能網羅チェック、アフォーダンスチェックを含む"
     },
     {
       "name": "plantuml-salt",

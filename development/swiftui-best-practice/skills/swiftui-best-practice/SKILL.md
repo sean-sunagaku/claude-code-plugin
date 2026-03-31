@@ -7,7 +7,8 @@ description: >
   レイアウト崩れを修正するとき。safeAreaInset や ViewThatFits を使うとき。
   マルチデバイス対応するとき。
   Triggers: "SwiftUI", "layout", "safeAreaInset", "ViewThatFits",
-  "GeometryReader", "レイアウト", "崩れ", "表示バグ", "iPhone SE"
+  "GeometryReader", "レイアウト", "崩れ", "表示バグ", "iPhone SE",
+  "ATT", "ATTrackingManager", "requestTrackingAuthorization", "AdMob", "広告"
 ---
 
 # SwiftUI Best Practices
@@ -167,6 +168,26 @@ struct ItemListView: View {
 - `.sheet` / `.fullScreenCover` 内で使うなら、専用の子 View struct に切り出す
 - 関数パラメータとして `FocusState<T>.Binding` を渡しても動かない
 
+### ATT (App Tracking Transparency) の呼び出しタイミング
+
+`ATTrackingManager.requestTrackingAuthorization()` は `.onAppear` ではなく **`scenePhase == .active` のタイミング**で呼ぶ。`.onAppear` で呼ぶと iPadOS（MultiScene）でダイアログが表示されずリジェクトされる。
+
+詳細は [references/att-scene-phase.md](references/att-scene-phase.md) を参照。
+
+```swift
+// ❌ BAD — .onAppear で ATT → iPadOS でダイアログが出ない
+.onAppear {
+    Task { await ATTrackingManager.requestTrackingAuthorization() }
+}
+
+// ✅ GOOD — scenePhase == .active で ATT
+.onChange(of: scenePhase) { _, newPhase in
+    if newPhase == .active {
+        Task { await AdService.shared.requestTrackingAndInitialize() }
+    }
+}
+```
+
 ### Adaptive multi-device layout
 
 See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoint patterns and responsive design best practices.
@@ -191,6 +212,8 @@ When writing or modifying SwiftUI layout code:
 14. `@FocusState` は sheet 内で使うなら sheet のコンテンツ View 自体が所有すること — 親 View の `@FocusState` を sheet 越しに渡しても動かない
 15. TextField 横の削除ボタンは `Button` ではなく `Image` + `.onTapGesture` を使う — `Button` タップはキーボードを一瞬閉じてしまう
 16. `.onSubmit` もキーボードを一瞬閉じるため、連続フォーカス移動には `TextField(axis: .vertical)` + `onChange` で改行検知する方式を使う
+17. `ATTrackingManager.requestTrackingAuthorization()` は `.onAppear` ではなく `scenePhase == .active` で呼ぶ — `.onAppear` では iPadOS でダイアログが表示されずリジェクトされる
+18. AdMob 等の広告 SDK 初期化は ATT リクエスト完了後に行う — IDFA の取得状態が確定してからでないとパーソナライズ判定が正しくない
 
 ## Subagent: Hit Area Auditor
 
