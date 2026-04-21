@@ -2,10 +2,10 @@
 name: swiftui-best-practice
 description: >
   SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンと、
-  iOS / watchOS アプリの実機配布 (Provisioning / App Group / Code Signing)
-  トラブルシューティングのガイド。コード生成・修正時に既知のレイアウトバグを
-  防ぎ、App Group + watchOS + Apple Watch の実機インストール失敗を
-  5 段階フレームワークで診断・解消する。
+  iOS / watchOS アプリの実機配布 (Provisioning / App Group / Code Signing /
+  Apple Watch Developer Mode) トラブルシューティングのガイド。
+  コード生成・修正時に既知のレイアウトバグを防ぎ、App Group + watchOS +
+  Apple Watch の実機インストール失敗を 6 段階フレームワークで診断・解消する。
   Use when: SwiftUI のコードを書く・修正するとき。
   レイアウト崩れを修正するとき。safeAreaInset や ViewThatFits を使うとき。
   マルチデバイス対応するとき。iOS + watchOS アプリの実機ビルド / 配布で
@@ -17,7 +17,9 @@ description: >
   "Provisioning Profile", "App Group", "Manual Signing", "Code Signing",
   "Apple Watch", "watchOS", "Install できない", "Could not install at this time",
   "Bundle ID 紐付け", "Xcode Automatic Signing", "embedded.mobileprovision",
-  "Spaceship", "App Store Connect API", "WKCompanionAppBundleIdentifier"
+  "Spaceship", "App Store Connect API", "WKCompanionAppBundleIdentifier",
+  "Developer Mode", "Privacy & Security", "watchOS Developer Mode",
+  "Apple Watch に App を入れられない"
 ---
 
 # SwiftUI Best Practices
@@ -203,7 +205,9 @@ See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoin
 
 ### iOS + watchOS Provisioning (App Group / Manual Signing)
 
-**`Could not install at this time.` / Profile に App Group が入らない / Xcode Automatic Signing が手動 Profile を上書き** — これらは iOS + watchOS + App Group 構成で頻発する既知の罠。5 段階フレームワークで診断・解決する。
+**`Could not install at this time.` / Profile に App Group が入らない / Xcode Automatic Signing が手動 Profile を上書き** — これらは iOS + watchOS + App Group 構成で頻発する既知の罠。6 段階フレームワークで診断・解決する。
+
+> ⚠️ **§ 1〜§ 5 を完璧に直しても Watch の "Could not install at this time." が消えないときは、§ 6 (Apple Watch 本体の Developer Mode OFF) を確認する**。Provisioning 側は正しくても Watch 本体設定が揃っていないと絶対に入らない。
 
 詳細は [references/watchos-provisioning.md](references/watchos-provisioning.md) を参照。要点だけ:
 
@@ -212,6 +216,7 @@ See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoin
 3. **Apple Watch UDID 未登録** — iPhone と別 device 扱い。`ios-deploy -c -t 5` で USB Companion proxy 経由で取得 → Spaceship API で `class=APPLE_WATCH` として登録。
 4. **API 製 Profile に App Group が入らない仕様** — `Spaceship::ConnectAPI::Profile.create` で生成した Profile は App Group entitlement を取り込まない（Apple サーバ側の制約）。**Web UI で 4 つ生成・Download** が必須。
 5. **Xcode Automatic Signing が手動 Profile を上書き** — `-allowProvisioningUpdates` で Team Provisioning Profile を再 fetch → 手動版が消える。**`CODE_SIGN_STYLE: Manual` + `PROVISIONING_PROFILE_SPECIFIER` を 4 ターゲット全部で明示**、かつ `-allowProvisioningUpdates` を絶対に付けない。
+6. **Apple Watch 本体の Developer Mode OFF** — iOS 16+ で開発 App をインストールするには Watch 側も **Settings → Privacy & Security → Developer Mode → ON → Watch 再起動** が必要。iPhone の Watch アプリには出てこないので **必ず Apple Watch 本体**で設定する。これを忘れると Provisioning が正しくても 100% "Could not install at this time." になる。
 
 ```yaml
 # project.yml で各ターゲットの settings.base に追加
@@ -264,6 +269,7 @@ When writing or modifying SwiftUI layout code:
 20. 埋め込み Extension (Widget / Watch App / Watch Widget) の Bundle ID は必ず親 App Bundle ID の **完全な prefix** で始める — `app.focusone.widget` は NG、`app.focusone.app.widget` が正
 21. Apple Watch 実機配布前に `ios-deploy -c -t 5` で Watch UDID を取得し Developer Portal に登録する — iPhone とは別 device 扱いで自動登録されない
 22. Profile 生成は Web UI でやる — API 経由 (Spaceship / App Store Connect API) で作った Profile には App Group entitlement が入らない (Apple の未ドキュメント仕様)
+23. **Apple Watch 本体で Developer Mode を ON にする** — Settings → Privacy & Security → Developer Mode → ON → Watch 再起動。iPhone の Developer Mode は別物で、iPhone の Watch アプリにもこの設定は出てこない。これが OFF だと Provisioning を完璧に直しても "Could not install at this time." で 100% 失敗する
 
 ## Subagent: Hit Area Auditor
 

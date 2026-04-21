@@ -1,6 +1,8 @@
 # iOS + watchOS Provisioning トラブルシューティング
 
-App Group + watchOS + Apple Watch 実機配布で詰まる 5 つの罠と、それぞれの診断・解決手順。
+App Group + watchOS + Apple Watch 実機配布で詰まる 6 つの罠（Provisioning 5 段 + Watch 本体設定 1 段）と、それぞれの診断・解決手順。
+
+> ⚠️ **Watch に "Could not install at this time." が出たとき、§ 1〜§ 5 の Provisioning をすべて完璧に直しても、§ 6 (Watch 本体の Developer Mode) が OFF だと 100% Install 失敗する**。他を何回直しても変わらない時は必ず § 6 を確認すること。
 
 ## 症状
 
@@ -12,10 +14,11 @@ App Group + watchOS + Apple Watch 実機配布で詰まる 5 つの罠と、そ�
 | iOS Widget / Watch App のビルドで `Embedded binary's bundle identifier is not prefixed with the parent app's bundle identifier.` | § 1 Bundle ID 不整合 |
 | Profile に App Group entitlement が入っていない（`security cms -D` で空） | § 2 App Group Capability 未保存 |
 | Web UI で Edit → Save したのに反映されない | § 2 App Group Capability 未保存 |
-| Apple Watch に「This app could not be installed at this time.」 | § 3 Watch UDID 未登録 or § 4 / § 5 |
+| Apple Watch に「This app could not be installed at this time.」 | § 3 Watch UDID 未登録 or § 4 / § 5 / **§ 6** |
 | Profile の `ProvisionedDevices` に Apple Watch UDID が含まれない | § 3 Watch UDID 未登録 |
 | Spaceship/fastlane で API 生成した Profile に capability が足りない | § 4 API 製 Profile の仕様 |
 | xcodebuild は通るが埋め込まれた Profile が「iOS Team Provisioning Profile:...」（Xcode 自動生成版） | § 5 Automatic Signing 上書き |
+| **§ 1〜§ 5 全部直したのに Watch に "Could not install at this time." が出る** | **§ 6 Watch 本体の Developer Mode OFF** |
 
 ## § 0 前提
 
@@ -318,6 +321,58 @@ xcodebuild -project ios/YourApp.xcodeproj -scheme YourApp \
 
 ログで `Provisioning Profile: "FocusOne Watch App Dev"` が出れば正しく手動版が使われている。
 
+## § 6 Apple Watch 本体の Developer Mode が OFF
+
+### 原因
+
+iOS 16 以降、開発アプリ（Provisioning Profile で署名した非 App Store アプリ）を実機にインストールするには **Developer Mode を ON にする必要がある**。iPhone と Apple Watch は**別々にこの設定を持つ**。
+
+- iPhone の Developer Mode は、Xcode で一度実機ビルドを通すと自動で求められて ON になる
+- **Apple Watch 側も同じように Developer Mode が必要**だが、iPhone の Watch アプリから設定する経路が無く、手動で Watch 本体を操作しないと ON にできない
+- これを知らずに「iPhone は Developer Mode ON なのに Watch にインストールできない」と詰まるケースが多発
+
+§ 1〜§ 5 の Provisioning を完璧に直しても、Watch 側の Developer Mode が OFF なら **iPhone の Watch アプリで "Install" を押した瞬間に "This app could not be installed at this time." が出る**。
+
+### 診断
+
+iPhone の Watch アプリ → My Watch → **一般** → **情報** → 下まで見ても Developer Mode の項目が **無い**（ここには出ない）。**Apple Watch 本体の設定を見るしかない**。
+
+### 解決
+
+**Apple Watch 本体で**:
+
+1. Settings（設定）アプリを開く
+2. **Privacy & Security（プライバシーとセキュリティ）**
+3. 下にスクロール → **Developer Mode（デベロッパーモード）**
+4. トグルを **ON**
+5. **Apple Watch を再起動**（サイドボタン長押し → 電源オフ → 再度サイドボタン長押しで起動）
+6. 再起動後、Developer Mode を有効化する最終確認が Watch 上に出るので **"Turn On"** をタップ
+
+再起動後、iPhone の Watch アプリ → My Watch → 利用可能なアプリ → FocusOne の **「インストール」** を押すと通るはず。
+
+### 補足: iPhone 側 Developer Mode の確認
+
+- iPhone で **Settings** → **Privacy & Security** → **Developer Mode** が表示されているか
+- 表示されないなら Mac で一度 Xcode から実機ビルドを通すと出現する
+- iPhone 側はほぼ自動で ON になっているが、Watch 側は **完全に手動**
+
+### それでも "Could not install at this time." が出る場合の追加切り分け
+
+Watch 本体 Developer Mode を ON にしても失敗するときの順番チェック:
+
+1. **Watch のストレージ**: Settings → General → Storage で 100MB 以上空きがあるか
+2. **iPhone Watch アプリ完全再起動**: App Switcher から Watch アプリを上スワイプ kill → 再起動 → Install 再試行
+3. **iPhone 側のアプリ完全削除 → 再インストール**: ホーム長押し → 削除 → Mac から再 install → Install 再試行
+4. **ペアリング解除 → 再ペア**: 最終手段。iPhone Watch アプリ → Apple Watch → ペア解除。復元込みで 15〜30 分。これで Apple 側の Watch 管理情報がリセットされる
+
+4 までやって直らなければ、Mac の Console.app で iPhone / Watch のログを取る:
+
+1. Console.app 起動
+2. 左サイドバーで iPhone または Apple Watch を選択
+3. 検索バーに `install` と入れる
+4. Install ボタンを押した瞬間の **赤い ERROR 行**を探す
+5. エラー詳細（bundle id 不一致 / entitlement mismatch / profile not found 等）で原因確定
+
 ## 検証チェックリスト
 
 全ステップ完了後、以下を確認:
@@ -334,6 +389,7 @@ xcodebuild -project ios/YourApp.xcodeproj -scheme YourApp \
   ```
 - [ ] 埋め込まれた `.app/Watch/*.app/embedded.mobileprovision` も同じ条件
 - [ ] ビルドログの `Provisioning Profile:` 行が **全て `FocusOne` で始まる**（`iOS Team Provisioning Profile:` が無い）
+- [ ] **Apple Watch 本体で Settings → Privacy & Security → Developer Mode が ON**（§ 6） ← 忘れがち
 - [ ] iPhone の Watch アプリ → 利用可能なアプリ → 対象アプリ → **インストール** が成功
 
 ## 全自動化は不可能な理由
