@@ -22,7 +22,18 @@ description: >
   "Developer Mode", "Privacy & Security", "watchOS Developer Mode",
   "Apple Watch に App を入れられない",
   "整合性を確認できなかった", "integrity check", "ENABLE_DEBUG_DYLIB",
-  "__preview.dylib", "debug.dylib", "Xcode 15 Preview", "SwiftUI Preview dylib"
+  "__preview.dylib", "debug.dylib", "Xcode 15 Preview", "SwiftUI Preview dylib",
+  "ENABLE_PREVIEWS",
+  "AppIntents", "AppShortcut", "AppShortcutsProvider", "AppEntity", "AppEnum",
+  "Siri", "Siri に流れる", "Siri がリマインダーに流れる",
+  "updateAppShortcutParameters", "Invalid parameter type", "Invalid Utterance",
+  "applicationName", "CFBundleDisplayName", "CFBundleSpokenName",
+  "TaskEntityQuery", "AppEntityQuery", "TimelineProvider", "recommendations",
+  "WatchConnectivity", "WCSession", "updateApplicationContext", "sessionDidBecomeInactive",
+  "iPhone と Watch でデータ共有", "App Group 共有できない",
+  "scenePhase", "ポーリング", "watchOS バッテリー",
+  "TextField 文字色 watchOS", "Picker 文字色 watchOS",
+  "Single Size AppIcon", "watchOS AppIcon"
 ---
 
 # SwiftUI Best Practices
@@ -206,6 +217,46 @@ struct ItemListView: View {
 
 See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoint patterns and responsive design best practices.
 
+### AppIntents / Siri / AppShortcuts
+
+`Siri がリマインダーに流れる` / `Invalid parameter type. AppEntity and AppEnum are the only allowed types` / `Invalid Utterance. Every App Shortcut utterance should have one '${applicationName}'` — AppShortcuts は仕様の制約が多く、これを踏まないように 5 段階で組む必要がある。
+
+詳細は [references/appintents-siri.md](references/appintents-siri.md) を参照。要点だけ:
+
+1. **`@Parameter` の `String` を utterance に埋め込めない** — `\(\.$xxx)` で参照できるのは `AppEntity` / `AppEnum` のみ。`String` パラメータは `requestValueDialog` で Siri に質問させ、utterance からは外す。
+2. **全 utterance に `\(.applicationName)` 必須** — 1 つでも含まない utterance を書くと AppIntents metadata extractor が halt して全 utterance がインデックスされなくなる。
+3. **`AppShortcutsProvider.updateAppShortcutParameters()` を起動時 + データ変更時に呼ぶ** — 呼ばないと phrase / display name 変更後も Siri が古い登録のままで「FocusOne にタスクを追加」が Reminder に流れる。
+4. **`AppEntityQuery` は Widget snapshot を見ない** — snapshot は Widget 用に件数 cap されているので、4 件目以降のタスクが Siri から見えなくなる。専用の API 直叩きメソッドを Service に作って、AppEntityQuery から呼ぶ。並び順は App / Widget / Watch / Siri 全てで共通 resolver に統一する。
+5. **`CFBundleDisplayName` + `CFBundleSpokenName` を Info.plist に設定** — `applicationName` は CFBundleDisplayName を指す。日本語ユーザー向けに英語名を使うなら CFBundleSpokenName でカナ読みも与える。
+
+```swift
+// 起動時 + refresh 後に呼ぶ
+import AppIntents
+.task { TaskFlowAppShortcuts.updateAppShortcutParameters() }
+
+// AppEntityQuery は API 直叩き、共通 resolver で並び順統一
+struct TaskEntityQuery: EntityStringQuery, EnumerableEntityQuery {
+    func allEntities() async throws -> [TaskEntity] {
+        let tasks = await TaskWidgetService().fetchTodayActiveTasks()  // snapshot 経由しない
+        return tasks.map(TaskEntity.init(from:))
+    }
+}
+```
+
+### watchOS App アーキテクチャ
+
+watchOS App + Widget Extension で踏みやすい罠 (TextField 色 / WatchConnectivity / scenePhase / `recommendations()`)。
+
+詳細は [references/watchos-app-architecture.md](references/watchos-app-architecture.md) を参照。要点:
+
+1. **TextField / Picker の文字色明示** — watchOS の TextField はデフォルトで白文字描画。白系背景の上に置くと見えなくなるので `.foregroundStyle(...)` + `.tint(...)` を明示する。
+2. **`AppIntentTimelineProvider.recommendations()` watchOS で必須** — iOS は optional だが watchOS は required メソッド。実装漏れると "does not conform to protocol" エラー。
+3. **iPhone ↔ Watch は WatchConnectivity で値だけ橋渡し** — App Group は別デバイスで共有不可。`WCSession.updateApplicationContext` で primitive を push、Watch 側 delegate で受け取って自分の App Group UserDefaults に保存。両側で `WCSession.delegate = self` + `activate()` 必須。
+4. **delegate の `[String: Any]` は primitive 抜き出して MainActor へ** — Swift 6 strict concurrency で `[String: Any]` は非 Sendable。delegate スレッド上で `as? String` 等で抜き出してから MainActor closure に渡す。
+5. **scenePhase で Watch 側ポーリング ON/OFF** — `.active` で `startPolling`、`.inactive` / `.background` で `stopPolling`。バッテリー配慮。`Task` ベースなら `pollingTask?.cancel()` で重複起動安全。
+6. **App Group ID は `#if os(watchOS)` で OS 分岐** — iOS と watchOS で別 entitlement が必要だが、Shared コードは同じものを使えるよう `TaskWidgetSharedDefaults.appGroupID` を `#if os(watchOS)` で切り替える。
+7. **AppIcon は Single Size モード (1024x1024 1 枚)** — Contents.json に `idiom: universal, platform: watchos, size: 1024x1024` 1 件だけ書けば Xcode が全サイズ展開する。
+
 ### iOS + watchOS Provisioning (App Group / Manual Signing)
 
 **`Could not install at this time.` / 整合性を確認できなかった / Profile に App Group が入らない / Xcode Automatic Signing が手動 Profile を上書き** — これらは iOS + watchOS + App Group 構成で頻発する既知の罠。7 段階フレームワークで診断・解決する。
@@ -278,6 +329,17 @@ When writing or modifying SwiftUI layout code:
 22. Profile 生成は Web UI でやる — API 経由 (Spaceship / App Store Connect API) で作った Profile には App Group entitlement が入らない (Apple の未ドキュメント仕様)
 23. **Apple Watch 本体で Developer Mode を ON にする** — Settings → Privacy & Security → Developer Mode → ON → Watch 再起動。iPhone の Developer Mode は別物で、iPhone の Watch アプリにもこの設定は出てこない。これが OFF だと Provisioning を完璧に直しても "Could not install at this time." で 100% 失敗する
 24. **watchOS ターゲットに `ENABLE_DEBUG_DYLIB: NO` を設定する** — Xcode 15+ は Debug ビルド時に `__preview.dylib` と `<App>.debug.dylib` を自動生成するが、これが watchOS の code signing 整合性チェックを通らず **「整合性を確認できなかったので、Install できませんでした」** で弾かれる。watchOS ターゲット 2 つ（Watch App + Watch Widget）に `ENABLE_DEBUG_DYLIB: NO` を追加すれば解消。iOS 側には不要
+25. **Xcode 16+ では `ENABLE_PREVIEWS: NO` も併記する** — `ENABLE_DEBUG_DYLIB: NO` だけでは Xcode 16+ で再発するケースがあり、preview 機能自体を OFF にする必要がある。watchOS の SwiftUI Live Preview が使えなくなる副作用はあるが、実機/シミュレーターで確認すれば実害は小さい
+26. **`AppShortcut.phrases` の `\(\.$xxx)` は AppEntity / AppEnum 限定** — `String` パラメータを utterance に埋め込むと "Invalid parameter type" でビルドが halt する。値を取りたいなら `requestValueDialog` で Siri に質問させ、utterance からは外す
+27. **AppShortcut の utterance は全て `\(.applicationName)` を含む** — 1 つでも含まない utterance を書くと "Invalid Utterance" で全 utterance のインデックスが失われる。アプリ名抜きの短縮 phrase はユーザーが Shortcuts アプリで個別に設定する
+28. **`AppShortcutsProvider.updateAppShortcutParameters()` を起動時 + データ変更時に呼ぶ** — 呼ばないと Siri index が古いままで、phrase 変更や CFBundleDisplayName 変更が反映されず Siri がアプリを認識せずデフォルトのリマインダーに流れる。`AppEntityQuery` の候補が変わるタイミング（タスク追加 / 完了など）にも呼ぶと UX が良くなる
+29. **`AppEntityQuery` は Widget snapshot ではなく API 直叩きで取得する** — snapshot は Widget 用に件数 cap されているので Siri 候補も cap される。専用 fetch メソッドを Service に作り、共通 resolver で App / Widget / Watch / Siri の並び順を統一する
+30. **iPhone ↔ Watch のデータ共有は WatchConnectivity で primitive を push する** — App Group は別デバイスで共有不可。`WCSession.updateApplicationContext` で値を push、両側で delegate + `activate()` 必須。delegate の `[String: Any]` は primitive を抜き出してから MainActor へ渡す（Swift 6 strict concurrency 対策）
+31. **watchOS の TextField / Picker は `.foregroundStyle()` + `.tint()` で文字色を明示する** — デフォルトの白文字が白系背景の上で見えなくなる
+32. **watchOS の `AppIntentTimelineProvider` には `recommendations()` を実装する** — iOS では optional だが watchOS では required。Smart Stack / 文字盤ギャラリーに出す候補を返す
+33. **Watch アプリのポーリングは `scenePhase` で ON/OFF** — `.active` で `startPolling`、`.inactive` / `.background` で `stopPolling`。Task ベースなら `pollingTask?.cancel()` で重複起動安全に
+34. **共有コードの App Group ID は `#if os(watchOS)` で OS 分岐** — iOS と watchOS で別 entitlement、同じコードで両方動かすため定数側で切り替える
+35. **watchOS / iOS の AppIcon は Single Size モード (1024x1024 1 枚)** — Contents.json に `idiom: universal, platform: <ios|watchos>, size: 1024x1024` 1 件で Xcode が全サイズ展開してくれる
 
 ## Subagent: Hit Area Auditor
 
