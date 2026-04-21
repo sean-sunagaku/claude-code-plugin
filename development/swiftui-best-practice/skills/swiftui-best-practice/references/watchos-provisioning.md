@@ -1,8 +1,8 @@
 # iOS + watchOS Provisioning トラブルシューティング
 
-App Group + watchOS + Apple Watch 実機配布で詰まる 6 つの罠（Provisioning 5 段 + Watch 本体設定 1 段）と、それぞれの診断・解決手順。
+App Group + watchOS + Apple Watch 実機配布で詰まる 7 つの罠（Provisioning 5 段 + Watch 本体設定 1 段 + Xcode ビルド設定 1 段）と、それぞれの診断・解決手順。
 
-> ⚠️ **Watch に "Could not install at this time." が出たとき、§ 1〜§ 5 の Provisioning をすべて完璧に直しても、§ 6 (Watch 本体の Developer Mode) が OFF だと 100% Install 失敗する**。他を何回直しても変わらない時は必ず § 6 を確認すること。
+> ⚠️ **Watch に "Could not install at this time." が出たとき、§ 1〜§ 5 の Provisioning をすべて完璧に直しても、§ 6 (Watch 本体の Developer Mode) が OFF だと 100% Install 失敗する**。他を何回直しても変わらない時は必ず § 6 を確認すること。さらに § 6 も ON で「**整合性を確認できなかったので、Install できません**」エラーが出た場合は § 7 (`ENABLE_DEBUG_DYLIB: NO`) を設定する。
 
 ## 症状
 
@@ -19,6 +19,8 @@ App Group + watchOS + Apple Watch 実機配布で詰まる 6 つの罠（Provisi
 | Spaceship/fastlane で API 生成した Profile に capability が足りない | § 4 API 製 Profile の仕様 |
 | xcodebuild は通るが埋め込まれた Profile が「iOS Team Provisioning Profile:...」（Xcode 自動生成版） | § 5 Automatic Signing 上書き |
 | **§ 1〜§ 5 全部直したのに Watch に "Could not install at this time." が出る** | **§ 6 Watch 本体の Developer Mode OFF** |
+| **Watch に「整合性を確認できなかったので、Install できませんでした」が出る** | **§ 7 Xcode 15+ Debug dylib (ENABLE_DEBUG_DYLIB)** |
+| Watch App の bundle に `__preview.dylib` や `<App>.debug.dylib` が同梱され、code signing 整合性チェックを通らない | § 7 Xcode 15+ Debug dylib |
 
 ## § 0 前提
 
@@ -373,6 +375,85 @@ Watch 本体 Developer Mode を ON にしても失敗するときの順番チェ
 4. Install ボタンを押した瞬間の **赤い ERROR 行**を探す
 5. エラー詳細（bundle id 不一致 / entitlement mismatch / profile not found 等）で原因確定
 
+## § 7 Xcode 15+ Debug dylib が watchOS で integrity check を弾く
+
+### 原因
+
+Xcode 15+ は Debug ビルド時に **SwiftUI Preview 高速化のための `__preview.dylib` と `<App>.debug.dylib` を自動生成**する。これは iPhone では問題ないが、watchOS の実機インストール時に **code signing の整合性チェックを通らず** インストール拒否される。
+
+具体的な症状:
+
+- iPhone の Watch アプリで「インストール」を押す → **「整合性を確認できなかったので、Install できませんでした。」** と出る
+- `.app/Watch/<WatchApp>.app/` 配下に `__preview.dylib` と `<WatchAppName>.debug.dylib` が存在する
+
+これは Xcode 15+ の **SwiftUI Preview 高速化**（コード変更時に全体リビルドせず dylib だけ差し替える仕組み）の副作用で、watchOS のデバイス側セキュリティが dylib を別署名として扱い弾く。
+
+### 診断
+
+埋め込まれている dylib を確認:
+
+```bash
+ls /tmp/DerivedData/Build/Products/Debug-iphoneos/YourApp.app/Watch/YourWatchApp.app/ | grep -E "(\.debug\.dylib|__preview\.dylib)"
+```
+
+`__preview.dylib` や `*.debug.dylib` が出てくれば、それが原因で弾かれる可能性大。
+
+### 解決
+
+`project.yml` の **watchOS ターゲット 2 つ**（Watch App + Watch Widget Extension）に `ENABLE_DEBUG_DYLIB: NO` を追加:
+
+```yaml
+targets:
+  TaskFlowWatch:
+    settings:
+      base:
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: Apple Development
+        PROVISIONING_PROFILE_SPECIFIER: FocusOne Watch App Dev
+        ENABLE_DEBUG_DYLIB: NO   # ← watchOS 実機で integrity check を通すために必須
+  TaskFlowWatchWidgetExtension:
+    settings:
+      base:
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: Apple Development
+        PROVISIONING_PROFILE_SPECIFIER: FocusOne Watch Widget Dev
+        ENABLE_DEBUG_DYLIB: NO   # ← 同上
+```
+
+> 💡 iOS 側のターゲット（iOS App / iOS Widget）には **付けなくて良い**。iPhone では debug dylib が問題なく動くため、SwiftUI Preview 高速化のメリットを残しておける。
+
+xcodegen → クリーンビルド → 再インストール:
+
+```bash
+cd ios && xcodegen generate && cd ..
+xcodebuild -project ios/YourApp.xcodeproj -scheme YourApp \
+  -destination "platform=iOS,id=<iPhone UDID>" \
+  -derivedDataPath /tmp/DerivedData \
+  clean build
+xcrun devicectl device install app --device <iPhone UDID> \
+  /tmp/DerivedData/Build/Products/Debug-iphoneos/YourApp.app
+```
+
+Watch App の `__preview.dylib` / `.debug.dylib` が消えたことを確認:
+
+```bash
+ls /tmp/DerivedData/Build/Products/Debug-iphoneos/YourApp.app/Watch/YourWatchApp.app/ | grep -E "(preview|debug\.dylib)"
+# → 出力なし = OK
+```
+
+その後 iPhone の Watch アプリ → My Watch → 利用可能なアプリ → 「インストール」で通る。
+
+### 副作用
+
+- **SwiftUI Preview が watchOS 側だけ少し遅くなる**（コード変更時に部分リビルドではなく通常ビルドになる）
+- ただし Xcode の Preview は iPhone 側で確認できるので実害はほぼ無い
+- Release ビルドには **一切影響なし**（Release は元々 debug dylib を作らない）
+
+### 関連する類似症状
+
+- Watch App の内部構造を見たいときは `unzip` せずに `Finder で右クリック → パッケージの内容を表示` でも可
+- `embeddedBinaryValidationUtility` のログがビルド出力に出て、そこで弾かれていることもある
+
 ## 検証チェックリスト
 
 全ステップ完了後、以下を確認:
@@ -390,6 +471,12 @@ Watch 本体 Developer Mode を ON にしても失敗するときの順番チェ
 - [ ] 埋め込まれた `.app/Watch/*.app/embedded.mobileprovision` も同じ条件
 - [ ] ビルドログの `Provisioning Profile:` 行が **全て `FocusOne` で始まる**（`iOS Team Provisioning Profile:` が無い）
 - [ ] **Apple Watch 本体で Settings → Privacy & Security → Developer Mode が ON**（§ 6） ← 忘れがち
+- [ ] **watchOS ターゲット 2 つで `ENABLE_DEBUG_DYLIB: NO` が設定されている**（§ 7）
+  ```bash
+  # .app 内の Watch 配下に __preview.dylib / .debug.dylib が無いこと
+  ls YourApp.app/Watch/YourWatchApp.app/ | grep -E "(preview|debug\.dylib)"
+  # → 出力なしで OK
+  ```
 - [ ] iPhone の Watch アプリ → 利用可能なアプリ → 対象アプリ → **インストール** が成功
 
 ## 全自動化は不可能な理由

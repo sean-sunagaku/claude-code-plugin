@@ -289,8 +289,8 @@
     {
       "name": "swiftui-best-practice",
       "source": "./development/swiftui-best-practice",
-      "version": "1.3.0",
-      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス + iOS/watchOS 実機配布 (App Group / Manual Signing / Watch UDID / 手動 Profile / Apple Watch 本体 Developer Mode) の 6 段階トラブルシューティング + Hit Area Auditor サブエージェント"
+      "version": "1.2.0",
+      "description": "SwiftUI のレイアウト落とし穴・ベストプラクティス + iOS/watchOS 実機配布 (App Group / Manual Signing / Watch UDID / 手動 Profile / Apple Watch 本体 Developer Mode / ENABLE_DEBUG_DYLIB) の 7 段階トラブルシューティング + Hit Area Auditor サブエージェント"
     },
     {
       "name": "plantuml-salt",
