@@ -1,8 +1,8 @@
 {
   "name": "swiftui-best-practice",
-  "version": "1.1.0",
-  "description": "SwiftUI のレイアウト落とし穴・ベストプラクティスガイド + Hit Area Auditor サブエージェント。ATT呼び出しタイミング、.buttonStyle(.plain) + contentShape、CRUD 機能網羅チェック、アフォーダンスチェックを含む",
+  "version": "1.2.0",
+  "description": "SwiftUI のレイアウト落とし穴・ベストプラクティスガイド + iOS/watchOS Provisioning トラブルシューティング + Hit Area Auditor サブエージェント。ATT呼び出しタイミング、.buttonStyle(.plain) + contentShape、CRUD 機能網羅、アフォーダンス、Apple Watch 実機配布 (App Group / Manual Signing / Watch UDID / 手動 Profile) の 5 段階診断を含む",
   "author": { "name": "sunagaku" },
   "license": "MIT",
-  "keywords": ["swiftui", "layout", "best-practice", "safeAreaInset", "ViewThatFits", "adaptive", "ATT", "AdMob"]
+  "keywords": ["swiftui", "layout", "best-practice", "safeAreaInset", "ViewThatFits", "adaptive", "ATT", "AdMob", "watchos", "apple-watch", "provisioning", "app-group", "code-signing", "manual-signing"]
 }

@@ -1,14 +1,23 @@
 ---
 name: swiftui-best-practice
 description: >
-  SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンのガイド。
-  コード生成・修正時に既知のレイアウトバグを防ぎ、正しいパターンを適用する。
+  SwiftUI のレイアウト落とし穴・ベストプラクティス・非推奨パターンと、
+  iOS / watchOS アプリの実機配布 (Provisioning / App Group / Code Signing)
+  トラブルシューティングのガイド。コード生成・修正時に既知のレイアウトバグを
+  防ぎ、App Group + watchOS + Apple Watch の実機インストール失敗を
+  5 段階フレームワークで診断・解消する。
   Use when: SwiftUI のコードを書く・修正するとき。
   レイアウト崩れを修正するとき。safeAreaInset や ViewThatFits を使うとき。
-  マルチデバイス対応するとき。
+  マルチデバイス対応するとき。iOS + watchOS アプリの実機ビルド / 配布で
+  provisioning / App Group / Manual Signing / Apple Watch の UDID / Xcode 自動署名の
+  罠に詰まったとき。Apple Watch に "Could not install at this time" が出たとき。
   Triggers: "SwiftUI", "layout", "safeAreaInset", "ViewThatFits",
   "GeometryReader", "レイアウト", "崩れ", "表示バグ", "iPhone SE",
-  "ATT", "ATTrackingManager", "requestTrackingAuthorization", "AdMob", "広告"
+  "ATT", "ATTrackingManager", "requestTrackingAuthorization", "AdMob", "広告",
+  "Provisioning Profile", "App Group", "Manual Signing", "Code Signing",
+  "Apple Watch", "watchOS", "Install できない", "Could not install at this time",
+  "Bundle ID 紐付け", "Xcode Automatic Signing", "embedded.mobileprovision",
+  "Spaceship", "App Store Connect API", "WKCompanionAppBundleIdentifier"
 ---
 
 # SwiftUI Best Practices
@@ -192,6 +201,43 @@ struct ItemListView: View {
 
 See [references/adaptive-layout.md](references/adaptive-layout.md) for breakpoint patterns and responsive design best practices.
 
+### iOS + watchOS Provisioning (App Group / Manual Signing)
+
+**`Could not install at this time.` / Profile に App Group が入らない / Xcode Automatic Signing が手動 Profile を上書き** — これらは iOS + watchOS + App Group 構成で頻発する既知の罠。5 段階フレームワークで診断・解決する。
+
+詳細は [references/watchos-provisioning.md](references/watchos-provisioning.md) を参照。要点だけ:
+
+1. **Bundle ID 不整合** — embed 拡張 (Widget / Watch App / Watch Widget) の Bundle ID は **親 App Bundle ID の完全 prefix** である必要。`app.focusone.widget` は NG、`app.focusone.app.widget` が正。
+2. **App Group Capability 未保存** — Apple Developer Portal の Configure → 選択 → Continue の後、**画面右上 Save + Confirm ダイアログ** まで押さないと反映されない。Capabilities 行の右が **Edit** なら ✅、**Configure** なら未保存。
+3. **Apple Watch UDID 未登録** — iPhone と別 device 扱い。`ios-deploy -c -t 5` で USB Companion proxy 経由で取得 → Spaceship API で `class=APPLE_WATCH` として登録。
+4. **API 製 Profile に App Group が入らない仕様** — `Spaceship::ConnectAPI::Profile.create` で生成した Profile は App Group entitlement を取り込まない（Apple サーバ側の制約）。**Web UI で 4 つ生成・Download** が必須。
+5. **Xcode Automatic Signing が手動 Profile を上書き** — `-allowProvisioningUpdates` で Team Provisioning Profile を再 fetch → 手動版が消える。**`CODE_SIGN_STYLE: Manual` + `PROVISIONING_PROFILE_SPECIFIER` を 4 ターゲット全部で明示**、かつ `-allowProvisioningUpdates` を絶対に付けない。
+
+```yaml
+# project.yml で各ターゲットの settings.base に追加
+CODE_SIGN_STYLE: Manual
+CODE_SIGN_IDENTITY: Apple Development
+PROVISIONING_PROFILE_SPECIFIER: FocusOne Watch App Dev
+```
+
+検証:
+
+```bash
+# Profile に App Group が含まれているか
+security cms -D -i <profile.mobileprovision> | \
+  plutil -extract Entitlements xml1 -o - - | grep application-groups
+
+# Profile に Apple Watch UDID が含まれているか
+security cms -D -i <profile.mobileprovision> | \
+  plutil -extract ProvisionedDevices xml1 -o - - | grep <Watch UDID>
+
+# 埋め込まれた Profile が手動版か自動生成版か
+security cms -D -i <YourApp.app>/Watch/<WatchApp.app>/embedded.mobileprovision | \
+  plutil -extract Name raw -
+# 期待: "FocusOne Watch App Dev" などの手動版名
+# NG:   "iOS Team Provisioning Profile: ..." (Xcode 自動版)
+```
+
 ## Workflow
 
 When writing or modifying SwiftUI layout code:
@@ -214,6 +260,10 @@ When writing or modifying SwiftUI layout code:
 16. `.onSubmit` もキーボードを一瞬閉じるため、連続フォーカス移動には `TextField(axis: .vertical)` + `onChange` で改行検知する方式を使う
 17. `ATTrackingManager.requestTrackingAuthorization()` は `.onAppear` ではなく `scenePhase == .active` で呼ぶ — `.onAppear` では iPadOS でダイアログが表示されずリジェクトされる
 18. AdMob 等の広告 SDK 初期化は ATT リクエスト完了後に行う — IDFA の取得状態が確定してからでないとパーソナライズ判定が正しくない
+19. iOS + watchOS + App Group 構成では **Manual Signing + 手動 Web UI 生成 Profile** を使う — Automatic Signing と Spaceship API は App Group entitlement を取り込まず、Xcode が手動 Profile を上書きする
+20. 埋め込み Extension (Widget / Watch App / Watch Widget) の Bundle ID は必ず親 App Bundle ID の **完全な prefix** で始める — `app.focusone.widget` は NG、`app.focusone.app.widget` が正
+21. Apple Watch 実機配布前に `ios-deploy -c -t 5` で Watch UDID を取得し Developer Portal に登録する — iPhone とは別 device 扱いで自動登録されない
+22. Profile 生成は Web UI でやる — API 経由 (Spaceship / App Store Connect API) で作った Profile には App Group entitlement が入らない (Apple の未ドキュメント仕様)
 
 ## Subagent: Hit Area Auditor
 
