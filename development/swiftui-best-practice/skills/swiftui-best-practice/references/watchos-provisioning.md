@@ -400,7 +400,7 @@ ls /tmp/DerivedData/Build/Products/Debug-iphoneos/YourApp.app/Watch/YourWatchApp
 
 ### 解決
 
-`project.yml` の **watchOS ターゲット 2 つ**（Watch App + Watch Widget Extension）に `ENABLE_DEBUG_DYLIB: NO` を追加:
+`project.yml` の **watchOS ターゲット 2 つ**（Watch App + Watch Widget Extension）に `ENABLE_DEBUG_DYLIB: NO` **と** `ENABLE_PREVIEWS: NO` を **両方** 追加:
 
 ```yaml
 targets:
@@ -410,15 +410,22 @@ targets:
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: Apple Development
         PROVISIONING_PROFILE_SPECIFIER: FocusOne Watch App Dev
-        ENABLE_DEBUG_DYLIB: NO   # ← watchOS 実機で integrity check を通すために必須
+        ENABLE_DEBUG_DYLIB: NO   # ← preview dylib の生成停止
+        ENABLE_PREVIEWS: NO       # ← preview 機能自体を OFF (Xcode 16+ 取りこぼし対策)
   TaskFlowWatchWidgetExtension:
     settings:
       base:
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: Apple Development
         PROVISIONING_PROFILE_SPECIFIER: FocusOne Watch Widget Dev
-        ENABLE_DEBUG_DYLIB: NO   # ← 同上
+        ENABLE_DEBUG_DYLIB: NO
+        ENABLE_PREVIEWS: NO
 ```
+
+> ⚠️ **`ENABLE_DEBUG_DYLIB: NO` だけでは Xcode 16+ で再発するケースがある**。
+> 一度成功したのに何かの拍子に「整合性を確認できなかった」が再発したら、`ENABLE_PREVIEWS: NO` を二重で入れて、Preview 経路そのものを切る。
+> 副作用: watchOS の SwiftUI Live Preview が使えなくなる（実機/シミュレーター起動で確認する形になる）。
+> 実害は小さい — Watch View は Preview より実機サイズで見ないと UX 判断できないことがほとんど。
 
 > 💡 iOS 側のターゲット（iOS App / iOS Widget）には **付けなくて良い**。iPhone では debug dylib が問題なく動くため、SwiftUI Preview 高速化のメリットを残しておける。
 
