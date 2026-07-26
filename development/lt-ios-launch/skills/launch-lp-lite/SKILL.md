@@ -27,6 +27,8 @@ Create a static, local-first site under `lp/`. Do not initialize a framework unl
 - Make keyboard and touch interactions work.
 - Respect `prefers-reduced-motion`.
 - Avoid fabricated ratings, awards, testimonials, download counts, or health claims.
+- Do not frame the app as eyesight/cognitive training or as an ability test.
+- Do not promise that everyone can play or that VoiceOver can identify a visually different answer. Describe the implemented accessibility behavior and its limits literally.
 - Verify at mobile and desktop widths.
 - Record the command and result in `deliverables/run-log.md`.
 

@@ -14,8 +14,18 @@ if ! command -v rg >/dev/null 2>&1; then
   exit 69
 fi
 
-swift_count="$(find "$project_root" -type f -name '*.swift' | wc -l | tr -d ' ')"
-plist_count="$(find "$project_root" -type f -name '*.plist' | wc -l | tr -d ' ')"
+swift_count="$(
+  find "$project_root" \
+    \( -name .git -o -name .derivedData -o -name DerivedData -o -name build \) -prune -o \
+    -type f -name '*.swift' -print |
+    wc -l | tr -d ' '
+)"
+manifest_count="$(
+  find "$project_root" \
+    \( -name .git -o -name .derivedData -o -name DerivedData -o -name build \) -prune -o \
+    -type f \( -name '*.plist' -o -name '*.xcprivacy' \) -print |
+    wc -l | tr -d ' '
+)"
 
 if [[ "$swift_count" -eq 0 ]]; then
   echo "No Swift source files were found under: $project_root" >&2
@@ -30,15 +40,17 @@ scan() {
   local destination="$2"
   rg --line-number --hidden --glob '!**/.git/**' --glob '!**/.derivedData/**' \
     --glob '!**/DerivedData/**' --glob '!**/build/**' --glob '!**/deliverables/**' \
-    --glob '*.swift' --glob '*.plist' --glob 'project.yml' --glob 'Package.swift' \
+    --glob '*.swift' --glob '*.plist' --glob '*.xcprivacy' --glob 'project.yml' --glob 'Package.swift' \
     --glob 'Podfile' --glob 'Cartfile' --glob '*.pbxproj' \
     "$pattern" "$project_root" >"$destination" || true
 }
 
 scan 'NS(Camera|Microphone|Location|Contacts|PhotoLibrary|Calendars|Reminders|Bluetooth|Motion|FaceID|Health|Tracking)[A-Za-z]*UsageDescription' "$work_dir/permissions.txt"
 scan 'URLSession|URLRequest|WKWebView|SFSafariViewController|NWConnection|Network\.framework|https?://' "$work_dir/network.txt"
-scan 'Package\.swift|XCRemoteSwiftPackageReference|packageProductDependencies|Podfile|Cartfile|Carthage|CocoaPods' "$work_dir/dependencies.txt"
-scan '@AppStorage|UserDefaults|SwiftData|CoreData|NSPersistent|Keychain|SecItem|FileManager|write\\(to:' "$work_dir/persistence.txt"
+grep -v 'www\.apple\.com/DTDs/PropertyList-1\.0\.dtd' "$work_dir/network.txt" >"$work_dir/network.filtered.txt" || true
+mv "$work_dir/network.filtered.txt" "$work_dir/network.txt"
+scan 'XCRemoteSwiftPackageReference|XCSwiftPackageProductDependency|https://github\.com/|^[[:space:]]*pod[[:space:]]|^[[:space:]]*github[[:space:]]' "$work_dir/dependencies.txt"
+scan '@AppStorage|UserDefaults|SwiftData|CoreData|NSPersistent|Keychain|SecItem|FileManager|write\(to:' "$work_dir/persistence.txt"
 scan 'UIPasteboard|AVCapture|CLLocation|CNContact|ATTrackingManager|AdSupport|ASIdentifierManager|SecItem|PHPhotoLibrary' "$work_dir/sensitive.txt"
 
 count_lines() {
@@ -58,7 +70,7 @@ mkdir -p "$(dirname "$output_path")"
   echo
   echo "- Project root: \`$project_root\`"
   echo "- Swift files scanned: $swift_count"
-  echo "- Property lists scanned: $plist_count"
+  echo "- Property lists and privacy manifests scanned: $manifest_count"
   echo "- Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
   echo
   echo '## Summary'

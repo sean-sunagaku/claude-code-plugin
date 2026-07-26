@@ -34,8 +34,10 @@ Run:
 Create exactly three cards:
 
 1. `1マスだけ、違う。`
-2. `あなたの目、どこまで見える？`
+2. `到達レベルが、そのままスコア。`
 3. `通信なし。アカウント不要。`
+
+Do not imply eyesight/cognitive measurement, diagnosis, training, or improvement. Avoid absolute accessibility claims such as “誰でも遊べる”; state only behavior verified in the app.
 
 ## Validate
 
