@@ -1,5 +1,8 @@
 {
   "name": "parallel-impl-task-planner",
   "version": "1.0.0",
-  "description": "実装計画からタスクを分解し、ファイル単位の依存関係を分析して並列実行可能な Wave に自動グルーピング。編集ファイルが被らないタスクは全て同時並列にし、Mermaid 依存関係図 + ディレクトリ分割 TODO を出力する"
+  "description": "実装計画からタスクを分解し、ファイル単位の依存関係を分析して並列実行可能な Wave に自動グルーピング。編集ファイルが被らないタスクは全て同時並列にし、Mermaid 依存関係図 + ディレクトリ分割 TODO を出力する",
+  "author": {
+    "name": "sunagaku"
+  }
 }

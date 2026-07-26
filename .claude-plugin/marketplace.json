@@ -1,5 +1,6 @@
 {
   "name": "sunagaku-marketplace",
+  "description": "Sunagakuの開発・デザイン・レビュー・マーケティング向けClaude Code Plugin集",
   "owner": {
     "name": "sunagaku"
   },
@@ -327,6 +328,12 @@
       "source": "./development/simulator-screenshot-crop",
       "version": "1.0.0",
       "description": "シミュレーターのスクリーンショットからタイトルバーを自動検出して除去する"
+    },
+    {
+      "name": "lt-ios-launch",
+      "source": "./development/lt-ios-launch",
+      "version": "0.1.0",
+      "description": "50分のライブ登壇で、3画面以内のローカルiOSアプリを企画・Design・実装・LP・ASO・動画・スクショ・プライバシー検証まで完走する軽量Skill集"
     }
   ]
 }

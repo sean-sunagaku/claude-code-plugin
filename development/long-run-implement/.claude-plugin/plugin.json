@@ -2,5 +2,7 @@
   "name": "long-run-implement",
   "version": "1.1.0",
   "description": "TODO駆動で大きな実装タスクを段階的に進め、サブエージェントがレビューするスキル。ディレクトリベースのタスク管理で長時間・大規模な変更を着実に完遂。",
-  "author": "sunagaku"
+  "author": {
+    "name": "sunagaku"
+  }
 }
