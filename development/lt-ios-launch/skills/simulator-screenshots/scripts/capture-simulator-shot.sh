@@ -21,14 +21,30 @@ for command_name in xcrun jq; do
   fi
 done
 
-device_id="$(
+booted_ids="$(
   xcrun simctl list devices booted --json |
-    jq -r '[.devices[][] | select(.state == "Booted") | .udid][0] // empty'
+    jq -r '.devices[][] | select(.state == "Booted") | .udid'
 )"
 
-if [[ -z "$device_id" ]]; then
+if [[ -z "$booted_ids" ]]; then
   echo "No booted iOS Simulator was found." >&2
   exit 69
+fi
+
+if [[ -n "${SCREENSHOT_SIMULATOR_UDID:-}" ]]; then
+  if ! grep -Fxq "$SCREENSHOT_SIMULATOR_UDID" <<<"$booted_ids"; then
+    echo "SCREENSHOT_SIMULATOR_UDID is not a booted Simulator: $SCREENSHOT_SIMULATOR_UDID" >&2
+    exit 69
+  fi
+  device_id="$SCREENSHOT_SIMULATOR_UDID"
+else
+  device_count="$(wc -l <<<"$booted_ids" | tr -d ' ')"
+  if [[ "$device_count" -ne 1 ]]; then
+    echo "Multiple iOS Simulators are booted. Set SCREENSHOT_SIMULATOR_UDID explicitly:" >&2
+    sed 's/^/  /' <<<"$booted_ids" >&2
+    exit 64
+  fi
+  device_id="$booted_ids"
 fi
 
 mkdir -p "$output_dir"

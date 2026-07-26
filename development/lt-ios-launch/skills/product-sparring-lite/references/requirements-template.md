@@ -4,6 +4,8 @@
 
 ## Persona and job
 
+## Primary success metric
+
 ## Constraints
 
 ## Three-screen map
@@ -17,6 +19,12 @@ stateDiagram-v2
 ```
 
 ## Rules and state
+
+### Persistence schema
+
+### Time, timeout, failure, penalty, and reset
+
+### Deterministic demo state
 
 ## Devil's advocate
 

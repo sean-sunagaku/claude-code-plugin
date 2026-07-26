@@ -9,11 +9,12 @@ Use actual Simulator pixels whenever the app builds.
 
 ## Capture
 
-1. Determine the booted device and launch the target bundle.
+1. Determine the booted device and launch the target bundle. If more than one Simulator is booted, export the exact target as `SCREENSHOT_SIMULATOR_UDID`; the script intentionally refuses to guess.
 2. Put the app into one deterministic state at a time: Home, Play, Result.
 3. Run:
 
 ```bash
+export SCREENSHOT_SIMULATOR_UDID=<recorded-preflight-udid>
 "${CLAUDE_SKILL_DIR}/scripts/capture-simulator-shot.sh" home deliverables/screenshots/raw
 "${CLAUDE_SKILL_DIR}/scripts/capture-simulator-shot.sh" play deliverables/screenshots/raw
 "${CLAUDE_SKILL_DIR}/scripts/capture-simulator-shot.sh" result deliverables/screenshots/raw
