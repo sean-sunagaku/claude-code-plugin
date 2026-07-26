@@ -1,0 +1,8 @@
+{
+  "name": "hyperframes-video",
+  "version": "0.1.0-beta",
+  "description": "[Beta] HyperFrames (HTML→MP4) でアプリのプロモ動画を決定論的に生成する。公式スキルを土台に素材・検証ゲート・納品仕様を橋渡しする",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["hyperframes", "video", "promo", "html-to-video", "gsap", "marketing"]
+}
