@@ -37,6 +37,7 @@ magick \
   -font "$font_path" -fill '#14221B' \
   -gravity north -pointsize 82 -annotate +0+105 "$headline" \
   -pointsize 42 -fill '#43544B' -annotate +0+225 "$subheadline" \
+  -alpha off -colorspace sRGB -define png:color-type=2 \
   -strip "$output_path"
 
 dimensions="$(
@@ -48,4 +49,10 @@ if [[ "$dimensions" != "1290x2796" ]]; then
   exit 74
 fi
 
-echo "Composed App Store card: ${output_path} (${dimensions})"
+alpha_trait="$(magick identify -format '%A' "$output_path")"
+if [[ "$alpha_trait" != "Undefined" ]]; then
+  echo "App Store card still has an alpha channel: $output_path ($alpha_trait)" >&2
+  exit 74
+fi
+
+echo "Composed App Store card: ${output_path} (${dimensions}, RGB/no alpha)"
