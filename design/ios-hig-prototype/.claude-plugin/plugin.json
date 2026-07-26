@@ -1,0 +1,8 @@
+{
+  "name": "ios-hig-prototype",
+  "version": "1.0.0",
+  "description": "Apple HIG 準拠の iOS アプリ UI を、単一 HTML の動くインタラクティブプロトタイプとして生成。デバイスフレーム・ナビバー・タブバー・リスト・モーダルを iOS 純正の見た目で再現",
+  "author": { "name": "sunagaku" },
+  "license": "MIT",
+  "keywords": ["ios", "hig", "prototype", "ui-design", "iphone", "mockup", "claude-design"]
+}
