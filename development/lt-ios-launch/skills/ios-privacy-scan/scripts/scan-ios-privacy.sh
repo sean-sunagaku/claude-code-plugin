@@ -20,10 +20,10 @@ swift_count="$(
     -type f -name '*.swift' -print |
     wc -l | tr -d ' '
 )"
-plist_count="$(
+manifest_count="$(
   find "$project_root" \
     \( -name .git -o -name .derivedData -o -name DerivedData -o -name build \) -prune -o \
-    -type f -name '*.plist' -print |
+    -type f \( -name '*.plist' -o -name '*.xcprivacy' \) -print |
     wc -l | tr -d ' '
 )"
 
@@ -40,7 +40,7 @@ scan() {
   local destination="$2"
   rg --line-number --hidden --glob '!**/.git/**' --glob '!**/.derivedData/**' \
     --glob '!**/DerivedData/**' --glob '!**/build/**' --glob '!**/deliverables/**' \
-    --glob '*.swift' --glob '*.plist' --glob 'project.yml' --glob 'Package.swift' \
+    --glob '*.swift' --glob '*.plist' --glob '*.xcprivacy' --glob 'project.yml' --glob 'Package.swift' \
     --glob 'Podfile' --glob 'Cartfile' --glob '*.pbxproj' \
     "$pattern" "$project_root" >"$destination" || true
 }
@@ -70,7 +70,7 @@ mkdir -p "$(dirname "$output_path")"
   echo
   echo "- Project root: \`$project_root\`"
   echo "- Swift files scanned: $swift_count"
-  echo "- Property lists scanned: $plist_count"
+  echo "- Property lists and privacy manifests scanned: $manifest_count"
   echo "- Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
   echo
   echo '## Summary'
