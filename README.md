@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-49-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-50-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -43,7 +43,7 @@ Or use the slash command inside Claude Code:
 | [Design](./design/) | 7 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
 | [Development](./development/) | 12 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
 | [Review](./review/) | 6 skills | コードレビュー・プランレビュー・UI検証・品質チェック |
-| [Marketing](./marketing/) | 5 skills | アプリ名決定・ASO最適化・スクリーンショット作成・プレビュー動画生成 |
+| [Marketing](./marketing/) | 6 skills | アプリ名決定・ASO最適化・スクリーンショット作成・プレビュー動画生成 |
 | [Agent Toolkit](./agent-toolkit/) | 4 skills | エージェントチームの構築・運用・ベストプラクティス |
 
 ## Hooks
@@ -99,23 +99,29 @@ UI コード変更時にアクセシビリティとレイアウト品質を自�
 - **CocoaPods (pod)** — eas-deploy
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
-- **EAS CLI (eas)** — eas-deploy
-- **ffmpeg** — app-store-preview-movie / frame-inspect / lt-sprint-orchestrator / promo-video-lite
+- **Docker** — ci-check / hyperframes-video
+- **EAS CLI (eas)** — eas-deploy / rn-debug
+- **ffmpeg** — frame-inspect / hyperframes-video / lt-sprint-orchestrator / promo-video-lite
+- **ffprobe** — frame-inspect / hyperframes-video / lt-sprint-orchestrator / promo-video-lite
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
-- **GitHub CLI (gh)** — ci-fix / git-workflow / skill-publisher
-- **ImageMagick (magick)** — lt-sprint-orchestrator / promo-video-lite / simulator-screenshots
-- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / simulator-screenshots / skill-publisher
+- **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow / skill-publisher
+- **go** — arch-review
+- **ImageMagick** — lt-sprint-orchestrator / promo-video-lite / simulator-screenshots
+- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / simulator-screenshots / skill-publisher / unknown
 - **lsof** — ui-verify
+- **Node.js** — hyperframes-video
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pip** — simulator-screenshot-crop
 - **pnpm** — ci-check / database / ui-verify
 - **python** — GitHub Actions / ci-check
 - **python3** — GitHub Actions / hook-publisher
+- **ripgrep (rg)** — ios-privacy-scan
 - **rsvg-convert** — logo-design
-- **Xcode Command Line Tools (xcrun / simctl)** — lt-sprint-orchestrator / simulator-screenshots
-- **XcodeGen (xcodegen)** — lt-sprint-orchestrator
+- **sips** — screenshot-creator
+- **Xcode** — eas-deploy / lt-sprint-orchestrator / simulator-screenshots
+- **XcodeGen** — lt-sprint-orchestrator
 - **yarn** — ci-check
 
 ## FAQ
