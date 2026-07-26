@@ -61,7 +61,7 @@ fi
 # channel even when every alpha value is 1, so normalize the file to 8-bit RGB.
 rgb_output_path="${output_path}.rgb.png"
 magick "$output_path" \
-  -alpha off -colorspace sRGB -define png:color-type=2 -strip \
+  -alpha off -colorspace sRGB -depth 8 -define png:color-type=2 -strip \
   "$rgb_output_path"
 mv "$rgb_output_path" "$output_path"
 
@@ -76,4 +76,10 @@ if [[ "$alpha_trait" != "Undefined" ]]; then
   exit 74
 fi
 
-echo "Captured ${label}: ${output_path} (${dimensions}, RGB/no alpha, simulator ${device_id})"
+bit_depth="$(magick identify -format '%z' "$output_path")"
+if [[ "$bit_depth" != "8" ]]; then
+  echo "Screenshot is not 8-bit: $output_path ($bit_depth-bit)" >&2
+  exit 74
+fi
+
+echo "Captured ${label}: ${output_path} (${dimensions}, 8-bit RGB/no alpha, simulator ${device_id})"

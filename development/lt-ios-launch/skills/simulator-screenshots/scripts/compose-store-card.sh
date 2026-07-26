@@ -37,7 +37,7 @@ magick \
   -font "$font_path" -fill '#14221B' \
   -gravity north -pointsize 82 -annotate +0+105 "$headline" \
   -pointsize 42 -fill '#43544B' -annotate +0+225 "$subheadline" \
-  -alpha off -colorspace sRGB -define png:color-type=2 \
+  -alpha off -colorspace sRGB -depth 8 -define png:color-type=2 \
   -strip "$output_path"
 
 dimensions="$(
@@ -55,4 +55,10 @@ if [[ "$alpha_trait" != "Undefined" ]]; then
   exit 74
 fi
 
-echo "Composed App Store card: ${output_path} (${dimensions}, RGB/no alpha)"
+bit_depth="$(magick identify -format '%z' "$output_path")"
+if [[ "$bit_depth" != "8" ]]; then
+  echo "App Store card is not 8-bit: $output_path ($bit_depth-bit)" >&2
+  exit 74
+fi
+
+echo "Composed App Store card: ${output_path} (${dimensions}, 8-bit RGB/no alpha)"
