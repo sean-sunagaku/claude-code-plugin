@@ -26,10 +26,12 @@ The report must state:
 - network clients, URL literals, and web views;
 - external package/dependency declarations;
 - persistence APIs and stored keys;
+- required-reason API coverage when `UserDefaults` or `@AppStorage` appears;
 - keychain, pasteboard, camera, microphone, location, contacts, and tracking APIs;
 - limitations of static analysis;
 - exact evidence for any “offline,” “no account,” or “no permission” claim.
 
 Do not report `PASS` when files were missing or the build target was not identified.
+Treat `UserDefaults` / `@AppStorage` without a target privacy manifest, the UserDefaults accessed-API category, and an accessed-API reasons key as an App Store blocker. The script can confirm declaration shape, but the reviewer must verify that the chosen Apple-approved reason matches the actual access boundary.
 
 Use [references/interpretation.md](references/interpretation.md) when classifying results.
