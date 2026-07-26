@@ -1,5 +1,8 @@
 {
   "name": "hook-publisher",
   "version": "1.0.0",
-  "description": "[Internal] Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ"
+  "description": "[Internal] Hook スクリプトを claude-code-plugin リポジトリの正しい構造に配置・登録するための内部ユーティリティ",
+  "author": {
+    "name": "sunagaku"
+  }
 }
