@@ -18,7 +18,7 @@ claude-code-plugin リポジトリの構造を検証し、エラーを自動修�
 ## 対象リポジトリ
 
 ```
-PLUGIN_REPO=/Users/babashunsuke/Desktop/claude-code-plugin
+PLUGIN_REPO=/Users/babashunsuke/Repository/claude-code-plugin
 VALIDATE_SCRIPT=$PLUGIN_REPO/.github/scripts/validate-marketplace.sh
 FIX_SCRIPT=scripts/fix-marketplace.sh
 ```

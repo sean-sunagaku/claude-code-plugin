@@ -15,7 +15,7 @@ Hook スクリプトを claude-code-plugin リポジトリの正しい構造に�
 ## 対象リポジトリ
 
 ```
-PLUGIN_REPO=/Users/babashunsuke/Desktop/claude-code-plugin
+PLUGIN_REPO=/Users/babashunsuke/Repository/claude-code-plugin
 ```
 
 ## リポジトリ構成（Hook プラグイン）

@@ -334,6 +334,12 @@
       "source": "./development/lt-ios-launch",
       "version": "0.1.7",
       "description": "50分のライブ登壇で、3画面以内のローカルiOSアプリを企画・Design・実装・LP・ASO・動画・スクショ・プライバシー検証まで完走する軽量Skill集"
+    },
+    {
+      "name": "ios-hig-prototype",
+      "source": "./design/ios-hig-prototype",
+      "description": "Apple HIG 準拠の iOS アプリ UI を、単一 HTML の動くインタラクティブプロトタイプとして生成。iPhone フレーム・ナビバー・タブバー・モーダルを iOS 純正の見た目で再現",
+      "version": "1.0.0"
     }
   ]
 }

@@ -17,8 +17,35 @@
 
 set -euo pipefail
 
-PLUGIN_REPO="/Users/babashunsuke/Desktop/claude-code-plugin"
+# PLUGIN_REPO の解決順:
+#   1. 環境変数 PLUGIN_REPO
+#   2. このスクリプトが claude-code-plugin リポジトリ内にある場合はそのルート
+#   3. $HOME/Repository/claude-code-plugin
+resolve_plugin_repo() {
+  if [ -n "${PLUGIN_REPO:-}" ]; then
+    echo "$PLUGIN_REPO"
+    return
+  fi
+  local d
+  d="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  while [ "$d" != "/" ]; do
+    if [ -f "$d/.claude-plugin/marketplace.json" ]; then
+      echo "$d"
+      return
+    fi
+    d="$(dirname "$d")"
+  done
+  echo "$HOME/Repository/claude-code-plugin"
+}
+
+PLUGIN_REPO="$(resolve_plugin_repo)"
 MARKETPLACE_JSON="$PLUGIN_REPO/.claude-plugin/marketplace.json"
+
+if [ ! -f "$MARKETPLACE_JSON" ]; then
+  echo "ERROR: claude-code-plugin リポジトリが見つかりません: $PLUGIN_REPO"
+  echo "  環境変数 PLUGIN_REPO でリポジトリのパスを指定してください"
+  exit 1
+fi
 INTERNAL=false
 CATEGORY=""
 MARKETPLACE_NAME="sunagaku-marketplace"
