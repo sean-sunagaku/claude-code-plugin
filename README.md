@@ -1,6 +1,6 @@
 # Claude Code Plugin
 
-![Skills](https://img.shields.io/badge/skills-47-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Skills](https://img.shields.io/badge/skills-48-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 Claude Code の開発ワークフローを強化するスキルプラグイン集。
 
@@ -41,7 +41,7 @@ Or use the slash command inside Claude Code:
 | [Product](./product/) | 8 skills | プロダクトの企画・ユーザーリサーチ・ペルソナ設計・ジャーニーマップ作成 |
 | [Planning](./planning/) | 6 skills | 機能検討・技術設計の議論・実装計画の策定 |
 | [Design](./design/) | 6 skills | UI/UXデザイン・ロゴ作成・デザインバリエーション生成 |
-| [Development](./development/) | 11 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
+| [Development](./development/) | 12 skills | CI/CD・データベース管理・Gitワークフロー・デバッグ・テスト・デプロイ |
 | [Review](./review/) | 6 skills | コードレビュー・プランレビュー・UI検証・品質チェック |
 | [Marketing](./marketing/) | 5 skills | アプリ名決定・ASO最適化・スクリーンショット作成・プレビュー動画生成 |
 | [Agent Toolkit](./agent-toolkit/) | 4 skills | エージェントチームの構築・運用・ベストプラクティス |
@@ -98,27 +98,34 @@ UI コード変更時にアクセシビリティとレイアウト品質を自�
 
 - **Codex CLI** — arch-review / multi-ai-review / plan-review
 - **curl** — rn-debug
-- **Docker** — ci-check
-- **EAS CLI** — eas-deploy
-- **ffmpeg** — frame-inspect
-- **ffprobe** — frame-inspect
 - **gem** — eas-deploy
 - **Gemini CLI** — multi-ai-review / plan-review
-- **GitHub CLI (gh)** — ci-check / ci-fix / git-workflow / skill-publisher
-- **go** — arch-review
-- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / skill-publisher / unknown
+- **GitHub CLI (gh)** — ci-fix / git-workflow / skill-publisher
+- **jq** — GitHub Actions / ci-fix / hook-publisher / marketplace-validate / simulator-screenshots / skill-publisher / unknown
 - **lsof** — ui-verify
-- **Node.js** — svg-to-png
 - **npm** — ci-check / frame-inspect / long-run-implement / svg-to-png
 - **npx** — frame-inspect / rn-debug
 - **pip** — simulator-screenshot-crop
 - **pnpm** — ci-check / database / ui-verify
-- **pod** — eas-deploy
 - **python** — ci-check
 - **python3** — GitHub Actions / hook-publisher
-- **rsvg-convert** — logo-design
-- **xmllint** — logo-design
 - **yarn** — ci-check
+- **EAS CLI** (used by eas-deploy)
+- **ffmpeg** (used by frame-inspect / promo-video-lite)
+- **ffprobe** (used by frame-inspect / promo-video-lite)
+- **ImageMagick** (used by simulator-screenshots / promo-video-lite)
+- **ios-deploy** (used by swiftui-best-practice)
+- **Node.js** (used by svg-to-png)
+- **plutil** (used by swiftui-best-practice)
+- **pod** (used by eas-deploy)
+- **qlmanage** (used by screenshot-creator)
+- **ripgrep (rg)** (used by ios-privacy-scan)
+- **rsvg-convert** (used by logo-design)
+- **security** (used by swiftui-best-practice)
+- **sips** (used by screenshot-creator / simulator-screenshots)
+- **xcodegen** (used by lt-sprint-orchestrator)
+- **xcrun** (used by simulator-screenshots / lt-sprint-orchestrator)
+- **xmllint** (used by logo-design)
 
 ## FAQ
 
