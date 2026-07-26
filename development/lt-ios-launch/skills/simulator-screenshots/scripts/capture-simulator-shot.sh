@@ -14,7 +14,7 @@ if [[ ! "$label" =~ ^[a-zA-Z0-9_-]+$ ]]; then
   exit 64
 fi
 
-for command_name in xcrun jq; do
+for command_name in xcrun jq magick; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     echo "Missing required command: $command_name" >&2
     exit 69
@@ -57,9 +57,23 @@ if [[ ! -s "$output_path" ]]; then
   exit 74
 fi
 
+# simctl may emit a fully opaque RGBA PNG. App Store Connect rejects any alpha
+# channel even when every alpha value is 1, so normalize the file to 8-bit RGB.
+rgb_output_path="${output_path}.rgb.png"
+magick "$output_path" \
+  -alpha off -colorspace sRGB -define png:color-type=2 -strip \
+  "$rgb_output_path"
+mv "$rgb_output_path" "$output_path"
+
 dimensions="$(
   sips -g pixelWidth -g pixelHeight "$output_path" 2>/dev/null |
     awk '/pixelWidth:/{width=$2} /pixelHeight:/{height=$2} END{print width "x" height}'
 )"
 
-echo "Captured ${label}: ${output_path} (${dimensions}, simulator ${device_id})"
+alpha_trait="$(magick identify -format '%A' "$output_path")"
+if [[ "$alpha_trait" != "Undefined" ]]; then
+  echo "Screenshot still has an alpha channel: $output_path ($alpha_trait)" >&2
+  exit 74
+fi
+
+echo "Captured ${label}: ${output_path} (${dimensions}, RGB/no alpha, simulator ${device_id})"

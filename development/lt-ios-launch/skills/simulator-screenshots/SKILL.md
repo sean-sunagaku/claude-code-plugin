@@ -41,4 +41,4 @@ Do not imply eyesight/cognitive measurement, diagnosis, training, or improvement
 
 ## Validate
 
-Check dimensions, legibility, clipping, truthful copy, and visual consistency using [references/checklist.md](references/checklist.md). Keep raw captures beside marketing cards.
+Check dimensions, absence of alpha channels, legibility, clipping, truthful copy, and visual consistency using [references/checklist.md](references/checklist.md). Keep raw captures beside marketing cards. Apple upload files must be 8-bit RGB; a fully opaque RGBA file is still invalid.
