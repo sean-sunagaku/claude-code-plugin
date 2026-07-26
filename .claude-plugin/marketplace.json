@@ -332,7 +332,7 @@
     {
       "name": "lt-ios-launch",
       "source": "./development/lt-ios-launch",
-      "version": "0.1.6",
+      "version": "0.1.7",
       "description": "50分のライブ登壇で、3画面以内のローカルiOSアプリを企画・Design・実装・LP・ASO・動画・スクショ・プライバシー検証まで完走する軽量Skill集"
     }
   ]

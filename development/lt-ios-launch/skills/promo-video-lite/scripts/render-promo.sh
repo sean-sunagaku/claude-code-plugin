@@ -49,7 +49,7 @@ make_beat() {
     -strip "$destination"
 }
 
-make_beat "$play_path" '1マスだけ、違う。' '静かな30秒チャレンジ' "$work_dir/beat-1.png"
+make_beat "$play_path" '1マスだけ、違う。' '30秒スタートの色さがし' "$work_dir/beat-1.png"
 make_beat "$play_path" 'あなたは見つけられる？' 'タップするほど、少しずつ難しく' "$work_dir/beat-2.png"
 make_beat "$result_path" 'いろちがい' '通信なし・アカウント不要' "$work_dir/beat-3.png"
 
