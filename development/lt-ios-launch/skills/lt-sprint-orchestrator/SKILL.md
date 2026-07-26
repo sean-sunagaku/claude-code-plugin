@@ -16,7 +16,9 @@ Finish these checks before starting the public clock:
 3. Confirm the fallback requirements, Design output, and buildable repository.
 4. Confirm `security-guidance@claude-plugins-official` is enabled.
 5. Confirm all required permissions and first-run dialogs have already been handled.
-6. Create `deliverables/status.log` and `deliverables/run-log.md`.
+6. Confirm a deterministic demo reset or launch argument for stateful apps. Never consume a once-per-day or one-shot happy path during rehearsal without a reset.
+7. Define the Xcode project, scheme, Simulator device/OS, bundle ID, and the exact build/test command.
+8. Create `deliverables/status.log` and `deliverables/run-log.md`.
 
 If any preflight check fails, fix it before the talk or explicitly mark the fallback.
 
@@ -44,7 +46,7 @@ At minute 8, freeze:
 
 - one persona and one job-to-be-done;
 - no more than three screens;
-- one local persistence primitive at most;
+- one local persistence record/primitive at most; the record may contain only the minimum fields required to implement the frozen rules;
 - no login, network, payment, authentication, or external SDK;
 - one visual direction;
 - one primary success metric.
@@ -56,10 +58,12 @@ After the lock, accept only bug fixes or removals. Treat additions as post-demo 
 - By minute 8: if requirements are not frozen, use the fallback requirements.
 - By minute 20: if Design has no usable handoff, use the fallback Design bundle.
 - By minute 28: if the project has not completed one build, switch to the fallback repository.
-- By minute 43: if real screenshots are unavailable, use Design exports and label them as prototype images.
+- From minute 20: start the pattern-based privacy/security scan in the background; finalize it after the build.
+- Between minutes 38 and 43: capture real screenshot candidates while testing the Simulator path.
+- By minute 43: if real screenshot candidates are unavailable, use Design exports and label them as prototype images.
 - By minute 46: if promo rendering is not complete, show the storyboard and pre-rendered fallback.
 
-Record every fallback decision in `deliverables/run-log.md`; do not conceal it.
+Stop or isolate the superseded live job before switching to a fallback so a late result cannot overwrite the chosen artifact. Record every fallback decision in `deliverables/run-log.md`; do not conceal it.
 
 ## Completion contract
 
@@ -68,10 +72,10 @@ Finish only when these paths exist and are readable:
 - buildable iOS project;
 - `deliverables/requirements.md`;
 - `deliverables/design-handoff.md`;
-- `lp/`;
-- `deliverables/aso-ja.md`;
+- `deliverables/lp/`;
+- `deliverables/aso.md`;
 - `deliverables/screenshots/`;
-- `deliverables/promo/irochigai-promo.mp4`;
+- `deliverables/promo/<app-slug>-promo.mp4`;
 - `deliverables/privacy-report.md`;
 - `deliverables/run-log.md`.
 

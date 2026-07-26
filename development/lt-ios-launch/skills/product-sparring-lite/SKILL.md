@@ -37,13 +37,20 @@ Rank features as `must`, `later`, or `never in live demo`. Enforce:
 
 - three screens maximum;
 - no network, account, payment, or external API;
-- one persistence value at most;
+- one persistence record/primitive at most; a record may contain only the minimum fields needed for the frozen rules;
 - one game loop or task loop;
 - one visual direction.
 
 ### 5:00–7:00 — Freeze
 
 Write `deliverables/requirements.md` using [references/requirements-template.md](references/requirements-template.md). Include a Mermaid state flow and acceptance tests.
+
+Define:
+
+- what counts as a screen (alerts and sheets are states unless they create a distinct task);
+- the app's local-day/time-zone rule when the task is date-based;
+- deterministic demo launch arguments or a reset procedure for one-shot, daily, or persisted flows;
+- the meaning of success, failure, timeout, penalty, and reset for non-game tasks. Use `not applicable` only with a reason.
 
 End with:
 
