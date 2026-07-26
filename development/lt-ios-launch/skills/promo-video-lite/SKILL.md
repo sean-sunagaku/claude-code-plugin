@@ -28,7 +28,7 @@ The script creates three five-second beats:
 2. invite participation: `あなたは見つけられる？`;
 3. reveal the result and product name.
 
-Use no fabricated phone recording, user quote, rating, or sound claim. Audio is optional; silence is acceptable for social autoplay.
+Use no fabricated phone recording, user quote, rating, or sound claim. Do not imply eyesight/cognitive measurement, diagnosis, or improvement. If the app is not yet distributed, keep the CTA as an invitation to the demo rather than an availability claim. Audio is optional; silence is acceptable for social autoplay.
 
 ## Validate
 
