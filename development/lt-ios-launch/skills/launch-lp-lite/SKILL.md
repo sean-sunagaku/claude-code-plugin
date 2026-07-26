@@ -29,6 +29,7 @@ Create a static, local-first site under `lp/`. Do not initialize a framework unl
 - Avoid fabricated ratings, awards, testimonials, download counts, or health claims.
 - Do not frame the app as eyesight/cognitive training or as an ability test.
 - Do not promise that everyone can play or that VoiceOver can identify a visually different answer. Describe the implemented accessibility behavior and its limits literally.
+- Derive duration copy from the rules. If play starts at 30 seconds but correct answers add time, write “30秒から始まる”; do not write “30秒で終わる” or “制限時間は30秒だけ”.
 - Verify at mobile and desktop widths.
 - Record the command and result in `deliverables/run-log.md`.
 

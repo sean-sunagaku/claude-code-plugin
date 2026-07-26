@@ -15,7 +15,7 @@ Read the frozen requirements and produce `deliverables/aso-ja.md` containing:
 - selected name;
 - App Store name, at most 30 characters;
 - subtitle, at most 30 characters;
-- comma-separated keyword field, at most 100 characters, with no duplicated name/subtitle terms;
+- comma-separated keyword field, at most 100 UTF-8 bytes, with every keyword at least three Unicode characters and no duplicated name/subtitle terms;
 - promotional text, at most 170 characters;
 - description with the value in the first three lines;
 - category recommendation;
@@ -23,13 +23,19 @@ Read the frozen requirements and produce `deliverables/aso-ja.md` containing:
 - one A/B positioning alternative;
 - assumptions that require later keyword research.
 
-Count characters programmatically. Mark every limit as `PASS` or `FAIL`.
+Count characters programmatically for every field. For keywords, count both Unicode
+characters and UTF-8 bytes, then list the shortest term length. Apple product-page
+guidance says 100 characters while the App Store Connect field reference says 100
+bytes and each keyword greater than two characters; use the stricter field-reference
+contract until the actual input form proves otherwise. Mark every limit as `PASS` or
+`FAIL`.
 
 ## Guardrails
 
 - Do not claim medical, eyesight, cognitive, ranking, popularity, or price benefits without evidence.
 - Do not use “無料” unless distribution terms are known.
 - Distinguish a game from medical vision testing.
+- Keep duration claims literal. If correct actions can add time, say “starts at N seconds”; never rewrite it as “an N-second game” or “ends in N seconds.”
 - Keep the live version Japanese-only; localize after the demo.
 - Prefer plain search language over clever wording.
 

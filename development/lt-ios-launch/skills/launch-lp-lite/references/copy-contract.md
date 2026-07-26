@@ -7,3 +7,4 @@
 5. Three benefits: each headline at most 12 characters and one supporting sentence.
 6. Privacy proof: list concrete absences such as account, network, permissions.
 7. CTA: truthful release state.
+8. Time claim: distinguish starting time, timer cap, and total session duration; never collapse them into one fixed-duration promise.

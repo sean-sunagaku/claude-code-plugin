@@ -9,8 +9,16 @@
 
 ## Selected metadata
 
-| Field | Copy | Characters | Check |
-|---|---|---:|---|
+| Field | Copy | Characters | UTF-8 bytes | Check |
+|---|---|---:|---:|---|
+
+### Keyword gate
+
+| Check | Measured | Limit | Result |
+|---|---:|---:|---|
+| UTF-8 bytes |  | 100 |  |
+| Shortest keyword |  | 3 characters |  |
+| Duplicate name/subtitle terms |  | 0 |  |
 
 ## Description
 
