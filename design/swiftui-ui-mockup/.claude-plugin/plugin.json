@@ -1,0 +1,18 @@
+{
+  "name": "swiftui-ui-mockup",
+  "version": "1.0.0",
+  "description": "SwiftUIでiOS UIの方向性を検討し、複数案・主要状態を切り替えられる実際に動くネイティブモックを実装して、PreviewとSimulatorで検証する",
+  "author": {
+    "name": "sunagaku"
+  },
+  "license": "MIT",
+  "keywords": [
+    "swiftui",
+    "ios",
+    "ui-design",
+    "mockup",
+    "prototype",
+    "xcode-preview",
+    "simulator"
+  ]
+}

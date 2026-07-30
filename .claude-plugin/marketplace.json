@@ -346,6 +346,12 @@
       "source": "./design/ios-hig-prototype",
       "description": "Apple HIG 準拠の iOS アプリ UI を、単一 HTML の動くインタラクティブプロトタイプとして生成。iPhone フレーム・ナビバー・タブバー・モーダルを iOS 純正の見た目で再現",
       "version": "1.0.0"
+    },
+    {
+      "name": "swiftui-ui-mockup",
+      "source": "./design/swiftui-ui-mockup",
+      "description": "SwiftUIでiOS UIの方向性を検討し、複数案・主要状態を切り替えられる実際に動くネイティブモックを実装して、PreviewとSimulatorで検証する",
+      "version": "1.0.0"
     }
   ]
 }
